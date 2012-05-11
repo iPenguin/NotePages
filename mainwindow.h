@@ -4,6 +4,9 @@
 #include <QMainWindow>
 #include <QDomElement>
 #include <QTreeWidgetItem>
+#include <QMap>
+
+#include "page.h"
 
 namespace Ui {
 class MainWindow;
@@ -38,6 +41,8 @@ private:
 
     void load();
 
+    //update the titlebar, and other pointers to the current page.
+    void setCurrentPage(int pageId);
 
     void saveFile(QString fileName);
 
@@ -46,6 +51,9 @@ private:
     void openPage(int pageNumber);
 
     void setupMenubars();
+
+    //A mapping of page_id to object.
+    QMap <int, Page*> mPages;
 
     QString m_wikiFile;
     QString m_name;

@@ -183,57 +183,24 @@ void MainWindow::pageSelected(QTreeWidgetItem *page)
     QString pagePath = mPath + "/pages/" + QString::number(pageNumber) + "/page.xml";
 
     qDebug() << pagePath;
-    //TODO: if page has already been loaded don't load it again.
-    //TODO: if page folder doesn't exist
-    //          create it
-    //TODO: open folder and create a Page (class)
-    //          loading any data from the xml file.
 
-    QDomDocument doc("dWikiPage");
-    QFile file(pagePath);
+    Page *p;
 
-    if (!file.open(QIODevice::ReadOnly)) {
-        qWarning() << "failed to open file";
-        return;
+    //if the page hasn't been loaded, load it.
+    if(!mPages.contains(pageNumber)) {
+
+        p = new Page(pagePath);
+
+        mPages.insert(pageNumber, p);
+        ui->tabWidget->addTab(p, "tab");
+    } else {
+
+        p = mPages.value(pageNumber);
     }
 
-    QString errorMsg;
-    int errorLine;
-    if (!doc.setContent(&file, &errorMsg, &errorLine)) {
-        qWarning() << "failed to load wiki data: " << errorMsg << "line" << errorLine;
 
-        file.close();
-        return;
-    }
+    //display page.
+    ui->tabWidget->setCurrentWidget(p);
 
-    file.close();
-
-    //TODO: associate specific pageNumber with a given instance of a Page, then switch to that instance.
-    //      the class can then decide if it needs to open file/load data or just switch to what it currently has loaded.
-    QMap <int, Page*> mPages;
-    //TODO: pass loading Page content to the Page class.
-    QDomElement docElem = doc.documentElement();
-    QDomNode n = docElem.firstChild();
-
-    while(!n.isNull()) {
-
-        QDomElement e = n.toElement(); // try to convert the node to an element.
-        qDebug() << e.nodeName();
-        if(!e.isNull()) {
-            if(e.tagName() == "title") {
-                m_name = e.text();
-                //TODO: set titlebar: dWikiName - PageName
-            } else if (e.tagName() == "properties") {
-                qDebug() << "TODO: properties - create parser function to get properties.";
-
-            } else if (e.tagName() == "note") {
-
-                qDebug() << "TODO: load note";
-            } else if (e.tagName() == "group") {
-                qDebug() << "TODO: for each child element load each note.";
-            }
-        }
-        n = n.nextSibling();
-    }
 }
 
