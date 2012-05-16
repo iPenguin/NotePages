@@ -13,10 +13,17 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     page.cpp \
-    note.cpp
+    note.cpp \
+    pagescene.cpp \
+    settings.cpp \
+    settingsui.cpp
 
 HEADERS  += mainwindow.h \
     page.h \
-    note.h
+    note.h \
+    pagescene.h \
+    settings.h \
+    settingsui.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+            settings.ui

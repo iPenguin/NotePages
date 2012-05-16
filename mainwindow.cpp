@@ -6,6 +6,8 @@
 #include <QDomElement>
 #include <QTreeWidgetItem>
 
+#include "settings.h"
+
 #include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -14,6 +16,10 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     setupMenubars();
+    setWindowState(Qt::WindowMaximized);
+
+    QString currentFolder = Settings::inst()->value("currentWiki").toString();
+    loadFile(currentFolder);
 }
 
 MainWindow::~MainWindow()
@@ -102,6 +108,8 @@ void MainWindow::loadFile(QString folder)
 
     mPath = folder;
 
+    Settings::inst()->setValue("currentWiki", QVariant(folder));
+
     QString fileName = folder + "/index.wiki";
 
     QDomDocument doc("dWikiIndex");
@@ -180,9 +188,7 @@ void MainWindow::pageSelected(QTreeWidgetItem *page)
 
     int pageNumber = page->data(0, Qt::UserRole).toInt();
 
-    QString pagePath = mPath + "/pages/" + QString::number(pageNumber) + "/page.xml";
-
-    qDebug() << pagePath;
+    QString pagePath = mPath + "/pages/" + QString::number(pageNumber);
 
     Page *p;
 
@@ -197,7 +203,6 @@ void MainWindow::pageSelected(QTreeWidgetItem *page)
 
         p = mPages.value(pageNumber);
     }
-
 
     //display page.
     ui->tabWidget->setCurrentWidget(p);

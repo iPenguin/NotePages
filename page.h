@@ -2,8 +2,10 @@
 #define PAGE_H
 
 #include <QWidget>
-#include <QGraphicsScene>
+#include "pagescene.h"
 #include <QGraphicsView>
+
+#include <QXmlStreamReader>
 
 class Page : public QWidget
 {
@@ -12,13 +14,21 @@ public:
     explicit Page(QString pagePath, QWidget *parent = 0);
 
     int id() { return mId; }
+
+    QString pagePath() { return mPagePath; }
+    void setPagePath(QString pagePath) { mPagePath = pagePath; }
+
 signals:
     
 public slots:
     
 private:
     QGraphicsView  *mView;
-    QGraphicsScene *mScene;
+    PageScene *mScene;
+
+    QString mPagePath;
+
+    void createNote(QXmlStreamReader *stream);
 
     int mId;
 };
