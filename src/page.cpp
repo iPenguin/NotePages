@@ -6,6 +6,8 @@
 #include <QFileInfo>
 #include <QDebug>
 
+#include <QtSvg/QGraphicsSvgItem>
+
 #include "note.h"
 
 Page::Page(QString pagePath, QWidget *parent) :
@@ -69,6 +71,13 @@ Page::Page(QString pagePath, QWidget *parent) :
         }
     }
 
+    QGraphicsSvgItem* i = new QGraphicsSvgItem("/Users/brian/projects/desktopWiki/test.svg");
+    mScene->addItem(i);
+    i->setFlag(QGraphicsItem::ItemIsMovable);
+    i->setFlag(QGraphicsItem::ItemIsSelectable);
+    i->setPos(0, 0);
+
+
 }
 
 void Page::createNote(QXmlStreamReader* stream)
@@ -126,7 +135,7 @@ void Page::createNote(QXmlStreamReader* stream)
 
             } else {
                 QString text = f.readAll();
-                n->setHtml(text);
+                //n->setHtml(text);
             }
             stream->skipCurrentElement();
 

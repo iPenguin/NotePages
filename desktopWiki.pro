@@ -4,26 +4,26 @@
 #
 #-------------------------------------------------
 
-QT       += core gui xml
+QT       += core gui xml svg
 
 TARGET = desktopWiki
 TEMPLATE = app
 
 
-SOURCES += main.cpp\
-        mainwindow.cpp \
-    page.cpp \
-    note.cpp \
-    pagescene.cpp \
-    settings.cpp \
-    settingsui.cpp
+SOURCES += src/main.cpp\
+        src/mainwindow.cpp \
+    src/page.cpp \
+    src/note.cpp \
+    src/pagescene.cpp \
+    src/settings.cpp \
+    src/settingsui.cpp
 
-HEADERS  += mainwindow.h \
-    page.h \
-    note.h \
-    pagescene.h \
-    settings.h \
-    settingsui.h
+HEADERS  += src/mainwindow.h \
+    src/page.h \
+    src/note.h \
+    src/pagescene.h \
+    src/settings.h \
+    src/settingsui.h
 
-FORMS    += mainwindow.ui \
-            settings.ui
+FORMS    += src/mainwindow.ui \
+            src/settings.ui

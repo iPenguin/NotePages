@@ -1,10 +1,10 @@
 #ifndef NOTE_H
 #define NOTE_H
 
-#include <QGraphicsTextItem>
+#include <QGraphicsItem>
 #include <QDateTime>
 
-class Note : public QGraphicsTextItem
+class Note : public QGraphicsItem
 {
 
 public:
@@ -24,7 +24,7 @@ public:
 signals:
     
 public slots:
-    
+
 private:
     QDateTime mLastModified;
     QDateTime mAdded;

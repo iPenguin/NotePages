@@ -10,6 +10,8 @@
 PageScene::PageScene(QObject *parent) :
     QGraphicsScene(parent)
 {
+    setSceneRect(-100, -100, 2000,2000);
+
 }
 
 
@@ -20,8 +22,9 @@ void PageScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
     if(!n)
         return;
 
-    QString text = n->document()->documentLayout()->anchorAt(e->pos());
+    //QString text = n->document()->documentLayout()->anchorAt(e->scenePos());
 
-    qDebug() << text;
+    //qDebug() << text;
 
+    QGraphicsScene::mouseReleaseEvent(e);
 }

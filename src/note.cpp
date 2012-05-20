@@ -7,7 +7,7 @@
 #include <QAbstractTextDocumentLayout>
 
 Note::Note(QGraphicsItem *parent, QGraphicsScene *scene) :
-    QGraphicsTextItem(parent, scene)
+    QGraphicsItem(parent, scene)
 {
     mAdded = QDateTime::currentDateTime();
 
@@ -18,12 +18,14 @@ Note::Note(QGraphicsItem *parent, QGraphicsScene *scene) :
 
 QRectF Note::boundingRect() const
 {
-    return QGraphicsTextItem::boundingRect();
+    return QGraphicsItem::boundingRect();
 }
 
 void Note::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    QGraphicsTextItem::paint(painter, option, widget);
+
+    //painter->drawRect(1,1,60,60);
+    QGraphicsItem::paint(painter, option, widget);
 }
 
 int Note::contentType()
