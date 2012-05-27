@@ -1,25 +1,33 @@
 #ifndef NOTE_H
 #define NOTE_H
 
-#include <QGraphicsItem>
+#include <QGraphicsTextItem>
 #include <QDateTime>
 
-class Note : public QGraphicsItem
+class Note : public QGraphicsTextItem
 {
 
 public:
-    explicit Note(QGraphicsItem *parent = 0, QGraphicsScene *scene = 0);
+    Note(QGraphicsItem *parent = 0, QGraphicsScene *scene = 0);
 
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
 
-    int contentType();
+    int type() const;
 
     QDateTime lastModified() { return mLastModified; }
     QDateTime addedDate() { return mAdded; }
 
     void setLastModified(QDateTime dt);
     void setAddedDate(QDateTime dt);
+
+    QSizeF mSize;
+
+    int id() { return mId; }
+    void setId(int id) { mId = id; }
+
+    QString attachment() { return mAttachment; }
+    void setAttachment(QString attchmnt) { mAttachment = attchmnt; }
 
 signals:
     
@@ -30,6 +38,10 @@ private:
     QDateTime mAdded;
 
     QString mText;
+
+    QString mAttachment;
+
+    int mId;
 };
 
 #endif // NOTE_H

@@ -14,6 +14,7 @@ public:
     explicit Page(QString pagePath, QWidget *parent = 0);
 
     int id() { return mId; }
+    void setId(int id) { mId = id; }
 
     QString pagePath() { return mPagePath; }
     void setPagePath(QString pagePath) { mPagePath = pagePath; }

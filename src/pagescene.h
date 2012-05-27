@@ -3,7 +3,6 @@
 
 #include <QGraphicsScene>
 
-
 class PageScene : public QGraphicsScene
 {
     Q_OBJECT
@@ -16,7 +15,11 @@ public slots:
     
 
 protected:
+    void drawBackground(QPainter *painter, const QRectF &rect);
+
+    void mousePressEvent(QGraphicsSceneMouseEvent *e);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *e);
+    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *e);
 };
 
 #endif // PAGESCENE_H

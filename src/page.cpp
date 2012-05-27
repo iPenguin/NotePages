@@ -55,7 +55,7 @@ Page::Page(QString pagePath, QWidget *parent) :
         stream.readNextStartElement();
         if (stream.isStartElement()) {
             QString name = stream.name().toString();
-            qDebug() << "stream" << name;
+
             if(name == "title") {
                 //m_name = e.text();
                 //TODO: set titlebar: dWikiName - PageName
@@ -71,13 +71,6 @@ Page::Page(QString pagePath, QWidget *parent) :
         }
     }
 
-    QGraphicsSvgItem* i = new QGraphicsSvgItem("/Users/brian/projects/desktopWiki/test.svg");
-    mScene->addItem(i);
-    i->setFlag(QGraphicsItem::ItemIsMovable);
-    i->setFlag(QGraphicsItem::ItemIsSelectable);
-    i->setPos(0, 0);
-
-
 }
 
 void Page::createNote(QXmlStreamReader* stream)
@@ -85,8 +78,11 @@ void Page::createNote(QXmlStreamReader* stream)
 
     Note *n = new Note();
     //set all the note properties.
-    n->setPos(stream->attributes().value("x").toString().toInt(), stream->attributes().value("y").toString().toInt());
+    n->setPos(stream->attributes().value("x").toString().toFloat(), stream->attributes().value("y").toString().toFloat());
+    n->mSize = QSizeF(stream->attributes().value("width").toString().toFloat(), stream->attributes().value("height").toString().toFloat());
     n->setZValue(stream->attributes().value("z").toString().toInt());
+
+    n->setId(stream->attributes().value("id").toString().toInt());
 
     QDateTime lastMod = QDateTime::fromString(stream->attributes().value("lastModified").toString(), "");
     QDateTime added = QDateTime::fromString(stream->attributes().value("lastModified").toString(), "");
@@ -120,14 +116,13 @@ void Page::createNote(QXmlStreamReader* stream)
             qDebug() << "TODO: load image content" << imageFile;
             stream->skipCurrentElement();
 
-        } else if (tag == "document") {
-            QString doc = stream->attributes().value("file").toString();
-            qDebug() << "TODO: load file preview / create 'Files attached' for" << doc;
+        } else if (tag == "attachment") {
+            QString attachment = stream->attributes().value("file").toString();
+            n->setAttachment(attachment);
             stream->skipCurrentElement();
 
         } else if (tag == "text") {
             QString textFile = stream->attributes().value("file").toString();
-            qDebug() << "TODO: load text from html file " << mPagePath + "/" + textFile;
             QFile f(mPagePath + "/" + textFile);
 
             if(!f.open(QIODevice::ReadOnly)) {
@@ -135,7 +130,7 @@ void Page::createNote(QXmlStreamReader* stream)
 
             } else {
                 QString text = f.readAll();
-                //n->setHtml(text);
+                n->setHtml(text);
             }
             stream->skipCurrentElement();
 
