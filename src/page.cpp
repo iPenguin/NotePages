@@ -9,6 +9,7 @@
 #include <QtSvg/QGraphicsSvgItem>
 
 #include "note.h"
+#include "notecontainer.h"
 
 Page::Page(QString pagePath, QWidget *parent) :
     QWidget(parent)
@@ -75,12 +76,14 @@ Page::Page(QString pagePath, QWidget *parent) :
 
 void Page::createNote(QXmlStreamReader* stream)
 {
-
+    NoteContainer *nc = new NoteContainer();
     Note *n = new Note();
+    nc->addItem(n);
+
     //set all the note properties.
-    n->setPos(stream->attributes().value("x").toString().toFloat(), stream->attributes().value("y").toString().toFloat());
+    nc->setPos(stream->attributes().value("x").toString().toFloat(), stream->attributes().value("y").toString().toFloat());
     n->mSize = QSizeF(stream->attributes().value("width").toString().toFloat(), stream->attributes().value("height").toString().toFloat());
-    n->setZValue(stream->attributes().value("z").toString().toInt());
+    nc->setZValue(stream->attributes().value("z").toString().toInt());
 
     n->setId(stream->attributes().value("id").toString().toInt());
 
@@ -141,7 +144,7 @@ void Page::createNote(QXmlStreamReader* stream)
 
     }
 
-    mScene->addItem(n);
+    mScene->addItem(nc);
     n->ensureVisible();
 
 }

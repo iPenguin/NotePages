@@ -10,10 +10,10 @@ class Note : public QGraphicsTextItem
 public:
     Note(QGraphicsItem *parent = 0, QGraphicsScene *scene = 0);
 
+    int type() const;
+
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
-
-    int type() const;
 
     QDateTime lastModified() { return mLastModified; }
     QDateTime addedDate() { return mAdded; }
@@ -33,14 +33,15 @@ signals:
     
 public slots:
 
+protected:
+    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *e);
+    void focusOutEvent(QFocusEvent *e);
+
 private:
     QDateTime mLastModified;
     QDateTime mAdded;
 
-    QString mText;
-
     QString mAttachment;
-
     int mId;
 };
 
