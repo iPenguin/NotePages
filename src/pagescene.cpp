@@ -30,7 +30,7 @@ void PageScene::mousePressEvent(QGraphicsSceneMouseEvent *e)
 
 void PageScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
 {
-
+/*
     QGraphicsItem *i = itemAt(e->pos().x(), e->pos().y());
 
     if(i && i->type() == Note::Type) {
@@ -38,18 +38,19 @@ void PageScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
 
         n->setTextInteractionFlags(Qt::NoTextInteraction);
     }
-
+*/
     QGraphicsScene::mouseReleaseEvent(e);
 }
 
 void PageScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *e)
 {
+/*
     QGraphicsItem *i = itemAt(e->pos());
 
     if(i && i->type() == Note::Type) {
         Note *n = qgraphicsitem_cast<Note*>(i);
         n->setTextInteractionFlags(Qt::TextEditable);
     }
-
+*/
     QGraphicsScene::mouseDoubleClickEvent(e);
 }

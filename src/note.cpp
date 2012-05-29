@@ -2,23 +2,26 @@
 
 #include <QPainter>
 #include <QGraphicsSceneMouseEvent>
-#include <QTextCursor>
-#include <QTextDocument>
-#include <QGraphicsTextItem>
-#include <QStyleOptionGraphicsItem>
 
 #include <QDebug>
 
 Note::Note(QGraphicsItem *parent, QGraphicsScene *scene) :
-    QGraphicsTextItem(parent, scene)
+    QGraphicsItemGroup(parent, scene),
+    mSizeHandle(false),
+    mDragStart(QPointF(0,0)),
+    mDiff(QPointF(0,0))
 {
+
+    mNoteText = new NoteText();
+    addToGroup(mNoteText);
+
     mAdded = QDateTime::currentDateTime();
 
     //setAcceptHoverEvents(true);
-    //setFlag(QGraphicsItem::ItemIsMovable);
+    setFlag(QGraphicsItem::ItemIsMovable);
     setFlag(QGraphicsItem::ItemIsSelectable);
+    setFiltersChildEvents(false);
     //setTextInteractionFlags(Qt::LinksAccessibleByMouse);
-
 }
 
 int Note::type() const
@@ -28,35 +31,59 @@ int Note::type() const
 
 QRectF Note::boundingRect() const
 {
-    QRectF r = QGraphicsTextItem::boundingRect();
-    //r.setHeight(r.height() + 25);
-    //r.setWidth(r.width() + 25);
-    return r;
+    int topMargin = -5;
+    if(!mAttachment.isEmpty()) {
+        topMargin = -30;
+    }
+
+    return QGraphicsItemGroup::childrenBoundingRect().adjusted(-5,topMargin,mDiff.x() + 5, mDiff.y() + 20);
 }
 
 void Note::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    QRectF r = boundingRect();
-    painter->fillRect(r, Qt::white);
-    painter->drawRect(r);
+    QGraphicsItemGroup::paint(painter, option, widget);
 
-    QGraphicsTextItem::paint(painter, option, widget);
+    painter->setPen(Qt::gray);
+    painter->setBrush(QBrush(QColor(225,225,225, 128)));
+    painter->drawRoundedRect(boundingRect().toRect(), 5, 5);
+
+    if(!mAttachment.isEmpty()) {
+        painter->setPen(QColor(50,50,50));
+        painter->drawText(16,-12, mAttachment);
+        painter->drawPixmap(-3,-25,16,16, QPixmap(":/images/attachment.svg"));
+    }
+
 }
 
-void Note::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *e)
+void Note::mousePressEvent(QGraphicsSceneMouseEvent *e)
 {
-    if (textInteractionFlags() == Qt::NoTextInteraction)
-        setTextInteractionFlags(Qt::TextEditorInteraction);
-    QGraphicsTextItem::mouseDoubleClickEvent(e);
+    QRectF rect = QGraphicsItemGroup::childrenBoundingRect().adjusted(-5,-30,mDiff.x() + 5, mDiff.y() + 20);
+    qDebug() << e->pos() << rect;
+    if(e->pos().x() >= rect.width() - 25 &&
+            e->pos().y() >= rect.height() - 25) {
+        qDebug() << "mpe cbr" << rect;
+        mSizeHandle = true;
+    }
+
+    QGraphicsItemGroup::mousePressEvent(e);
 }
 
-void Note::focusOutEvent(QFocusEvent *e)
+void Note::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
 {
+    if(mSizeHandle) {
+        mDiff = e->pos() - mDragStart;
+        update();
+        return;
+    }
 
-    setTextInteractionFlags(Qt::NoTextInteraction);
-    //emit lostFocus(this);
+    QGraphicsItemGroup::mouseMoveEvent(e);
+}
 
-    QGraphicsTextItem::focusOutEvent(e);
+void Note::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
+{
+    mSizeHandle = false;
+
+    QGraphicsItemGroup::mouseReleaseEvent(e);
 }
 
 void Note::setLastModified(QDateTime dt)
