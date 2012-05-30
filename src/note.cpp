@@ -33,10 +33,10 @@ QRectF Note::boundingRect() const
 {
     int topMargin = -5;
     if(!mAttachment.isEmpty()) {
-        topMargin = -30;
+        topMargin = -24;
     }
 
-    return QGraphicsItemGroup::childrenBoundingRect().adjusted(-5,topMargin,mDiff.x() + 5, mDiff.y() + 20);
+    return QGraphicsItemGroup::childrenBoundingRect().adjusted(-3,topMargin,mDiff.x() + 3, mDiff.y() + 20);
 }
 
 void Note::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
@@ -49,8 +49,8 @@ void Note::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
 
     if(!mAttachment.isEmpty()) {
         painter->setPen(QColor(50,50,50));
-        painter->drawText(16,-12, mAttachment);
-        painter->drawPixmap(-3,-25,16,16, QPixmap(":/images/attachment.svg"));
+        painter->drawText(20,-8, mAttachment);
+        painter->drawPixmap(0,-20,16,16, QPixmap(":/images/attachment.svg"));
     }
 
 }
@@ -58,7 +58,7 @@ void Note::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
 void Note::mousePressEvent(QGraphicsSceneMouseEvent *e)
 {
     QRectF rect = QGraphicsItemGroup::childrenBoundingRect().adjusted(-5,-30,mDiff.x() + 5, mDiff.y() + 20);
-    qDebug() << e->pos() << rect;
+
     if(e->pos().x() >= rect.width() - 25 &&
             e->pos().y() >= rect.height() - 25) {
         qDebug() << "mpe cbr" << rect;
