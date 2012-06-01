@@ -5,6 +5,7 @@
 #include <QDateTime>
 
 #include "notetext.h"
+#include "notehandler.h"
 
 class Note : public QGraphicsItemGroup
 {
@@ -29,8 +30,8 @@ public:
     QString attachment() { return mAttachment; }
     void setAttachment(QString attchmnt) { mAttachment = attchmnt; }
 
-    void setSize(QSizeF size) { Q_ASSERT(mNoteText);  mNoteText->mSize = size; }
-    void setHtml(QString html) { Q_ASSERT(mNoteText); mNoteText->setHtml(html); }
+    void setSize(QSizeF size);
+    void setHtml(QString html);
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *e);
@@ -43,17 +44,22 @@ public slots:
     
 private:
     bool mSizeHandle;
-    QPointF mDragStart;
 
     QDateTime mLastModified;
     QDateTime mAdded;
 
     QString mAttachment;
 
-    QPointF mDiff;
+    QPointF mMargins;
+    QRectF mOldBoundingRect;
 
-    NoteText *mNoteText;
+    QSizeF mSize;
+
     int mId;
+public:
+    NoteText *mNoteText;
+    NoteHandler *mNoteSizeHandler;
+
 };
 
 #endif // Note_H

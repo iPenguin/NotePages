@@ -75,7 +75,7 @@ Page::Page(QString pagePath, QWidget *parent) :
 
 void Page::createNote(QXmlStreamReader* stream)
 {
-    Note *n = new Note();
+    Note *n = new Note(0, mScene);
 
     //set all the note properties.
     n->setPos(stream->attributes().value("x").toString().toFloat(), stream->attributes().value("y").toString().toFloat());
@@ -140,8 +140,5 @@ void Page::createNote(QXmlStreamReader* stream)
         }
 
     }
-
-    mScene->addItem(n);
-    n->ensureVisible();
 
 }
