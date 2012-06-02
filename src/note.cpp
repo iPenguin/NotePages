@@ -11,26 +11,21 @@
 Note::Note(QGraphicsItem *parent, QGraphicsScene *scene) :
     QGraphicsItemGroup(parent, scene),
     mSizeHandle(false),
-    mDiff(QPointF(3,20))
+    mDiff(QPointF(3,20)),
+    mOldSize(QSizeF(0,0))
 {
 
     mNoteText = new NoteText(this);
     QRectF r = mNoteText->boundingRect();
 
-    //mNoteSizeHandler = new NoteHandler(this);
-
     addToGroup(mNoteText);
-    //addToGroup(mNoteSizeHandler);
-
-    //mNoteSizeHandler->setRect(100,50,10,10);
 
     mAdded = QDateTime::currentDateTime();
 
-    //setAcceptHoverEvents(true);
     setFlag(QGraphicsItem::ItemIsMovable);
-    setFlag(QGraphicsItem::ItemIsSelectable);
+    //setFlag(QGraphicsItem::ItemIsSelectable);
     setFiltersChildEvents(false);
-    //setTextInteractionFlags(Qt::LinksAccessibleByMouse);
+
 }
 
 int Note::type() const
@@ -41,13 +36,16 @@ int Note::type() const
 QRectF Note::boundingRect() const
 {
     int topMargin = -5;
+    int bottomMargin = 26;
     if(!mAttachment.isEmpty()) {
         topMargin = -24;
+        bottomMargin = 45;
+
     }
 
     QRectF rect = childrenBoundingRect().adjusted(-3,topMargin,0,0);
-    rect.setWidth(mNoteText->mSize.width() + mDiff.x());
-    rect.setHeight(mNoteText->mSize.height() + mDiff.y());
+    rect.setWidth(mNoteText->size().width() + 6);
+    rect.setHeight(mNoteText->size().height() + bottomMargin);
     return rect;
 }
 
@@ -59,7 +57,6 @@ void Note::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     painter->setPen(Qt::gray);
     painter->setBrush(QBrush(QColor(225,225,225, 128)));
     painter->drawRoundedRect(br.toRect(), 5, 5);
-    painter->drawText(0,0, QString::number(br.width()));
 
     //draw resize handle.
     painter->drawLine(QPointF(br.right(), br.bottom() - 15), QPointF(br.right() - 15, br.bottom()));
@@ -81,7 +78,8 @@ void Note::mousePressEvent(QGraphicsSceneMouseEvent *e)
     if(e->scenePos().x() >= (pt.x() - 25) &&
             e->scenePos().y() >= (pt.y() - 25)) {
         mSizeHandle = true;
-        mOldBoundingRect = rect;
+        mOldSize = mNoteText->size();
+        qDebug() << mOldSize;
     }
     qDebug() << "mpe" << boundingRect();
     QGraphicsItemGroup::mousePressEvent(e);
@@ -92,8 +90,8 @@ void Note::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
     if(mSizeHandle) {
         prepareGeometryChange();
         mDiff = (e->scenePos() - e->buttonDownScenePos(Qt::LeftButton));
-
-        mNoteText->setTextWidth(boundingRect().width() - 6);
+        QSizeF newSize = QSizeF(mOldSize.width() + mDiff.x(), mOldSize.height() + mDiff.y());
+        mNoteText->setSize(newSize);
 
         update();
         return;
@@ -105,7 +103,7 @@ void Note::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
 void Note::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
 {
     if(mSizeHandle) {
-        mNoteText->mSize = QSizeF(mNoteText->mSize.width() + mDiff.x(),mNoteText->mSize.height() + mDiff.y());
+        //mNoteText->setSize(QSizeF(mOldSize.width() + mDiff.x(), mOldSize.height() + mDiff.y()));
         mDiff = QPointF(0,0);
         mSizeHandle = false;
         update();
@@ -126,6 +124,7 @@ void Note::setAddedDate(QDateTime dt)
 void Note::setSize(QSizeF size)
 {
     Q_ASSERT(mNoteText);
-    mNoteText->mSize = size;
-    mNoteText->setTextWidth(size.width() - 10);
+    qDebug() << "setsize " << size;
+    mNoteText->setSize(size);
+    update();
 }

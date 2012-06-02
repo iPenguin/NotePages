@@ -13,7 +13,8 @@ public:
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
 
-    QSizeF mSize;
+    void setSize(QSizeF size);
+    QSizeF size() { return mSize; }
 
 signals:
     
@@ -24,7 +25,9 @@ protected:
     void focusOutEvent(QFocusEvent *e);
 
 private:
+    QGraphicsItem *mParent;
 
+    QSizeF mSize;
 };
 
 #endif // NOTE_H

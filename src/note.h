@@ -50,7 +50,7 @@ private:
     QString mAttachment;
 
     QPointF mDiff;
-    QRectF mOldBoundingRect;
+    QSizeF mOldSize;
 
     int mId;
 public:
