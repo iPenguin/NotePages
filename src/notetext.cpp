@@ -14,6 +14,7 @@ NoteText::NoteText(QGraphicsItem *parent, QGraphicsScene *scene) :
     mParent(parent),
     mSize(QSizeF(10,10))
 {
+    setFlag(QGraphicsItem::ItemIsFocusable);
 
 }
 
@@ -37,7 +38,7 @@ void NoteText::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
 
 void NoteText::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *e)
 {
-
+    qDebug() << "notetext mdce";
     if (textInteractionFlags() == Qt::NoTextInteraction)
         setTextInteractionFlags(Qt::TextEditorInteraction);
     QGraphicsTextItem::mouseDoubleClickEvent(e);
@@ -55,7 +56,9 @@ void NoteText::setSize(QSizeF size)
 {
     if(size.width() < 5)
         size.setWidth(5);
-    if(size.height() < 5)
-        size.setHeight(5);
+    setTextWidth(size.width());
+    if(size.height() < document()->size().height())
+        size.setHeight(document()->size().height());
+
     mSize = size;
 }

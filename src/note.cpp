@@ -23,8 +23,6 @@ Note::Note(QGraphicsItem *parent, QGraphicsScene *scene) :
     mAdded = QDateTime::currentDateTime();
 
     setFlag(QGraphicsItem::ItemIsMovable);
-    //setFlag(QGraphicsItem::ItemIsSelectable);
-    setFiltersChildEvents(false);
 
 }
 
@@ -72,6 +70,8 @@ void Note::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
 
 void Note::mousePressEvent(QGraphicsSceneMouseEvent *e)
 {
+    QGraphicsItemGroup::mousePressEvent(e);
+
     QRectF rect = boundingRect();
     QPointF pt = mapToScene(rect.bottomRight());
 
@@ -79,10 +79,10 @@ void Note::mousePressEvent(QGraphicsSceneMouseEvent *e)
             e->scenePos().y() >= (pt.y() - 25)) {
         mSizeHandle = true;
         mOldSize = mNoteText->size();
-        qDebug() << mOldSize;
+
     }
-    qDebug() << "mpe" << boundingRect();
-    QGraphicsItemGroup::mousePressEvent(e);
+
+
 }
 
 void Note::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
@@ -124,7 +124,7 @@ void Note::setAddedDate(QDateTime dt)
 void Note::setSize(QSizeF size)
 {
     Q_ASSERT(mNoteText);
-    qDebug() << "setsize " << size;
+
     mNoteText->setSize(size);
     update();
 }
