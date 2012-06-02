@@ -5,7 +5,6 @@
 #include <QDateTime>
 
 #include "notetext.h"
-#include "notehandler.h"
 
 class Note : public QGraphicsItemGroup
 {
@@ -56,7 +55,6 @@ private:
     int mId;
 public:
     NoteText *mNoteText;
-    NoteHandler *mNoteSizeHandler;
 
 };
 
