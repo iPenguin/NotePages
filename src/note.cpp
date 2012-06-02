@@ -48,7 +48,6 @@ QRectF Note::boundingRect() const
     QRectF rect = childrenBoundingRect().adjusted(-3,topMargin,0,0);
     rect.setWidth(mNoteText->mSize.width() + mDiff.x());
     rect.setHeight(mNoteText->mSize.height() + mDiff.y());
-    qDebug() << "br diff" << mDiff << rect;
     return rect;
 }
 
@@ -92,15 +91,9 @@ void Note::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
 {
     if(mSizeHandle) {
         prepareGeometryChange();
-        mDiff = (e->scenePos() - e->buttonDownScenePos(Qt::LeftButton));// - boundingRect().bottomRight();
-        qDebug() << "mme" << mDiff << e->scenePos() << e->buttonDownScenePos(Qt::LeftButton) << boundingRect();
+        mDiff = (e->scenePos() - e->buttonDownScenePos(Qt::LeftButton));
 
-        if(mDiff.x() < 0)
-            mDiff.setX(0);
-        if(mDiff.y() < 0)
-            mDiff.setY(0);
-
-        mNoteText->setTextWidth(boundingRect().width());
+        mNoteText->setTextWidth(boundingRect().width() - 6);
 
         update();
         return;
@@ -111,9 +104,12 @@ void Note::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
 
 void Note::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
 {
-    mSizeHandle = false;
-    qDebug() << "mre br" << boundingRect();
-    update();
+    if(mSizeHandle) {
+        mNoteText->mSize = QSizeF(mNoteText->mSize.width() + mDiff.x(),mNoteText->mSize.height() + mDiff.y());
+        mDiff = QPointF(0,0);
+        mSizeHandle = false;
+        update();
+    }
     QGraphicsItemGroup::mouseReleaseEvent(e);
 }
 
@@ -131,4 +127,5 @@ void Note::setSize(QSizeF size)
 {
     Q_ASSERT(mNoteText);
     mNoteText->mSize = size;
+    mNoteText->setTextWidth(size.width() - 10);
 }
