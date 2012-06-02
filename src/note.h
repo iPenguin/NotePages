@@ -31,7 +31,7 @@ public:
     void setAttachment(QString attchmnt) { mAttachment = attchmnt; }
 
     void setSize(QSizeF size);
-    void setHtml(QString html);
+    void setHtml(QString html) { Q_ASSERT(mNoteText); mNoteText->setHtml(html); }
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *e);
@@ -50,10 +50,8 @@ private:
 
     QString mAttachment;
 
-    QPointF mMargins;
+    QPointF mDiff;
     QRectF mOldBoundingRect;
-
-    QSizeF mSize;
 
     int mId;
 public:
