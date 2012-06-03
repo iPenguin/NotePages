@@ -5,6 +5,7 @@
 #include <QDateTime>
 
 #include "notetext.h"
+#include "noteattachment.h"
 
 class Note : public QGraphicsItemGroup
 {
@@ -27,7 +28,7 @@ public:
     void setId(int id) { mId = id; }
 
     QString attachment() { return mAttachment; }
-    void setAttachment(QString attchmnt) { mAttachment = attchmnt; }
+    void setAttachment(QString attchmnt);
 
     void setSize(QSizeF size);
     void setHtml(QString html) { Q_ASSERT(mNoteText); mNoteText->setHtml(html); }
@@ -53,8 +54,9 @@ private:
     QSizeF mOldSize;
 
     int mId;
-public:
+
     NoteText *mNoteText;
+    NoteAttachment *mNoteAttachment;
 
 };
 

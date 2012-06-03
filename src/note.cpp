@@ -6,6 +6,7 @@
 #include <QGraphicsScene>
 #include <QDebug>
 
+#include <QTextDocument>
 #include <math.h>
 
 Note::Note(QGraphicsItem *parent, QGraphicsScene *scene) :
@@ -24,6 +25,9 @@ Note::Note(QGraphicsItem *parent, QGraphicsScene *scene) :
 
     setFlag(QGraphicsItem::ItemIsMovable);
 
+    mNoteAttachment = new NoteAttachment(this, scene);
+    mNoteAttachment->setPos(0, -26);
+
 }
 
 int Note::type() const
@@ -36,7 +40,7 @@ QRectF Note::boundingRect() const
     int topMargin = -5;
     int bottomMargin = 26;
     if(!mAttachment.isEmpty()) {
-        topMargin = -24;
+        topMargin = -3;
         bottomMargin = 45;
 
     }
@@ -60,12 +64,6 @@ void Note::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     painter->drawLine(QPointF(br.right(), br.bottom() - 15), QPointF(br.right() - 15, br.bottom()));
     painter->drawLine(QPointF(br.right() -3, br.bottom() - 7), QPointF(br.right() - 7, br.bottom() - 3));
 
-    if(!mAttachment.isEmpty()) {
-        painter->setPen(QColor(50,50,50));
-        painter->drawText(20,-8, mAttachment);
-        painter->drawPixmap(0,-20,16,16, QPixmap(":/images/attachment.svg"));
-    }
-
 }
 
 void Note::mousePressEvent(QGraphicsSceneMouseEvent *e)
@@ -79,10 +77,7 @@ void Note::mousePressEvent(QGraphicsSceneMouseEvent *e)
             e->scenePos().y() >= (pt.y() - 25)) {
         mSizeHandle = true;
         mOldSize = mNoteText->size();
-
     }
-
-
 }
 
 void Note::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
@@ -90,7 +85,10 @@ void Note::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
     if(mSizeHandle) {
         prepareGeometryChange();
         mDiff = (e->scenePos() - e->buttonDownScenePos(Qt::LeftButton));
+
         QSizeF newSize = QSizeF(mOldSize.width() + mDiff.x(), mOldSize.height() + mDiff.y());
+        if(mNoteAttachment->document()->size().width() > newSize.width())
+            newSize.setWidth(mNoteAttachment->document()->size().width());
         mNoteText->setSize(newSize);
 
         update();
@@ -127,4 +125,14 @@ void Note::setSize(QSizeF size)
 
     mNoteText->setSize(size);
     update();
+}
+
+void Note::setAttachment(QString attchmnt)
+{
+
+    mAttachment = attchmnt;
+
+    if(!mAttachment.isEmpty()) {
+        mNoteAttachment->setHtml("<a href=\"file://" + mAttachment +"\"><img src=\"../images/attachment.svg\" height=16 width=16 />" + mAttachment + "</a>");
+    }
 }
