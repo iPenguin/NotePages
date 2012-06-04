@@ -58,7 +58,6 @@ private:
     QString m_wikiFile;
     QString m_name;
     QString mPath;
-    QString mLastDirectory;
 };
 
 #endif // MAINWINDOW_H

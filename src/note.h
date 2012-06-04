@@ -6,6 +6,7 @@
 
 #include "notetext.h"
 #include "noteattachment.h"
+#include "noteoptions.h"
 
 class Note : public QGraphicsItemGroup
 {
@@ -16,7 +17,8 @@ public:
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
 
-    int type() const;
+    enum { Type = UserType + 1 };
+    int type () const { return Note::Type; }
 
     QDateTime lastModified() { return mLastModified; }
     QDateTime addedDate() { return mAdded; }
@@ -33,6 +35,8 @@ public:
     void setSize(QSizeF size);
     void setHtml(QString html) { Q_ASSERT(mNoteText); mNoteText->setHtml(html); }
 
+    QSizeF size() { Q_ASSERT(mNoteText); return mNoteText->size(); }
+
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *e);
     void mouseMoveEvent(QGraphicsSceneMouseEvent *e);
@@ -42,6 +46,9 @@ signals:
     
 public slots:
     
+private slots:
+    void showNoteMenu();
+
 private:
     bool mSizeHandle;
 
@@ -57,6 +64,7 @@ private:
 
     NoteText *mNoteText;
     NoteAttachment *mNoteAttachment;
+    NoteOptions* mNoteOptions;
 
 };
 

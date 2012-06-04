@@ -14,6 +14,7 @@ NoteText::NoteText(QGraphicsItem *parent, QGraphicsScene *scene) :
     mParent(parent),
     mSize(QSizeF(10,10))
 {
+    setFlag(QGraphicsItem::ItemIsSelectable);
     setFlag(QGraphicsItem::ItemIsFocusable);
 
 }

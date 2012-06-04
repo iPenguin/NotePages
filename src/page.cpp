@@ -21,6 +21,10 @@ Page::Page(QString pagePath, QWidget *parent) :
     mScene = new PageScene(this);
     mView->setScene(mScene);
 
+
+    mUndoStack = new QUndoStack(this);
+
+
     mPagePath = pagePath;
     QString xmlIndex = pagePath + "/page.xml";
 
@@ -56,10 +60,7 @@ Page::Page(QString pagePath, QWidget *parent) :
         if (stream.isStartElement()) {
             QString name = stream.name().toString();
 
-            if(name == "title") {
-                //m_name = e.text();
-                //TODO: set titlebar: dWikiName - PageName
-            } else if (name == "properties") {
+            if (name == "properties") {
                 qDebug() << "TODO: properties - create parser function to get properties.";
 
             } else if (name == "note") {
@@ -140,5 +141,91 @@ void Page::createNote(QXmlStreamReader* stream)
         }
 
     }
+
+}
+
+void Page::save()
+{
+
+    QString xmlIndex = mPagePath + "/page.xml";
+    qDebug() << xmlIndex;
+    if(!QFileInfo(xmlIndex).exists()) {
+        qDebug() << "TODO: Create" << xmlIndex;
+        //TODO: create pagePath and some basic data.
+    }
+
+    QFile file(xmlIndex);
+
+    if(!file.open(QIODevice::WriteOnly)) {
+        //TODO: some nice dialog to warn the user.
+        qWarning() << "Couldn't open file for reading:" << xmlIndex;
+        return;
+    }
+
+    QXmlStreamWriter stream(&file);
+    stream.setAutoFormatting(true);
+    stream.writeStartDocument();
+
+    stream.writeStartElement("dwiki_page");
+
+        stream.writeStartElement("properties");
+        stream.writeAttribute("bgColor", "#ff00ff");
+        stream.writeAttribute("bgImage", "");
+        stream.writeEndElement(); //properties
+
+        foreach(QGraphicsItem *i, mScene->items()) {
+            if(i->type() != Note::Type) {
+                qDebug() << "Unknown QGraphicsItem::Type" << i->type();
+                continue;
+            }
+
+            Note *n = qgraphicsitem_cast<Note*>(i);
+            saveNote(n, &stream);
+
+        }
+
+    stream.writeEndElement(); //dwiki_page
+    stream.writeEndDocument();
+    file.close();
+
+}
+
+void Page::saveNote(Note *n, QXmlStreamWriter *stream)
+{
+
+    stream->writeStartElement("note");
+    stream->writeAttribute("id", QString::number(n->id()));
+    stream->writeAttribute("x", QString::number(n->pos().x()));
+    stream->writeAttribute("y", QString::number(n->pos().y()));
+    stream->writeAttribute("z", QString::number(n->zValue()));
+    stream->writeAttribute("width", QString::number(n->size().width()));
+    stream->writeAttribute("height", QString::number(n->size().height()));
+    stream->writeAttribute("lastModified", n->lastModified().toString("yyyy-MM-dd hh:mm:ss"));
+    stream->writeAttribute("added", n->addedDate().toString("yyyy-MM-dd hh:mm:ss"));
+
+    qDebug() << "TODO: fill in flags";
+    stream->writeStartElement("flags");
+    //stream->writeAttribute("value", n->flags());
+    stream->writeEndElement(); //flags
+
+    qDebug() << "TODO: add note icons";
+    stream->writeStartElement("icon");
+    stream->writeAttribute("file", "");
+    stream->writeEndElement(); //icon
+
+    qDebug() << "TODO: connect string for pointers";
+    stream->writeStartElement("connect");
+    stream->writeAttribute("id", "");
+    stream->writeEndElement(); //connect
+
+    stream->writeStartElement("attachment");
+    stream->writeAttribute("file", n->attachment());
+    stream->writeEndElement(); //attachment
+
+    stream->writeStartElement("text");
+    stream->writeAttribute("file", "note" + QString::number(n->id()) + ".html");
+    stream->writeEndElement(); //text
+
+    stream->writeEndElement(); //note
 
 }

@@ -14,12 +14,16 @@ signals:
 public slots:
     
 
+private slots:
+    void showNoteOptions();
+
 protected:
     void drawBackground(QPainter *painter, const QRectF &rect);
 
     void mousePressEvent(QGraphicsSceneMouseEvent *e);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *e);
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *e);
+
 };
 
 #endif // PAGESCENE_H

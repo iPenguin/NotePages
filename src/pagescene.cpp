@@ -6,6 +6,10 @@
 #include <QAbstractTextDocumentLayout>
 #include <QPainter>
 
+#include <QMenu>
+#include <QAction>
+#include "noteoptions.h"
+
 #include <QDebug>
 
 PageScene::PageScene(QObject *parent) :
@@ -13,6 +17,7 @@ PageScene::PageScene(QObject *parent) :
 {
     setSceneRect(-500, -500, 1500,1500);
 
+    connect(this, SIGNAL(selectionChanged()), SLOT(showNoteOptions()));
 }
 
 void PageScene::drawBackground(QPainter *painter, const QRectF &rect)
@@ -25,32 +30,41 @@ void PageScene::drawBackground(QPainter *painter, const QRectF &rect)
 void PageScene::mousePressEvent(QGraphicsSceneMouseEvent *e)
 {
     QGraphicsScene::mousePressEvent(e);
-
 }
 
 void PageScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
 {
-/*
-    QGraphicsItem *i = itemAt(e->pos().x(), e->pos().y());
-
-    if(i && i->type() == Note::Type) {
-        Note* n = qgraphicsitem_cast<Note *>(i);
-
-        n->setTextInteractionFlags(Qt::NoTextInteraction);
-    }
-*/
     QGraphicsScene::mouseReleaseEvent(e);
 }
 
 void PageScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *e)
 {
-/*
-    QGraphicsItem *i = itemAt(e->pos());
 
-    if(i && i->type() == Note::Type) {
-        Note *n = qgraphicsitem_cast<Note*>(i);
-        n->setTextInteractionFlags(Qt::TextEditable);
-    }
-*/
     QGraphicsScene::mouseDoubleClickEvent(e);
+}
+
+void PageScene::showNoteOptions()
+{
+    QList<QGraphicsItem *> items = selectedItems();
+
+    qDebug() << "show note Options" << items.count();
+    if(items.count() == 1) {
+        qDebug() << "single item type" << items.first()->type() << NoteOptions::Type;
+        if(items.first()->type() == NoteOptions::Type) {
+            QMenu menu;
+            QAction* copyAction = new QAction(tr("Copy"), 0);
+            QAction* cutAction = new QAction(tr("Cut"), 0);
+            QAction* pasteAction = new QAction(tr("Paste"), 0);
+
+            //connect(copyAction, SIGNAL(triggered()), SLOT(copy()));
+            //connect(cutAction, SIGNAL(triggered()), SLOT(cut()));
+            //connect(pasteAction, SIGNAL(triggered()), SLOT(paste()));
+
+            menu.addAction(copyAction);
+            menu.addAction(cutAction);
+            menu.addAction(pasteAction);
+            menu.exec(items.first()->pos().toPoint());
+        }
+    }
+
 }

@@ -16,34 +16,29 @@ Note::Note(QGraphicsItem *parent, QGraphicsScene *scene) :
     mOldSize(QSizeF(0,0))
 {
 
-    mNoteText = new NoteText(this);
+    mNoteText = new NoteText(this, scene);
     QRectF r = mNoteText->boundingRect();
-
-    addToGroup(mNoteText);
 
     mAdded = QDateTime::currentDateTime();
 
     setFlag(QGraphicsItem::ItemIsMovable);
+    setFlag(QGraphicsItem::ItemIsSelectable);
 
     mNoteAttachment = new NoteAttachment(this, scene);
-    mNoteAttachment->setPos(0, -26);
+    mNoteAttachment->setPos(18, -26);
+    mNoteAttachment->hide();
 
-}
+    mNoteText->setPos(0,0);
 
-int Note::type() const
-{
-    return QGraphicsItem::UserType + 10;
+    mNoteOptions = new NoteOptions(this, scene);
+    mNoteOptions->setPos(0,-26);
+
 }
 
 QRectF Note::boundingRect() const
 {
-    int topMargin = -5;
-    int bottomMargin = 26;
-    if(!mAttachment.isEmpty()) {
-        topMargin = -3;
-        bottomMargin = 45;
-
-    }
+    int topMargin = -3;
+    int bottomMargin = 45;
 
     QRectF rect = childrenBoundingRect().adjusted(-3,topMargin,0,0);
     rect.setWidth(mNoteText->size().width() + 6);
@@ -87,8 +82,8 @@ void Note::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
         mDiff = (e->scenePos() - e->buttonDownScenePos(Qt::LeftButton));
 
         QSizeF newSize = QSizeF(mOldSize.width() + mDiff.x(), mOldSize.height() + mDiff.y());
-        if(mNoteAttachment->document()->size().width() > newSize.width())
-            newSize.setWidth(mNoteAttachment->document()->size().width());
+        if(mNoteAttachment->document()->size().width() + mNoteOptions->rect().width() > newSize.width())
+            newSize.setWidth(mNoteAttachment->document()->size().width() + mNoteOptions->rect().width());
         mNoteText->setSize(newSize);
 
         update();
@@ -100,13 +95,15 @@ void Note::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
 
 void Note::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
 {
+
     if(mSizeHandle) {
-        //mNoteText->setSize(QSizeF(mOldSize.width() + mDiff.x(), mOldSize.height() + mDiff.y()));
         mDiff = QPointF(0,0);
         mSizeHandle = false;
         update();
     }
+
     QGraphicsItemGroup::mouseReleaseEvent(e);
+
 }
 
 void Note::setLastModified(QDateTime dt)
@@ -133,6 +130,7 @@ void Note::setAttachment(QString attchmnt)
     mAttachment = attchmnt;
 
     if(!mAttachment.isEmpty()) {
-        mNoteAttachment->setHtml("<a href=\"file://" + mAttachment +"\"><img src=\"../images/attachment.svg\" height=16 width=16 />" + mAttachment + "</a>");
+        mNoteAttachment->setHtml("<a href=\"file://" + mAttachment +"\"><img src=\"/Users/brian/projects/desktopWiki/images/attachment.svg\" height=16 width=16 />" + mAttachment + "</a>");
+        mNoteAttachment->show();
     }
 }

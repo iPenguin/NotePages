@@ -80,7 +80,7 @@ void MainWindow::paste()
 void MainWindow::load()
 {
     QFileDialog* fd = new QFileDialog(this, Qt::Sheet);
-      fd->setDirectory(mLastDirectory);
+      fd->setDirectory(mPath);
       fd->setObjectName("fileopendialog");
       fd->setViewMode(QFileDialog::List);
       fd->setFileMode( QFileDialog::Directory );
@@ -91,13 +91,15 @@ void MainWindow::load()
 
 void MainWindow::save()
 {
-    mLastDirectory = QFileDialog::getSaveFileName(this, tr("Save a Desktop Wiki"),
+    if(mPath.isEmpty()) {
+        mPath = QFileDialog::getSaveFileName(this, tr("Save a Desktop Wiki"),
                                                     "", tr("Desktop Wiki (*.dwiki)"));
 
-    if(mLastDirectory.isEmpty())
-        return;
+        if(mPath.isEmpty())
+            return;
+    }
 
-    saveFile(mLastDirectory);
+    saveFile(mPath);
 
 }
 
@@ -157,6 +159,18 @@ void MainWindow::loadFile(QString folder)
 
 void MainWindow::saveFile(QString fileName)
 {
+
+    QWidget *w = ui->tabWidget->currentWidget();
+
+    if(!w)
+        return;
+
+    Page *p = qobject_cast<Page*>(w);
+
+    if(!p)
+        return;
+
+    p->save();
 
 
 }
