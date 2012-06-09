@@ -7,6 +7,7 @@
 
 #include <QXmlStreamReader>
 #include <QUndoStack>
+#include <QMap>
 
 class Note;
 
@@ -24,7 +25,7 @@ public:
 
     void save();
 
-    void undoStack() { return mUndoStack; }
+    QUndoStack* undoStack() { return mUndoStack; }
 
 signals:
     
@@ -34,12 +35,15 @@ private:
     QGraphicsView  *mView;
     PageScene *mScene;
 
+    //requires a path seperator after it.
     QString mPagePath;
 
     void createNote(QXmlStreamReader *stream);
     void saveNote(Note *n, QXmlStreamWriter *stream);
 
     int mId;
+
+    QMap<QString, QMap<int, int> > mLines;
 
     QUndoStack *mUndoStack;
 };

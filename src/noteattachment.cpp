@@ -3,11 +3,16 @@
 #include <QPainter>
 #include <QDebug>
 
+#include <QDesktopServices>
+#include <QCursor>
+#include <QUrl>
+
 NoteAttachment::NoteAttachment(QGraphicsItem *parent, QGraphicsScene *scene)
     : QGraphicsTextItem(parent, scene)
 {
+    setAcceptHoverEvents(true);
     setFlag(QGraphicsItem::ItemIsSelectable);
-    setFlag(QGraphicsItem::ItemIsFocusable);
+    setCursor(QCursor(Qt::PointingHandCursor));
 }
 
 QRectF NoteAttachment::boundingRect() const
@@ -19,13 +24,12 @@ QRectF NoteAttachment::boundingRect() const
 void NoteAttachment::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
 
-    //painter->drawRect(boundingRect());
     QGraphicsTextItem::paint(painter, option, widget);
 }
 
 void NoteAttachment::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
 {
 
-    qDebug() << "Attachment Mouse Release Event";
+    QDesktopServices::openUrl(QUrl("file://"+mPath +"/" +mFile));
     QGraphicsTextItem::mouseReleaseEvent(e);
 }

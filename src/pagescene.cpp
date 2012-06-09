@@ -13,37 +13,40 @@
 #include <QDebug>
 
 PageScene::PageScene(QObject *parent) :
-    QGraphicsScene(parent)
+    QGraphicsScene(parent),
+    mCurMaxNoteId(1)
 {
     setSceneRect(-500, -500, 1500,1500);
 
-    connect(this, SIGNAL(selectionChanged()), SLOT(showNoteOptions()));
 }
 
 void PageScene::drawBackground(QPainter *painter, const QRectF &rect)
 {
-    painter->drawEllipse(QPoint(0,0),5, 5);
-
     QGraphicsScene::drawBackground(painter, rect);
 }
 
 void PageScene::mousePressEvent(QGraphicsSceneMouseEvent *e)
 {
+    QGraphicsItem *i = itemAt(e->scenePos());
+    if(!i) {
+        Note *n = createNewNote();
+        n->setPos(e->scenePos());
+
+    }
     QGraphicsScene::mousePressEvent(e);
 }
 
 void PageScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
 {
+    QGraphicsItem *i = itemAt(e->scenePos());
+    if(i && i->type() == NoteOptions::Type) {
+        showNoteOptions(e->screenPos());
+    }
+
     QGraphicsScene::mouseReleaseEvent(e);
 }
 
-void PageScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *e)
-{
-
-    QGraphicsScene::mouseDoubleClickEvent(e);
-}
-
-void PageScene::showNoteOptions()
+void PageScene::showNoteOptions(QPointF screenPos)
 {
     QList<QGraphicsItem *> items = selectedItems();
 
@@ -63,8 +66,28 @@ void PageScene::showNoteOptions()
             menu.addAction(copyAction);
             menu.addAction(cutAction);
             menu.addAction(pasteAction);
-            menu.exec(items.first()->pos().toPoint());
+            menu.exec(screenPos.toPoint());
         }
     }
 
+}
+
+Note* PageScene::createNewNote(int noteId)
+{
+    if(noteId >= mCurMaxNoteId)
+        mCurMaxNoteId = noteId + 1;
+
+    int newId;
+    Note *n = new Note(0, this);
+    if (noteId > -1) { //load an existing note.
+        newId = noteId;
+
+    } else { //create a new note.
+        newId = mCurMaxNoteId;
+        mCurMaxNoteId++;
+    }
+
+    n->setId(newId);
+
+    return n;
 }

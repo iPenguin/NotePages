@@ -24,7 +24,7 @@ signals:
 public slots:
 
 protected:
-    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *e);
+    void mousePressEvent(QGraphicsSceneMouseEvent *e);
     void focusOutEvent(QFocusEvent *e);
 
 private:

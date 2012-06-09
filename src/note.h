@@ -8,7 +8,7 @@
 #include "noteattachment.h"
 #include "noteoptions.h"
 
-class Note : public QGraphicsItemGroup
+class Note : public QGraphicsItem
 {
 
 public:
@@ -33,9 +33,17 @@ public:
     void setAttachment(QString attchmnt);
 
     void setSize(QSizeF size);
+
     void setHtml(QString html) { Q_ASSERT(mNoteText); mNoteText->setHtml(html); }
+    QString html() const {  Q_ASSERT(mNoteText); return mNoteText->toHtml(); }
 
     QSizeF size() { Q_ASSERT(mNoteText); return mNoteText->size(); }
+
+    void setImage(QString img);
+    QString image() { return mImage; }
+
+    QString path();
+    void setPath(QString p) { mPath = p; }
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *e);
@@ -56,6 +64,7 @@ private:
     QDateTime mAdded;
 
     QString mAttachment;
+    QString mImage;
 
     QPointF mDiff;
     QSizeF mOldSize;
@@ -65,7 +74,9 @@ private:
     NoteText *mNoteText;
     NoteAttachment *mNoteAttachment;
     NoteOptions* mNoteOptions;
+    QGraphicsPixmapItem *mNoteImage;
 
+    QString mPath;
 };
 
 #endif // Note_H

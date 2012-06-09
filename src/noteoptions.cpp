@@ -1,6 +1,8 @@
 #include "noteoptions.h"
 #include <QPainter>
 
+#include <QCursor>
+
 NoteOptions::NoteOptions(QGraphicsItem *parent, QGraphicsScene *scene)
     : QGraphicsRectItem(parent, scene)
 {
@@ -8,6 +10,8 @@ NoteOptions::NoteOptions(QGraphicsItem *parent, QGraphicsScene *scene)
     setFlag(QGraphicsItem::ItemIsSelectable);
     setFlag(QGraphicsItem::ItemIsFocusable);
     setZValue(1000);
+
+    setCursor(QCursor(Qt::ArrowCursor));
 }
 
 void NoteOptions::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)

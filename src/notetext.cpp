@@ -12,11 +12,11 @@
 NoteText::NoteText(QGraphicsItem *parent, QGraphicsScene *scene) :
     QGraphicsTextItem(parent, scene),
     mParent(parent),
-    mSize(QSizeF(10,10))
+    mSize(QSizeF(50,100))
 {
     setFlag(QGraphicsItem::ItemIsSelectable);
-    setFlag(QGraphicsItem::ItemIsFocusable);
-
+    setTextInteractionFlags(Qt::TextEditorInteraction);
+    setCursor(QCursor(Qt::IBeamCursor));
 }
 
 QRectF NoteText::boundingRect() const
@@ -37,17 +37,17 @@ void NoteText::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
     QGraphicsTextItem::paint(painter, option, widget);
 }
 
-void NoteText::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *e)
+void NoteText::mousePressEvent(QGraphicsSceneMouseEvent *e)
 {
-    qDebug() << "notetext mdce";
+
     if (textInteractionFlags() == Qt::NoTextInteraction)
         setTextInteractionFlags(Qt::TextEditorInteraction);
-    QGraphicsTextItem::mouseDoubleClickEvent(e);
+
+    QGraphicsTextItem::mousePressEvent(e);
 }
 
 void NoteText::focusOutEvent(QFocusEvent *e)
 {
-
     setTextInteractionFlags(Qt::NoTextInteraction);
 
     QGraphicsTextItem::focusOutEvent(e);

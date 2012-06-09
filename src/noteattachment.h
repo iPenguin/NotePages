@@ -14,8 +14,12 @@ public:
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
 
+    QString mPath;
+    QString mFile;
+
 protected:
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *e);
+
 };
 
 #endif // NOTEATTACHMENT_H

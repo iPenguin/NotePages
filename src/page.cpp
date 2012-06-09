@@ -76,14 +76,21 @@ Page::Page(QString pagePath, QWidget *parent) :
 
 void Page::createNote(QXmlStreamReader* stream)
 {
-    Note *n = new Note(0, mScene);
-
     //set all the note properties.
-    n->setPos(stream->attributes().value("x").toString().toFloat(), stream->attributes().value("y").toString().toFloat());
-    n->setSize(QSizeF(stream->attributes().value("width").toString().toFloat(), stream->attributes().value("height").toString().toFloat()));
-    n->setZValue(stream->attributes().value("z").toString().toInt());
+    qreal x = stream->attributes().value("x").toString().toFloat();
+    qreal y = stream->attributes().value("y").toString().toFloat();
 
-    n->setId(stream->attributes().value("id").toString().toInt());
+    qreal width = stream->attributes().value("width").toString().toFloat();
+    qreal height = stream->attributes().value("height").toString().toFloat();
+    qreal zValue = stream->attributes().value("z").toString().toInt();
+
+    int id = stream->attributes().value("id").toString().toInt();
+    Note *n = mScene->createNewNote(id);
+
+    n->setPath(mPagePath);
+    n->setPos(x, y);
+    n->setSize(QSizeF(width, height));
+    n->setZValue(zValue);
 
     QDateTime lastMod = QDateTime::fromString(stream->attributes().value("lastModified").toString(), "");
     QDateTime added = QDateTime::fromString(stream->attributes().value("lastModified").toString(), "");
@@ -110,11 +117,12 @@ void Page::createNote(QXmlStreamReader* stream)
             int connectedNote = stream->attributes().value("id").toString().toInt();
             //TODO:  make this a qlist that is used to id connections to draw in the painting routines. ?
             qDebug() << "TODO: connect this note to note" << connectedNote;
+
             stream->skipCurrentElement();
 
         } else if (tag == "image") {
             QString imageFile = stream->attributes().value("file").toString();
-            qDebug() << "TODO: load image content" << imageFile;
+            n->setImage(imageFile);
             stream->skipCurrentElement();
 
         } else if (tag == "attachment") {
@@ -222,10 +230,27 @@ void Page::saveNote(Note *n, QXmlStreamWriter *stream)
     stream->writeAttribute("file", n->attachment());
     stream->writeEndElement(); //attachment
 
+    stream->writeStartElement("image");
+    stream->writeAttribute("file", n->image());
+    stream->writeEndElement(); //image
+
+    QString noteFile = "note" + QString::number(n->id()) + ".html";
     stream->writeStartElement("text");
-    stream->writeAttribute("file", "note" + QString::number(n->id()) + ".html");
+    stream->writeAttribute("file", noteFile);
     stream->writeEndElement(); //text
 
     stream->writeEndElement(); //note
+
+    if(!n->html().isEmpty()) {
+        QFile f(mPagePath + "/" + noteFile);
+
+        if(!f.open(QFile::WriteOnly)) {
+            qDebug() << "error opeing file for writing: " << f.fileName();
+        }
+
+        QTextStream out(&f);
+        out << n->html();
+        f.close();
+    }
 
 }
