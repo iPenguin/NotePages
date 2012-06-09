@@ -12,7 +12,7 @@
 NoteText::NoteText(QGraphicsItem *parent, QGraphicsScene *scene) :
     QGraphicsTextItem(parent, scene),
     mParent(parent),
-    mSize(QSizeF(50,100))
+    mSize(QSizeF(100,50))
 {
     setFlag(QGraphicsItem::ItemIsSelectable);
     setTextInteractionFlags(Qt::TextEditorInteraction);

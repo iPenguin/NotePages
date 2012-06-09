@@ -42,7 +42,6 @@ Note::Note(QGraphicsItem *parent, QGraphicsScene *scene) :
     mNoteImage = new QGraphicsPixmapItem(this, scene);
     mNoteImage->setPos(0,0);
     mNoteImage->hide();
-    mNoteText->setSize(QSizeF(100,50));
 
     mNoteText->setTextInteractionFlags(Qt::TextEditorInteraction);
 }
@@ -53,6 +52,9 @@ QRectF Note::boundingRect() const
     int bottomMargin = 45;
 
     QRectF rect = childrenBoundingRect().adjusted(-3,topMargin,0,0);
+    qDebug() << rect << mId;
+    qDebug() << mNoteText->size();
+
     rect.setWidth(mNoteText->size().width() + 6);
     rect.setHeight(mNoteText->size().height() + bottomMargin);
     return rect;
@@ -60,6 +62,9 @@ QRectF Note::boundingRect() const
 
 void Note::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
+    Q_UNUSED(option);
+    Q_UNUSED(widget);
+
     //QGraphicsItemGroup::paint(painter, option, widget);
     QRectF br = boundingRect();
 

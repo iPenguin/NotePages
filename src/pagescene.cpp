@@ -74,11 +74,12 @@ void PageScene::showNoteOptions(QPointF screenPos)
 
 Note* PageScene::createNewNote(int noteId)
 {
+    qDebug() << mCurMaxNoteId;
     if(noteId >= mCurMaxNoteId)
         mCurMaxNoteId = noteId + 1;
 
     int newId;
-    Note *n = new Note(0, this);
+    Note *n = new Note();
     if (noteId > -1) { //load an existing note.
         newId = noteId;
 
@@ -88,6 +89,8 @@ Note* PageScene::createNewNote(int noteId)
     }
 
     n->setId(newId);
+    n->setSize(QSizeF(100,50));
+    addItem(n);
 
     return n;
 }
