@@ -52,9 +52,6 @@ QRectF Note::boundingRect() const
     int bottomMargin = 45;
 
     QRectF rect = childrenBoundingRect().adjusted(-3,topMargin,0,0);
-    qDebug() << rect << mId;
-    qDebug() << mNoteText->size();
-
     rect.setWidth(mNoteText->size().width() + 6);
     rect.setHeight(mNoteText->size().height() + bottomMargin);
     return rect;
@@ -89,7 +86,7 @@ void Note::mousePressEvent(QGraphicsSceneMouseEvent *e)
     if(e->scenePos().x() >= (pt.x() - 25) &&
             e->scenePos().y() >= (pt.y() - 25)) {
         mSizeHandle = true;
-        setCursor(QCursor(Qt::SizeFDiagCursor));
+
         mOldSize = mNoteText->size();
     }
 

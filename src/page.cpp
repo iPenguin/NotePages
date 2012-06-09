@@ -108,11 +108,6 @@ void Page::createNote(QXmlStreamReader* stream)
             qDebug() << "TODO: load flags" << flagBinary;
             stream->skipCurrentElement();
 
-        } else if (tag == "icon") {
-            QString iconName = stream->attributes().value("file").toString();
-            qDebug() << "TODO: load icon" << iconName;
-            stream->skipCurrentElement();
-
         } else if (tag == "connect") {
             int connectedNote = stream->attributes().value("id").toString().toInt();
             //TODO:  make this a qlist that is used to id connections to draw in the painting routines. ?
@@ -215,11 +210,6 @@ void Page::saveNote(Note *n, QXmlStreamWriter *stream)
     stream->writeStartElement("flags");
     //stream->writeAttribute("value", n->flags());
     stream->writeEndElement(); //flags
-
-    qDebug() << "TODO: add note icons";
-    stream->writeStartElement("icon");
-    stream->writeAttribute("file", "");
-    stream->writeEndElement(); //icon
 
     qDebug() << "TODO: connect string for pointers";
     stream->writeStartElement("connect");

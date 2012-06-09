@@ -179,10 +179,11 @@ QTreeWidgetItem* MainWindow::loadPage(QDomElement element)
 {
     QTreeWidgetItem *item = new QTreeWidgetItem();
 
-    qDebug() << element.attribute("id") << element.attribute("title") << element.attribute("icon");
     item->setData(0, Qt::UserRole, QVariant(element.attribute("id")));
     item->setData(0, Qt::DisplayRole, QVariant(element.attribute("title")));
-    item->setData(0, Qt::DecorationRole, QVariant(element.attribute("icon")));
+
+
+    item->setIcon(0, QIcon(element.attribute("icon")));
 
     QDomNode n = element.firstChild();
     while(!n.isNull()) {
@@ -212,7 +213,7 @@ void MainWindow::pageSelected(QTreeWidgetItem *page)
         p = new Page(pagePath);
 
         mPages.insert(pageNumber, p);
-        ui->tabWidget->addTab(p, "tab");
+        ui->tabWidget->addTab(p, page->icon(0), page->data(0, Qt::DisplayRole).toString());
     } else {
 
         p = mPages.value(pageNumber);
@@ -220,6 +221,5 @@ void MainWindow::pageSelected(QTreeWidgetItem *page)
 
     //display page.
     ui->tabWidget->setCurrentWidget(p);
-
 }
 
