@@ -1,3 +1,6 @@
+/********************************************************\
+| Copyright (c) 2012 Brian C. Milco <bcmilco@gmail.com>  |
+\********************************************************/
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
@@ -35,6 +38,8 @@ private slots:
     void loadFile(QString folder);
 
     void pageSelected(QTreeWidgetItem* page);
+//Help
+    void about();
 
 private:
     Ui::MainWindow *ui;

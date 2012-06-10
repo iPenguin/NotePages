@@ -1,5 +1,8 @@
-#ifndef Note_H
-#define Note_H
+/********************************************************\
+| Copyright (c) 2012 Brian C. Milco <bcmilco@gmail.com>  |
+\********************************************************/
+#ifndef NOTE_H
+#define NOTE_H
 
 #include <QGraphicsItemGroup>
 #include <QDateTime>
@@ -50,13 +53,6 @@ protected:
     void mouseMoveEvent(QGraphicsSceneMouseEvent *e);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *e);
 
-signals:
-    
-public slots:
-    
-private slots:
-    void showNoteMenu();
-
 private:
     bool mSizeHandle;
 
@@ -79,4 +75,4 @@ private:
     QString mPath;
 };
 
-#endif // Note_H
+#endif // NOTE_H

@@ -1,3 +1,6 @@
+/********************************************************\
+| Copyright (c) 2012 Brian C. Milco <bcmilco@gmail.com>  |
+\********************************************************/
 #include "note.h"
 
 #include <QPainter>
@@ -44,6 +47,7 @@ Note::Note(QGraphicsItem *parent, QGraphicsScene *scene) :
     mNoteImage->hide();
 
     mNoteText->setTextInteractionFlags(Qt::TextEditorInteraction);
+
 }
 
 QRectF Note::boundingRect() const
@@ -125,6 +129,7 @@ void Note::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
 
     setCursor(QCursor(Qt::OpenHandCursor));
 }
+
 
 void Note::setLastModified(QDateTime dt)
 {

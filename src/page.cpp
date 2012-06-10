@@ -1,3 +1,6 @@
+/********************************************************\
+| Copyright (c) 2012 Brian C. Milco <bcmilco@gmail.com>  |
+\********************************************************/
 #include "page.h"
 
 #include <QLayout>
@@ -138,13 +141,11 @@ void Page::createNote(QXmlStreamReader* stream)
             }
             stream->skipCurrentElement();
 
-
         } else {
             qDebug() << "Unknown note element, skipping" << stream->name().toString();
         }
 
     }
-
 }
 
 void Page::save()

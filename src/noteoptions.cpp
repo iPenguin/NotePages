@@ -1,3 +1,6 @@
+/********************************************************\
+| Copyright (c) 2012 Brian C. Milco <bcmilco@gmail.com>  |
+\********************************************************/
 #include "noteoptions.h"
 #include <QPainter>
 

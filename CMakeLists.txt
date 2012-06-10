@@ -23,15 +23,15 @@ include(FindHunSpell)
 include(GetGitRevisionDescription)
 git_describe(DW_VERSION --tags --dirty=-working)
 
-string(REGEX REPLACE "^([0-9]+)\\..*" "\\1" DW_VERSION_MAJOR "${DW_VERSION}")
-string(REGEX REPLACE "^[0-9]+\\.([0-9]+).*" "\\1" DW_VERSION_MINOR "${DW_VERSION}")
-string(REGEX REPLACE "^[0-9]+\\.[0-9]+\\.([0-9]+).*" "\\1" DW_VERSION_PATCH "${DW_VERSION}")
-string(REGEX REPLACE "^[0-9]+\\.[0-9]+\\.[0-9]+(.*)" "\\1" DW_VERSION_SHA1 "${DW_VERSION}")
+string(REGEX REPLACE "^v([0-9]+)\\..*" "\\1" DW_VERSION_MAJOR "${DW_VERSION}")
+string(REGEX REPLACE "^v[0-9]+\\.([0-9]+).*" "\\1" DW_VERSION_MINOR "${DW_VERSION}")
+string(REGEX REPLACE "^v[0-9]+\\.[0-9]+\\.([0-9]+).*" "\\1" DW_VERSION_PATCH "${DW_VERSION}")
+string(REGEX REPLACE "^v[0-9]+\\.[0-9]+\\.[0-9]+(.*)" "\\1" DW_VERSION_SHA1 "${DW_VERSION}")
 set(DW_VERSION_SHORT "${DW_VERSION_MAJOR}.${DW_VERSION_MINOR}.${DW_VERSION_PATCH}")
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules/version.cpp.in
                 ${CMAKE_CURRENT_BINARY_DIR}/version.cpp)
-set(crochet_version "${CMAKE_CURRENT_BINARY_DIR}/version.cpp")
+set(dw_version "${CMAKE_CURRENT_BINARY_DIR}/version.cpp")
 
 find_package(Qt4 REQUIRED)
 #find_package(Qt4 COMPONENTS QTCORE QTGUI)

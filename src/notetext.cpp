@@ -1,3 +1,6 @@
+/********************************************************\
+| Copyright (c) 2012 Brian C. Milco <bcmilco@gmail.com>  |
+\********************************************************/
 #include "notetext.h"
 
 #include <QPainter>
@@ -6,6 +9,8 @@
 #include <QTextDocument>
 #include <QGraphicsTextItem>
 #include <QStyleOptionGraphicsItem>
+
+#include <QFocusEvent>
 
 #include <QDebug>
 

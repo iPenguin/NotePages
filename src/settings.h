@@ -1,7 +1,6 @@
-/*************************************************\
-| Copyright (c) 2010 Stitch Works Software        |
-| Brian C. Milco <brian@stitchworkssoftware.com>  |
-\*************************************************/
+/********************************************************\
+| Copyright (c) 2012 Brian C. Milco <bcmilco@gmail.com>  |
+\********************************************************/
 #ifndef SETTINGS_H
 #define SETTINGS_H
 

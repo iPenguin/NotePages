@@ -1,3 +1,6 @@
+/********************************************************\
+| Copyright (c) 2012 Brian C. Milco <bcmilco@gmail.com>  |
+\********************************************************/
 #include "pagescene.h"
 
 #include "note.h"
@@ -17,6 +20,12 @@ PageScene::PageScene(QObject *parent) :
     mCurMaxNoteId(1)
 {
     setSceneRect(-500, -500, 1500,1500);
+
+}
+
+void PageScene::deleteNote()
+{
+    qDebug() << "delete note";
 
 }
 
@@ -50,26 +59,29 @@ void PageScene::showNoteOptions(QPointF screenPos)
 {
     QList<QGraphicsItem *> items = selectedItems();
 
-    qDebug() << "show note Options" << items.count();
     if(items.count() == 1) {
-        qDebug() << "single item type" << items.first()->type() << NoteOptions::Type;
         if(items.first()->type() == NoteOptions::Type) {
             QMenu menu;
-            QAction* copyAction = new QAction(tr("Copy"), 0);
-            QAction* cutAction = new QAction(tr("Cut"), 0);
-            QAction* pasteAction = new QAction(tr("Paste"), 0);
+            QAction *copyAction = new QAction(tr("Copy"), 0);
+            QAction *cutAction = new QAction(tr("Cut"), 0);
+            QAction *pasteAction = new QAction(tr("Paste"), 0);
 
+            QAction *delNote = new QAction(tr("Delete Note"), 0);
             //connect(copyAction, SIGNAL(triggered()), SLOT(copy()));
             //connect(cutAction, SIGNAL(triggered()), SLOT(cut()));
             //connect(pasteAction, SIGNAL(triggered()), SLOT(paste()));
 
+            connect(delNote, SIGNAL(triggered()), SLOT(deleteNote()));
+
             menu.addAction(copyAction);
             menu.addAction(cutAction);
             menu.addAction(pasteAction);
+            menu.addSeparator();
+            menu.addAction(delNote);
+
             menu.exec(screenPos.toPoint());
         }
     }
-
 }
 
 Note* PageScene::createNewNote(int noteId)

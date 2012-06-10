@@ -1,3 +1,6 @@
+/********************************************************\
+| Copyright (c) 2012 Brian C. Milco <bcmilco@gmail.com>  |
+\********************************************************/
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
@@ -5,6 +8,8 @@
 #include <QDomDocument>
 #include <QDomElement>
 #include <QTreeWidgetItem>
+#include <QMessageBox>
+#include "appinfo.h"
 
 #include "settings.h"
 
@@ -42,6 +47,9 @@ void MainWindow::setupMenubars()
     connect(ui->actionCut, SIGNAL(triggered()), SLOT(cut()));
     connect(ui->actionPaste, SIGNAL(triggered()), SLOT(paste()));
 
+
+//Help
+    connect(ui->actionAbout_DesktopWiki, SIGNAL(triggered()), SLOT(about()));
 
 //Tree
     connect(ui->pageTree, SIGNAL(itemClicked(QTreeWidgetItem*,int)), SLOT(pageSelected(QTreeWidgetItem*)));
@@ -223,3 +231,19 @@ void MainWindow::pageSelected(QTreeWidgetItem *page)
     ui->tabWidget->setCurrentWidget(p);
 }
 
+
+void MainWindow::about()
+{
+    QString aboutInfo = QString(tr("<h1>%1</h1>"
+                                       "<p>Version: %2 (built on %3)</p>"
+                                       "<p>Copyright (c) 2012 Brian Milco</p>"
+                                       "<p>This software is a note taking application with the"
+                                        "ability to do cross-references like an online wiki.</p>")
+                                    .arg(qApp->applicationName())
+                                    .arg(qApp->applicationVersion())
+                                    .arg(AppInfo::inst()->appBuildInfo)
+                                    );
+
+    QMessageBox::about(this, tr("About desktopWiki"), aboutInfo);
+
+}

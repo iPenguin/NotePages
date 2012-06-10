@@ -1,5 +1,8 @@
-#ifndef NOTE_H
-#define NOTE_H
+/********************************************************\
+| Copyright (c) 2012 Brian C. Milco <bcmilco@gmail.com>  |
+\********************************************************/
+#ifndef NOTETEXT_H
+#define NOTETEXT_H
 
 #include <QGraphicsTextItem>
 #include <QDateTime>
@@ -19,8 +22,6 @@ public:
     void setSize(QSizeF size);
     QSizeF size() { return mSize; }
 
-signals:
-    
 public slots:
 
 protected:
@@ -33,4 +34,4 @@ private:
     QSizeF mSize;
 };
 
-#endif // NOTE_H
+#endif // NOTETEXT_H

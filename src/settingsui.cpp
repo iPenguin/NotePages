@@ -1,7 +1,6 @@
-/*************************************************\
-| Copyright (c) 2010 Stitch Works Software        |
-| Brian C. Milco <brian@stitchworkssoftware.com>  |
-\*************************************************/
+/********************************************************\
+| Copyright (c) 2012 Brian C. Milco <bcmilco@gmail.com>  |
+\********************************************************/
 #include "settingsui.h"
 #include "ui_settings.h"
 

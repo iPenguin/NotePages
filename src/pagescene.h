@@ -1,3 +1,6 @@
+/********************************************************\
+| Copyright (c) 2012 Brian C. Milco <bcmilco@gmail.com>  |
+\********************************************************/
 #ifndef PAGESCENE_H
 #define PAGESCENE_H
 
@@ -15,7 +18,7 @@ public:
 signals:
     
 public slots:
-
+    void deleteNote();
 
 private slots:
     void showNoteOptions(QPointF screenPos);
