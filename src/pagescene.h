@@ -15,6 +15,9 @@ class PageScene : public QGraphicsScene
 public:
     explicit PageScene(QObject *parent = 0);
     
+    QString pagePath() { return mPagePath; }
+    void setPagePath(QString pp) { mPagePath = pp; }
+
 signals:
     
 public slots:
@@ -34,6 +37,9 @@ protected:
 private:
 
     int mCurMaxNoteId;
+
+    //requires a path seperator after it.
+    QString mPagePath;
 };
 
 #endif // PAGESCENE_H

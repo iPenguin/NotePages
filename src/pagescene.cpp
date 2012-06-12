@@ -40,6 +40,7 @@ void PageScene::mousePressEvent(QGraphicsSceneMouseEvent *e)
     if(!i) {
         Note *n = createNewNote();
         n->setPos(e->scenePos());
+        n->setPath(mPagePath);
 
     }
     QGraphicsScene::mousePressEvent(e);
@@ -86,7 +87,7 @@ void PageScene::showNoteOptions(QPointF screenPos)
 
 Note* PageScene::createNewNote(int noteId)
 {
-    qDebug() << mCurMaxNoteId;
+
     if(noteId >= mCurMaxNoteId)
         mCurMaxNoteId = noteId + 1;
 

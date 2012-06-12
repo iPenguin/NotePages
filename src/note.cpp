@@ -187,6 +187,7 @@ void Note::saveNote(QXmlStreamWriter *stream)
 
         QTextStream out(&f);
         out << html();
+        f.flush();
         f.close();
     }
 

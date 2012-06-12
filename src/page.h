@@ -23,9 +23,6 @@ public:
     int id() { return mId; }
     void setId(int id) { mId = id; }
 
-    QString pagePath() { return mPagePath; }
-    void setPagePath(QString pagePath) { mPagePath = pagePath; }
-
     void savePage();
 
     QUndoStack* undoStack() { return mUndoStack; }
@@ -36,9 +33,6 @@ private:
     Ui::Page *ui;
 
     PageScene *mScene;
-
-    //requires a path seperator after it.
-    QString mPagePath;
 
     int mId;
 

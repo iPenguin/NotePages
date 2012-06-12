@@ -15,18 +15,17 @@
 
 Page::Page(QString pagePath, QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::Page),
-    mPagePath(pagePath)
+    ui(new Ui::Page)
 {
     ui->setupUi(this);
 
     mScene = new PageScene(this);
+    mScene->setPagePath(pagePath);
+
     ui->graphicsView->setScene(mScene);
 
     //FIXME: move this code into a seperate function.
     mUndoStack = new QUndoStack(this);
-
-    mPagePath = pagePath;
 
     loadPage();
 }
@@ -38,20 +37,15 @@ Page::~Page()
 
 void Page::savePage()
 {
-
-    QString xmlIndex = mPagePath + "/page.xml";
+    QString pagePath = mScene->pagePath();
+    QString xmlIndex = pagePath + "/page.xml";
     if(!QFileInfo(xmlIndex).exists()) {
-        if(!QFileInfo(mPagePath).exists()) {
-            QString parentDir = QFileInfo(mPagePath).path();
-            QString dir = QFileInfo(mPagePath).baseName();
-            qDebug() << parentDir << dir;
+        if(!QFileInfo(pagePath).exists()) {
+            QString parentDir = QFileInfo(pagePath).path();
+            QString dir = QFileInfo(pagePath).baseName();
             QDir d(parentDir);
             d.mkdir(dir);
-
         }
-
-        qDebug() << "TODO: Create" << xmlIndex;
-        //TODO: create pagePath and some basic data.
     }
 
     QFile file(xmlIndex);
@@ -93,7 +87,7 @@ void Page::savePage()
 void Page::loadPage()
 {
 
-    QString xmlIndex = mPagePath + "/page.xml";
+    QString xmlIndex = mScene->pagePath() + "/page.xml";
 
     if(!QFileInfo(xmlIndex).exists()) {
         qDebug() << "TODO: Create" << xmlIndex;
@@ -131,7 +125,7 @@ void Page::loadPage()
 
             } else if (name == "note") {
                 Note *n = new Note();
-                n->loadNote(&stream, mPagePath);
+                n->loadNote(&stream, mScene->pagePath());
                 mScene->addItem(n);
 
             } else if (name == "group") {
