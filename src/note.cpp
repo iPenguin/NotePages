@@ -20,33 +20,28 @@ Note::Note(QGraphicsItem *parent, QGraphicsScene *scene) :
     mSizeHandle(false),
     mImage(""),
     mDiff(QPointF(3,20)),
-    mOldSize(QSizeF(0,0))
+    mOldSize(QSizeF(100,50))
 {
 
     mNoteText = new NoteText(this, scene);
-    QRectF r = mNoteText->boundingRect();
-
-    mAdded = QDateTime::currentDateTime();
+    mNoteText->setPos(0,0);
+    mNoteText->setTextInteractionFlags(Qt::TextEditorInteraction);
 
     setFlag(QGraphicsItem::ItemIsMovable);
+    setCursor(QCursor(Qt::OpenHandCursor));
+    mAdded = QDateTime::currentDateTime();
 
     mNoteAttachment = new NoteAttachment(this, scene);
     mNoteAttachment->setPos(18, -26);
     mNoteAttachment->hide();
 
-    mNoteText->setPos(0,0);
-
     mNoteOptions = new NoteOptions(this, scene);
     mNoteOptions->setPos(0,-26);
-
-    setCursor(QCursor(Qt::OpenHandCursor));
 
     //TODO: make the images display properly on the note.
     mNoteImage = new QGraphicsPixmapItem(this, scene);
     mNoteImage->setPos(0,0);
     mNoteImage->hide();
-
-    mNoteText->setTextInteractionFlags(Qt::TextEditorInteraction);
 
 }
 
@@ -58,6 +53,7 @@ QRectF Note::boundingRect() const
     QRectF rect = childrenBoundingRect().adjusted(-3,topMargin,0,0);
     rect.setWidth(mNoteText->size().width() + 6);
     rect.setHeight(mNoteText->size().height() + bottomMargin);
+
     return rect;
 }
 
@@ -77,6 +73,122 @@ void Note::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     //draw resize handle.
     painter->drawLine(QPointF(br.right(), br.bottom() - 15), QPointF(br.right() - 15, br.bottom()));
     painter->drawLine(QPointF(br.right() -3, br.bottom() - 7), QPointF(br.right() - 7, br.bottom() - 3));
+
+}
+
+void Note::loadNote(QXmlStreamReader* stream, QString pagePath)
+{
+    //set all the note properties.
+    qreal x = stream->attributes().value("x").toString().toFloat();
+    qreal y = stream->attributes().value("y").toString().toFloat();
+
+    qreal width = stream->attributes().value("width").toString().toFloat();
+    qreal height = stream->attributes().value("height").toString().toFloat();
+    qreal zValue = stream->attributes().value("z").toString().toInt();
+
+    int id = stream->attributes().value("id").toString().toInt();
+    setId(id);
+
+    setPath(pagePath);
+    setPos(x, y);
+    setSize(QSizeF(width, height));
+    setZValue(zValue);
+
+    QDateTime lastMod = QDateTime::fromString(stream->attributes().value("lastModified").toString(), "");
+    QDateTime added = QDateTime::fromString(stream->attributes().value("lastModified").toString(), "");
+    setLastModified(lastMod);
+    setAddedDate(added);
+
+
+    while(!(stream->isEndElement() && stream->name() == "note")) {
+
+        stream->readNextStartElement();
+        QString tag = stream->name().toString();
+
+        if (tag == "connect") {
+            int connectedNote = stream->attributes().value("id").toString().toInt();
+            //TODO:  make this a qlist that is used to id connections to draw in the painting routines. ?
+            if(connectedNote > 0) {
+                qDebug() << "TODO: connect this note to note" << connectedNote;
+
+            }
+            stream->skipCurrentElement();
+
+        } else if (tag == "image") {
+            QString imageFile = stream->attributes().value("file").toString();
+            setImage(imageFile);
+            stream->skipCurrentElement();
+
+        } else if (tag == "attachment") {
+            QString attachment = stream->attributes().value("file").toString();
+            setAttachment(attachment);
+            stream->skipCurrentElement();
+
+        } else if (tag == "text") {
+            QString textFile = stream->attributes().value("file").toString();
+            QFile f(pagePath + "/" + textFile);
+
+            if(!f.open(QIODevice::ReadOnly)) {
+                qDebug() << "Error opening note - " << f.fileName();
+
+            } else {
+                QString text = f.readAll();
+                setHtml(text);
+            }
+            stream->skipCurrentElement();
+
+        } else {
+            qDebug() << "Unknown note element, skipping" << stream->name().toString();
+        }
+
+    }
+}
+
+void Note::saveNote(QXmlStreamWriter *stream)
+{
+
+    stream->writeStartElement("note");
+    stream->writeAttribute("id", QString::number(id()));
+    stream->writeAttribute("x", QString::number(pos().x()));
+    stream->writeAttribute("y", QString::number(pos().y()));
+    stream->writeAttribute("z", QString::number(zValue()));
+    stream->writeAttribute("width", QString::number(size().width()));
+    stream->writeAttribute("height", QString::number(size().height()));
+    stream->writeAttribute("lastModified", lastModified().toString("yyyy-MM-dd hh:mm:ss"));
+    stream->writeAttribute("added", addedDate().toString("yyyy-MM-dd hh:mm:ss"));
+
+    qDebug() << "TODO: connect string for pointers";
+    //TODO: foreach connection create an xml fragment.
+    stream->writeStartElement("connect");
+    stream->writeAttribute("id", "");
+    stream->writeEndElement(); //connect
+
+    stream->writeStartElement("attachment");
+    stream->writeAttribute("file", attachment());
+    stream->writeEndElement(); //attachment
+
+    stream->writeStartElement("image");
+    stream->writeAttribute("file", image());
+    stream->writeEndElement(); //image
+
+    QString noteFile = "note" + QString::number(id()) + ".html";
+    stream->writeStartElement("text");
+    stream->writeAttribute("file", noteFile);
+    stream->writeEndElement(); //text
+
+    stream->writeEndElement(); //note
+
+    if(!html().isEmpty()) {
+        QFile f(mPath + "/" + noteFile);
+
+        if(!f.open(QFile::WriteOnly)) {
+            qDebug() << "error opeing file for writing: " << f.fileName();
+        }
+
+        QTextStream out(&f);
+        out << html();
+        f.close();
+    }
 
 }
 

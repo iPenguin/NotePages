@@ -4,8 +4,9 @@
 #ifndef NOTE_H
 #define NOTE_H
 
-#include <QGraphicsItemGroup>
+#include <QGraphicsItem>
 #include <QDateTime>
+#include <QXmlStreamReader>
 
 #include "notetext.h"
 #include "noteattachment.h"
@@ -47,6 +48,9 @@ public:
 
     QString path();
     void setPath(QString p) { mPath = p; }
+
+    void loadNote(QXmlStreamReader *stream, QString pagePath);
+    void saveNote(QXmlStreamWriter *stream);
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *e);

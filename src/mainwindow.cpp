@@ -178,7 +178,7 @@ void MainWindow::saveFile(QString fileName)
     if(!p)
         return;
 
-    p->save();
+    p->savePage();
 
 
 }
