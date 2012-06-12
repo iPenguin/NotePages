@@ -53,6 +53,9 @@ void MainWindow::setupMenubars()
 
 //Tree
     connect(ui->pageTree, SIGNAL(itemClicked(QTreeWidgetItem*,int)), SLOT(pageSelected(QTreeWidgetItem*)));
+
+//TabWidget
+    connect(ui->tabWidget, SIGNAL(tabCloseRequested(int)), SLOT(closeTab(int)));
 }
 
 void MainWindow::open()
@@ -99,6 +102,7 @@ void MainWindow::load()
 
 void MainWindow::save()
 {
+    //FIXME: use a QFileDialog as load() above.
     if(mPath.isEmpty()) {
         mPath = QFileDialog::getSaveFileName(this, tr("Save a Desktop Wiki"),
                                                     "", tr("Desktop Wiki (*.dwiki)"));
@@ -223,8 +227,10 @@ void MainWindow::pageSelected(QTreeWidgetItem *page)
         mPages.insert(pageNumber, p);
         ui->tabWidget->addTab(p, page->icon(0), page->data(0, Qt::DisplayRole).toString());
     } else {
-
         p = mPages.value(pageNumber);
+        if(ui->tabWidget->indexOf(p) < 0) {
+            ui->tabWidget->addTab(p, page->icon(0), page->data(0, Qt::DisplayRole).toString());
+        }
     }
 
     //display page.
@@ -245,5 +251,18 @@ void MainWindow::about()
                                     );
 
     QMessageBox::about(this, tr("About desktopWiki"), aboutInfo);
+
+}
+
+void MainWindow::closeTab(int tabNumber)
+{
+    QWidget *w = ui->tabWidget->widget(tabNumber);
+    ui->tabWidget->removeTab(tabNumber);
+    //TODO: test if the tab has been completely saved before even thinking of closing it.
+    //TODO: pass tab closure onto the undo stack.
+
+    //NOTE: if I decide to delete the Page then you have to remove the page from the mPages QMap.
+    //delete w;
+    //w = 0;
 
 }

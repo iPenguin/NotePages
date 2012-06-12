@@ -41,6 +41,9 @@ private slots:
 //Help
     void about();
 
+protected slots:
+    void closeTab(int tabNumber);
+
 private:
     Ui::MainWindow *ui;
 
