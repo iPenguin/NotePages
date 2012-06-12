@@ -27,6 +27,13 @@ void PageScene::deleteNote()
 {
     qDebug() << "delete note";
 
+    QList<QGraphicsItem*> items = selectedItems();
+    QGraphicsItem *i = items.first();
+    Note *n = qgraphicsitem_cast<Note*>(i->parentItem());
+    n->deleteNote();
+    delete n;
+    i = 0; n = 0;
+    items.removeFirst();
 }
 
 void PageScene::drawBackground(QPainter *painter, const QRectF &rect)

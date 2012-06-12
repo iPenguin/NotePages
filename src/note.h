@@ -52,6 +52,9 @@ public:
     void loadNote(QXmlStreamReader *stream, QString pagePath);
     void saveNote(QXmlStreamWriter *stream);
 
+    //perminantly delete the contents of the note.
+    void deleteNote();
+
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *e);
     void mouseMoveEvent(QGraphicsSceneMouseEvent *e);

@@ -9,6 +9,7 @@
 #include <QGraphicsScene>
 #include <QDebug>
 #include <QFileInfo>
+#include <QDir>
 
 #include <QTextDocument>
 #include <math.h>
@@ -76,6 +77,19 @@ void Note::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
 
 }
 
+void Note::deleteNote()
+{
+    QString noteFile = mPath + "/note" + QString::number(mId) + ".html";
+    qDebug() << noteFile;
+    if(QFileInfo(noteFile).exists()) {
+        qDebug() << mPath;
+        QDir d(mPath);
+        d.remove(noteFile);
+
+    }
+
+}
+
 void Note::loadNote(QXmlStreamReader* stream, QString pagePath)
 {
     //set all the note properties.
@@ -88,6 +102,7 @@ void Note::loadNote(QXmlStreamReader* stream, QString pagePath)
 
     int id = stream->attributes().value("id").toString().toInt();
     setId(id);
+    qDebug() << id;
 
     setPath(pagePath);
     setPos(x, y);

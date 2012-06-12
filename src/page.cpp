@@ -75,7 +75,6 @@ void Page::savePage()
 
             Note *n = qgraphicsitem_cast<Note*>(i);
             n->saveNote(&stream);
-
         }
 
     stream.writeEndElement(); //dwiki_page
