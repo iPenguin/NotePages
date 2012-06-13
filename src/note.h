@@ -68,6 +68,7 @@ private:
 
     QString mAttachment;
     QString mImage;
+    QPixmap mPixmap;
 
     QPointF mDiff;
     QSizeF mOldSize;

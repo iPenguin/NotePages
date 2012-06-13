@@ -24,6 +24,8 @@ public slots:
     void deleteNote();
     void addAttachment();
     void loadAttachment(QString fileName);
+    void addImage();
+    void loadImage(QString fileName);
 
 private slots:
     void showNoteOptions(QPointF screenPos);

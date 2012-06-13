@@ -123,9 +123,8 @@ void Page::loadPage()
                 qDebug() << "TODO: properties - create parser function to get properties.";
 
             } else if (name == "note") {
-                Note *n = new Note();
+                Note *n = new Note(0, mScene);
                 n->loadNote(&stream, mScene->pagePath());
-                mScene->addItem(n);
 
             } else if (name == "group") {
                 qDebug() << "TODO: for each child element load each note.";

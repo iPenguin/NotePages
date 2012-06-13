@@ -41,7 +41,7 @@ void PageScene::deleteNote()
 
 void PageScene::addAttachment()
 {
-    qDebug() << "Add Attachment";
+
     QList<QGraphicsItem*> items = selectedItems();
     QGraphicsItem *i = items.first();
     Note *n = qgraphicsitem_cast<Note*>(i->parentItem());
@@ -60,7 +60,7 @@ void PageScene::addAttachment()
 
 void PageScene::loadAttachment(QString fileName)
 {
-    qDebug() << "load attachment" << fileName;
+
     QList<QGraphicsItem*> items = selectedItems();
     QGraphicsItem *i = items.first();
     Note *n = qgraphicsitem_cast<Note*>(i->parentItem());
@@ -72,7 +72,7 @@ void PageScene::loadAttachment(QString fileName)
     QFile f(fileName);
 
     //If the destination file exists offer options.
-    if(QFileInfo(mPagePath + fInfo.baseName()).exists()) {
+    if(QFileInfo(mPagePath + fInfo.fileName()).exists()) {
         QMessageBox::information(0, tr("Destination file exists"), tr("The destination file exists"), 1);
         //TODO: more information, and figure out user response and react appropriately.
         return;
@@ -80,6 +80,50 @@ void PageScene::loadAttachment(QString fileName)
 
     f.copy(mPagePath + "/" + fInfo.fileName());
     n->setAttachment(fInfo.fileName());
+}
+
+void PageScene::addImage()
+{
+
+    QList<QGraphicsItem*> items = selectedItems();
+    QGraphicsItem *i = items.first();
+    Note *n = qgraphicsitem_cast<Note*>(i->parentItem());
+    if(n) {
+        //TODO: Add an attachment to the note.
+        //find file with dialog
+        QFileDialog* fd = new QFileDialog(0, Qt::Sheet);
+          fd->setDirectory(mPagePath);
+          fd->setObjectName("addimagedialog");
+          fd->setViewMode(QFileDialog::List);
+          //fd->setFileMode( QFileDialog::Directory );
+          fd->setAcceptMode(QFileDialog::AcceptOpen);
+          fd->open(this, SLOT(loadImage(QString)));
+    }
+}
+
+void PageScene::loadImage(QString fileName)
+{
+
+    QList<QGraphicsItem*> items = selectedItems();
+    QGraphicsItem *i = items.first();
+    Note *n = qgraphicsitem_cast<Note*>(i->parentItem());
+    //copy file into the directory
+    QFileInfo fInfo(fileName);
+    if(!fInfo.exists())
+        return;
+
+    QFile f(fileName);
+
+    //If the destination file exists offer options.
+    if(QFileInfo(mPagePath + fInfo.fileName()).exists()) {
+        QMessageBox::information(0, tr("Destination file exists"), tr("The destination file exists"), 1);
+        //TODO: more information, and figure out user response and react appropriately.
+        return;
+    }
+
+    f.copy(mPagePath + "/" + fInfo.fileName());
+    n->setImage(fInfo.fileName());
+
 }
 
 void PageScene::drawBackground(QPainter *painter, const QRectF &rect)
@@ -117,17 +161,17 @@ void PageScene::showNoteOptions(QPointF screenPos)
         if(items.first()->type() == NoteOptions::Type) {
             QMenu menu;
             QAction *addAttach = new QAction(tr("Add Attachment"), 0);
-            QAction *cutAction = new QAction(tr("Cut"), 0);
+            QAction *addImg = new QAction(tr("Add Image"), 0);
             QAction *pasteAction = new QAction(tr("Paste"), 0);
             QAction *delNote = new QAction(tr("Delete Note"), 0);
 
             connect(addAttach, SIGNAL(triggered()), SLOT(addAttachment()));
-            //connect(cutAction, SIGNAL(triggered()), SLOT(cut()));
+            connect(addImg, SIGNAL(triggered()), SLOT(addImage()));
             //connect(pasteAction, SIGNAL(triggered()), SLOT(paste()));
             connect(delNote, SIGNAL(triggered()), SLOT(deleteNote()));
 
             menu.addAction(addAttach);
-            menu.addAction(cutAction);
+            menu.addAction(addImg);
             menu.addAction(pasteAction);
             menu.addSeparator();
             menu.addAction(delNote);

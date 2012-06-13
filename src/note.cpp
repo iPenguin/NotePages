@@ -39,11 +39,6 @@ Note::Note(QGraphicsItem *parent, QGraphicsScene *scene) :
     mNoteOptions = new NoteOptions(this, scene);
     mNoteOptions->setPos(0,-26);
 
-    //TODO: make the images display properly on the note.
-    mNoteImage = new QGraphicsPixmapItem(this, scene);
-    mNoteImage->setPos(0,0);
-    mNoteImage->hide();
-
 }
 
 QRectF Note::boundingRect() const
@@ -63,14 +58,12 @@ void Note::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     Q_UNUSED(option);
     Q_UNUSED(widget);
 
-    //QGraphicsItemGroup::paint(painter, option, widget);
     QRectF br = boundingRect();
 
     painter->setPen(Qt::gray);
     painter->setBrush(QBrush(QColor(225,225,225, 128)));
     painter->drawRoundedRect(br.toRect(), 5, 5);
 
-    painter->drawText(0,0, QString::number(id()));
     //draw resize handle.
     painter->drawLine(QPointF(br.right(), br.bottom() - 15), QPointF(br.right() - 15, br.bottom()));
     painter->drawLine(QPointF(br.right() -3, br.bottom() - 7), QPointF(br.right() - 7, br.bottom() - 3));
@@ -293,7 +286,19 @@ void Note::setAttachment(QString attchmnt)
 
 void Note::setImage(QString img)
 {
+    qDebug() << "load image: " << img;
     mImage = img;
+    if(!mImage.isEmpty()) {
+        qDebug() << "load image" << mImage;
+        mPixmap = QPixmap(boundingRect().size().toSize());
+        mPixmap.load(mPath + "/" + img);
 
-    mNoteImage->setPixmap(QPixmap(mImage));
+        qDebug() << "loading pixmap for scene:" << mPixmap.isNull() << scene();
+        mNoteImage = scene()->addPixmap(mPixmap);
+        qDebug() << "setImage setParent:";
+        mNoteImage->setParentItem(this);
+        mNoteImage->setPos(0,0);
+
+    }
+    qDebug() << "setImage end";
 }
