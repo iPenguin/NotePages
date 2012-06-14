@@ -17,12 +17,13 @@ public:
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
 
-    QString mPath;
-    QString mFile;
-
+    void setAttachment(QString path, QString fileName);
 protected:
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *e);
 
+private:
+    QString mPath;
+    QString mFile;
 };
 
 #endif // NOTEATTACHMENT_H

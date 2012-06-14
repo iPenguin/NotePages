@@ -34,18 +34,18 @@ Note::Note(QGraphicsItem *parent, QGraphicsScene *scene) :
     mAdded = QDateTime::currentDateTime();
 
     mNoteAttachment = new NoteAttachment(this, scene);
-    mNoteAttachment->setPos(18, -26);
+    mNoteAttachment->setPos(18, -24);
     mNoteAttachment->hide();
 
     mNoteOptions = new NoteOptions(this, scene);
-    mNoteOptions->setPos(0,-26);
+    mNoteOptions->setPos(0,-18);
 
 }
 
 QRectF Note::boundingRect() const
 {
     int topMargin = -3;
-    int bottomMargin = 45;
+    int bottomMargin = 40;
 
     QSizeF size;
 
@@ -54,15 +54,16 @@ QRectF Note::boundingRect() const
     size.setWidth(mNoteText->size().width());
     size.setHeight(mNoteText->size().height());
 
-    if(!mPixmap.isNull()) {
+    if(mNoteImage) {
         QSize s = mPixmap.size();
         size.setWidth(s.width());
         size.setHeight(s.height());
+
     }
 
     rect.setWidth(size.width() + 6);
     rect.setHeight(size.height() + bottomMargin);
-
+    qDebug() << "note image " << size << rect;
     return rect;
 }
 
@@ -137,7 +138,9 @@ void Note::loadNote(QXmlStreamReader* stream, QString pagePath)
 
         } else if (tag == "image") {
             QString imageFile = stream->attributes().value("file").toString();
-            setImage(imageFile);
+            qreal width = stream->attributes().value("width").toString().toFloat();
+            qreal height = stream->attributes().value("height").toString().toFloat();
+            setImage(imageFile, QSizeF(width, height));
             stream->skipCurrentElement();
 
         } else if (tag == "attachment") {
@@ -190,6 +193,8 @@ void Note::saveNote(QXmlStreamWriter *stream)
 
     stream->writeStartElement("image");
     stream->writeAttribute("file", image());
+    stream->writeAttribute("width", QString::number(mPixmap.size().width()));
+    stream->writeAttribute("height", QString::number(mPixmap.size().height()));
     stream->writeEndElement(); //image
 
     QString noteFile = "note" + QString::number(id()) + ".html";
@@ -238,16 +243,16 @@ void Note::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
         mDiff = (e->scenePos() - e->buttonDownScenePos(Qt::LeftButton));
 
         QSizeF newSize = QSizeF(mOldSize.width() + mDiff.x(), mOldSize.height() + mDiff.y());
-        if(mNoteAttachment->document()->size().width() + mNoteOptions->rect().width() > newSize.width())
-            newSize.setWidth(mNoteAttachment->document()->size().width() + mNoteOptions->rect().width());
+        qreal headerWidth = mNoteAttachment->document()->size().width() + mNoteOptions->rect().width();
+        if( headerWidth > newSize.width())
+            newSize.setWidth(headerWidth);
 
         if(mNoteText->isVisible()) {
-            qDebug() << "resize text";
             mNoteText->setSize(newSize);
         }
         if(mNoteImage) {
-            qDebug() << "resize pixmap";
             mNoteImage->setPixmap(mPixmap.scaled(newSize.toSize()));
+            qDebug() << newSize << mNoteText->size();
         }
         update();
         return;
@@ -296,28 +301,26 @@ void Note::setAttachment(QString attchmnt)
     mAttachment = attchmnt;
 
     if(!mAttachment.isEmpty()) {
-        mNoteAttachment->setHtml("<a href=\"file://" + mAttachment +"\"><img src=\"/Users/brian/projects/desktopWiki/images/attachment.svg\" height=16 width=16 />" + mAttachment + "</a>");
-        mNoteAttachment->show();
-        //FIXME: simplify the addition of html and file, path into a function for the NoteAttachment class.
-        mNoteAttachment->mPath = mPath;
-        mNoteAttachment->mFile = mAttachment;
+        mNoteAttachment->setAttachment(mPath, mAttachment);
     }
 }
 
-void Note::setImage(QString img)
+void Note::setImage(QString img, QSizeF size)
 {
+
+    QRectF br = boundingRect();
 
     mImage = img;
     if(!mImage.isEmpty()) {
-        mPixmap = QPixmap(boundingRect().size().toSize());
+        mPixmap = QPixmap(size.isEmpty() ? br.size().toSize() : size.toSize());
         mPixmap.load(mPath + "/" + img);
 
-        mNoteImage = scene()->addPixmap(mPixmap.scaled(boundingRect().size().toSize()));
+        mNoteImage = scene()->addPixmap(mPixmap.scaled(size.isEmpty() ? br.size().toSize() : size.toSize()));
         mNoteImage->setParentItem(this);
         mNoteImage->setPos(0,0);
 
         mNoteText->hide();
-
+        mNoteText->setTextWidth(1);
     } else
         mNoteText->show();
 

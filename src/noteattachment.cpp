@@ -36,3 +36,11 @@ void NoteAttachment::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
     QDesktopServices::openUrl(QUrl("file://"+mPath +"/" +mFile));
     QGraphicsTextItem::mouseReleaseEvent(e);
 }
+
+void NoteAttachment::setAttachment(QString path, QString fileName)
+{
+    setHtml("<a href=\"file://" + fileName +"\"><img src=\"/Users/brian/projects/desktopWiki/images/attachment.svg\" height=16 width=16 />" + fileName + "</a>");
+    mPath = path;
+    mFile = fileName;
+    show();
+}

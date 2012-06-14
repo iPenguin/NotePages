@@ -43,7 +43,8 @@ public:
 
     QSizeF size() { Q_ASSERT(mNoteText); return mNoteText->size(); }
 
-    void setImage(QString img);
+    //if size = (-1,-1) use native image size.
+    void setImage(QString img, QSizeF size);
     QString image() { return mImage; }
 
     QString path();

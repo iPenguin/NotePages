@@ -122,7 +122,7 @@ void PageScene::loadImage(QString fileName)
     }
 
     f.copy(mPagePath + "/" + fInfo.fileName());
-    n->setImage(fInfo.fileName());
+    n->setImage(fInfo.fileName(), QSizeF());
 
 }
 
