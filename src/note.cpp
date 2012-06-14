@@ -21,7 +21,8 @@ Note::Note(QGraphicsItem *parent, QGraphicsScene *scene) :
     mSizeHandle(false),
     mImage(""),
     mDiff(QPointF(3,20)),
-    mOldSize(QSizeF(100,50))
+    mOldSize(QSizeF(100,50)),
+    mNoteImage(0)
 {
 
     mNoteText = new NoteText(this, scene);
@@ -46,9 +47,21 @@ QRectF Note::boundingRect() const
     int topMargin = -3;
     int bottomMargin = 45;
 
+    QSizeF size;
+
     QRectF rect = childrenBoundingRect().adjusted(-3,topMargin,0,0);
-    rect.setWidth(mNoteText->size().width() + 6);
-    rect.setHeight(mNoteText->size().height() + bottomMargin);
+
+    size.setWidth(mNoteText->size().width());
+    size.setHeight(mNoteText->size().height());
+
+    if(!mPixmap.isNull()) {
+        QSize s = mPixmap.size();
+        size.setWidth(s.width());
+        size.setHeight(s.height());
+    }
+
+    rect.setWidth(size.width() + 6);
+    rect.setHeight(size.height() + bottomMargin);
 
     return rect;
 }
@@ -212,7 +225,7 @@ void Note::mousePressEvent(QGraphicsSceneMouseEvent *e)
             e->scenePos().y() >= (pt.y() - 25)) {
         mSizeHandle = true;
 
-        mOldSize = mNoteText->size();
+        mOldSize = (mNoteImage ? QSizeF(mNoteImage->pixmap().size()) : mNoteText->size());
     }
 
     setCursor(QCursor(Qt::ClosedHandCursor));
@@ -227,8 +240,15 @@ void Note::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
         QSizeF newSize = QSizeF(mOldSize.width() + mDiff.x(), mOldSize.height() + mDiff.y());
         if(mNoteAttachment->document()->size().width() + mNoteOptions->rect().width() > newSize.width())
             newSize.setWidth(mNoteAttachment->document()->size().width() + mNoteOptions->rect().width());
-        mNoteText->setSize(newSize);
 
+        if(mNoteText->isVisible()) {
+            qDebug() << "resize text";
+            mNoteText->setSize(newSize);
+        }
+        if(mNoteImage) {
+            qDebug() << "resize pixmap";
+            mNoteImage->setPixmap(mPixmap.scaled(newSize.toSize()));
+        }
         update();
         return;
     }
@@ -286,19 +306,19 @@ void Note::setAttachment(QString attchmnt)
 
 void Note::setImage(QString img)
 {
-    qDebug() << "load image: " << img;
+
     mImage = img;
     if(!mImage.isEmpty()) {
-        qDebug() << "load image" << mImage;
         mPixmap = QPixmap(boundingRect().size().toSize());
         mPixmap.load(mPath + "/" + img);
 
-        qDebug() << "loading pixmap for scene:" << mPixmap.isNull() << scene();
-        mNoteImage = scene()->addPixmap(mPixmap);
-        qDebug() << "setImage setParent:";
+        mNoteImage = scene()->addPixmap(mPixmap.scaled(boundingRect().size().toSize()));
         mNoteImage->setParentItem(this);
         mNoteImage->setPos(0,0);
 
-    }
-    qDebug() << "setImage end";
+        mNoteText->hide();
+
+    } else
+        mNoteText->show();
+
 }
