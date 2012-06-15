@@ -55,15 +55,12 @@ QRectF Note::boundingRect() const
     size.setHeight(mNoteText->size().height());
 
     if(mNoteImage) {
-        QSize s = mPixmap.size();
-        size.setWidth(s.width());
-        size.setHeight(s.height());
-
+        size = mNoteImage->boundingRect().size();
     }
 
     rect.setWidth(size.width() + 6);
     rect.setHeight(size.height() + bottomMargin);
-    qDebug() << "note image " << size << rect;
+
     return rect;
 }
 
@@ -109,7 +106,7 @@ void Note::loadNote(QXmlStreamReader* stream, QString pagePath)
 
     int id = stream->attributes().value("id").toString().toInt();
     setId(id);
-    qDebug() << id;
+    qDebug() << "load note id" << id;
 
     setPath(pagePath);
     setPos(x, y);
@@ -191,11 +188,13 @@ void Note::saveNote(QXmlStreamWriter *stream)
     stream->writeAttribute("file", attachment());
     stream->writeEndElement(); //attachment
 
-    stream->writeStartElement("image");
-    stream->writeAttribute("file", image());
-    stream->writeAttribute("width", QString::number(mPixmap.size().width()));
-    stream->writeAttribute("height", QString::number(mPixmap.size().height()));
-    stream->writeEndElement(); //image
+    if(mNoteImage) {
+        stream->writeStartElement("image");
+        stream->writeAttribute("file", image());
+        stream->writeAttribute("width", QString::number(mNoteImage->boundingRect().width()));
+        stream->writeAttribute("height", QString::number(mNoteImage->boundingRect().height()));
+        stream->writeEndElement(); //image
+    }
 
     QString noteFile = "note" + QString::number(id()) + ".html";
     stream->writeStartElement("text");
@@ -252,7 +251,6 @@ void Note::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
         }
         if(mNoteImage) {
             mNoteImage->setPixmap(mPixmap.scaled(newSize.toSize()));
-            qDebug() << newSize << mNoteText->size();
         }
         update();
         return;
@@ -312,6 +310,8 @@ void Note::setImage(QString img, QSizeF size)
 
     mImage = img;
     if(!mImage.isEmpty()) {
+        qDebug() << "setImage (size): " << br << size;
+        qDebug() << (size.isEmpty() ? br.size().toSize() : size.toSize());
         mPixmap = QPixmap(size.isEmpty() ? br.size().toSize() : size.toSize());
         mPixmap.load(mPath + "/" + img);
 
