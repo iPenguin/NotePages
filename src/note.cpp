@@ -246,6 +246,9 @@ void Note::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
         if( headerWidth > newSize.width())
             newSize.setWidth(headerWidth);
 
+        if(newSize.height() < 1)
+            newSize.setHeight(1);
+
         if(mNoteText->isVisible()) {
             mNoteText->setSize(newSize);
         }
