@@ -41,20 +41,27 @@ void PageScene::deleteNote()
 
 void PageScene::addAttachment()
 {
+    QAction *a = qobject_cast<QAction*>(sender());
 
     QList<QGraphicsItem*> items = selectedItems();
     QGraphicsItem *i = items.first();
     Note *n = qgraphicsitem_cast<Note*>(i->parentItem());
-    if(n) {
-        //TODO: Add an attachment to the note.
-        //find file with dialog
-        QFileDialog* fd = new QFileDialog(0, Qt::Sheet);
-          fd->setDirectory(mPagePath);
-          fd->setObjectName("addattachmentdialog");
-          fd->setViewMode(QFileDialog::List);
-          //fd->setFileMode( QFileDialog::Directory );
-          fd->setAcceptMode(QFileDialog::AcceptOpen);
-          fd->open(this, SLOT(loadAttachment(QString)));
+
+    if(a->text() == tr("Add Attachment")) {
+
+        if(n) {
+            //TODO: Add an attachment to the note.
+            //find file with dialog
+            QFileDialog* fd = new QFileDialog(0, Qt::Sheet);
+            fd->setDirectory(mPagePath);
+            fd->setObjectName("addattachmentdialog");
+            fd->setViewMode(QFileDialog::List);
+            //fd->setFileMode( QFileDialog::Directory );
+            fd->setAcceptMode(QFileDialog::AcceptOpen);
+            fd->open(this, SLOT(loadAttachment(QString)));
+        }
+    } else {
+        n->removeAttachment();
     }
 }
 
@@ -89,7 +96,7 @@ void PageScene::addImage()
     QGraphicsItem *i = items.first();
     Note *n = qgraphicsitem_cast<Note*>(i->parentItem());
     if(n) {
-        //TODO: Add an attachment to the note.
+        //FIXME: Add an attachment to the note.
         //find file with dialog
         QFileDialog* fd = new QFileDialog(0, Qt::Sheet);
           fd->setDirectory(mPagePath);
@@ -147,6 +154,10 @@ void PageScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
 {
     QGraphicsItem *i = itemAt(e->scenePos());
     if(i && i->type() == NoteOptions::Type) {
+        foreach(QGraphicsItem *itm, selectedItems()) {
+            itm->setSelected(false);
+        }
+        i->setSelected(true);
         showNoteOptions(e->screenPos());
     }
 
@@ -160,19 +171,23 @@ void PageScene::showNoteOptions(QPointF screenPos)
     if(items.count() == 1) {
         if(items.first()->type() == NoteOptions::Type) {
             QMenu menu;
-            QAction *addAttach = new QAction(tr("Add Attachment"), 0);
+            Note *n = qgraphicsitem_cast<Note*>(items.first()->parentItem());
+
+            QAction *attach;
+            if(n->hasAttachment()) {
+                attach = new QAction(tr("Remove Attachment"), 0);
+            } else {
+                attach = new QAction(tr("Add Attachment"), 0);
+            }
             QAction *addImg = new QAction(tr("Add Image"), 0);
-            QAction *pasteAction = new QAction(tr("Paste"), 0);
             QAction *delNote = new QAction(tr("Delete Note"), 0);
 
-            connect(addAttach, SIGNAL(triggered()), SLOT(addAttachment()));
+            connect(attach, SIGNAL(triggered()), SLOT(addAttachment()));
             connect(addImg, SIGNAL(triggered()), SLOT(addImage()));
-            //connect(pasteAction, SIGNAL(triggered()), SLOT(paste()));
             connect(delNote, SIGNAL(triggered()), SLOT(deleteNote()));
 
-            menu.addAction(addAttach);
+            menu.addAction(attach);
             menu.addAction(addImg);
-            menu.addAction(pasteAction);
             menu.addSeparator();
             menu.addAction(delNote);
 

@@ -33,8 +33,10 @@ public:
     int id() { return mId; }
     void setId(int id) { mId = id; }
 
-    QString attachment() { return mAttachment; }
+    QString attachment() { return mNoteAttachment->file(); }
     void setAttachment(QString attchmnt);
+    bool hasAttachment() const { return !mNoteAttachment->file().isEmpty(); }
+    void removeAttachment();
 
     void setSize(QSizeF size);
 
@@ -67,7 +69,6 @@ private:
     QDateTime mLastModified;
     QDateTime mAdded;
 
-    QString mAttachment;
     QString mImage;
     QPixmap mPixmap;
 

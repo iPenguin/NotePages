@@ -18,6 +18,8 @@ public:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
 
     void setAttachment(QString path, QString fileName);
+
+    QString file() { return mFile; }
 protected:
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *e);
 

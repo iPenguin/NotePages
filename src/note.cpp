@@ -74,6 +74,9 @@ void Note::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     painter->setBrush(QBrush(QColor(225,225,225, 128)));
     painter->drawRoundedRect(br.toRect(), 5, 5);
 
+    //DEBUG: show id
+    //painter->drawText(0,0, QString::number(id()));
+
     //draw resize handle.
     painter->drawLine(QPointF(br.right(), br.bottom() - 15), QPointF(br.right() - 15, br.bottom()));
     painter->drawLine(QPointF(br.right() -3, br.bottom() - 7), QPointF(br.right() - 7, br.bottom() - 3));
@@ -310,11 +313,16 @@ void Note::setSize(QSizeF size)
 
 void Note::setAttachment(QString attchmnt)
 {
+    mNoteAttachment->setAttachment(mPath, attchmnt);
+}
 
-    mAttachment = attchmnt;
+void Note::removeAttachment()
+{
+    QString file = mNoteAttachment->file();
+    mNoteAttachment->setAttachment(mPath, "");
 
-    if(!mAttachment.isEmpty()) {
-        mNoteAttachment->setAttachment(mPath, mAttachment);
+    if(QFileInfo(mPath + "/" + file).exists()) {
+        QDir(mPath).remove(file);
     }
 }
 
