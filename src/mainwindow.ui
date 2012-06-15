@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>625</width>
-    <height>419</height>
+    <width>753</width>
+    <height>444</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -51,7 +51,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>625</width>
+     <width>753</width>
      <height>22</height>
     </rect>
    </property>
@@ -112,6 +112,15 @@
    <addaction name="actionCopy"/>
    <addaction name="actionCut"/>
    <addaction name="actionPaste"/>
+   <addaction name="separator"/>
+   <addaction name="actionBold"/>
+   <addaction name="actionItalic"/>
+   <addaction name="actionUnderline"/>
+   <addaction name="separator"/>
+   <addaction name="actionLeftJustify"/>
+   <addaction name="actionCenterJustify"/>
+   <addaction name="actionRightJustify"/>
+   <addaction name="actionJustify"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <widget class="QDockWidget" name="dockWidget">
@@ -186,6 +195,10 @@
    </widget>
   </widget>
   <action name="actionOpen">
+   <property name="icon">
+    <iconset resource="../desktopWiki.qrc">
+     <normaloff>:/images/fileopen.png</normaloff>:/images/fileopen.png</iconset>
+   </property>
    <property name="text">
     <string>Open</string>
    </property>
@@ -194,6 +207,10 @@
    </property>
   </action>
   <action name="actionSave">
+   <property name="icon">
+    <iconset resource="../desktopWiki.qrc">
+     <normaloff>:/images/filesave.png</normaloff>:/images/filesave.png</iconset>
+   </property>
    <property name="text">
     <string>Save</string>
    </property>
@@ -218,11 +235,19 @@
    </property>
   </action>
   <action name="actionExport">
+   <property name="icon">
+    <iconset resource="../desktopWiki.qrc">
+     <normaloff>:/images/exportpdf.png</normaloff>:/images/exportpdf.png</iconset>
+   </property>
    <property name="text">
     <string>Export</string>
    </property>
   </action>
   <action name="actionCopy">
+   <property name="icon">
+    <iconset resource="../desktopWiki.qrc">
+     <normaloff>:/images/editcopy.png</normaloff>:/images/editcopy.png</iconset>
+   </property>
    <property name="text">
     <string>Copy</string>
    </property>
@@ -231,6 +256,10 @@
    </property>
   </action>
   <action name="actionCut">
+   <property name="icon">
+    <iconset resource="../desktopWiki.qrc">
+     <normaloff>:/images/editcut.png</normaloff>:/images/editcut.png</iconset>
+   </property>
    <property name="text">
     <string>Cut</string>
    </property>
@@ -239,6 +268,10 @@
    </property>
   </action>
   <action name="actionPaste">
+   <property name="icon">
+    <iconset resource="../desktopWiki.qrc">
+     <normaloff>:/images/editpaste.png</normaloff>:/images/editpaste.png</iconset>
+   </property>
    <property name="text">
     <string>Paste</string>
    </property>
@@ -256,8 +289,88 @@
     <string>Options</string>
    </property>
   </action>
+  <action name="actionBold">
+   <property name="icon">
+    <iconset resource="../desktopWiki.qrc">
+     <normaloff>:/images/textbold.png</normaloff>:/images/textbold.png</iconset>
+   </property>
+   <property name="text">
+    <string>Bold</string>
+   </property>
+  </action>
+  <action name="actionItalic">
+   <property name="icon">
+    <iconset resource="../desktopWiki.qrc">
+     <normaloff>:/images/textitalic.png</normaloff>:/images/textitalic.png</iconset>
+   </property>
+   <property name="text">
+    <string>Italic</string>
+   </property>
+  </action>
+  <action name="actionUnderline">
+   <property name="icon">
+    <iconset resource="../desktopWiki.qrc">
+     <normaloff>:/images/textunder.png</normaloff>:/images/textunder.png</iconset>
+   </property>
+   <property name="text">
+    <string>Underline</string>
+   </property>
+  </action>
+  <action name="actionLeftJustify">
+   <property name="icon">
+    <iconset resource="../desktopWiki.qrc">
+     <normaloff>:/images/textleft.png</normaloff>:/images/textleft.png</iconset>
+   </property>
+   <property name="text">
+    <string>Left Justify</string>
+   </property>
+  </action>
+  <action name="actionRightJustify">
+   <property name="icon">
+    <iconset resource="../desktopWiki.qrc">
+     <normaloff>:/images/textright.png</normaloff>:/images/textright.png</iconset>
+   </property>
+   <property name="text">
+    <string>Right Justify</string>
+   </property>
+  </action>
+  <action name="actionCenterJustify">
+   <property name="icon">
+    <iconset resource="../desktopWiki.qrc">
+     <normaloff>:/images/textcenter.png</normaloff>:/images/textcenter.png</iconset>
+   </property>
+   <property name="text">
+    <string>Center</string>
+   </property>
+  </action>
+  <action name="actionJustify">
+   <property name="icon">
+    <iconset resource="../desktopWiki.qrc">
+     <normaloff>:/images/textjustify.png</normaloff>:/images/textjustify.png</iconset>
+   </property>
+   <property name="text">
+    <string>Justify</string>
+   </property>
+  </action>
+  <action name="actionOrderedList">
+   <property name="text">
+    <string>Ordered List</string>
+   </property>
+  </action>
+  <action name="actionUnorderedList">
+   <property name="text">
+    <string>Unordered List</string>
+   </property>
+  </action>
+  <action name="actionInsertTable">
+   <property name="text">
+    <string>Insert Table</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources/>
+ <resources>
+  <include location="../desktopWiki.qrc"/>
+ </resources>
  <connections/>
 </ui>
