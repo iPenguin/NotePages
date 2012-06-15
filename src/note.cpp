@@ -38,28 +38,27 @@ Note::Note(QGraphicsItem *parent, QGraphicsScene *scene) :
     mNoteAttachment->hide();
 
     mNoteOptions = new NoteOptions(this, scene);
-    mNoteOptions->setPos(0,-18);
+    mNoteOptions->setPos(0,-24);
 
 }
 
 QRectF Note::boundingRect() const
 {
     int topMargin = -3;
-    int bottomMargin = 40;
+    int leftMargin = -3;
+    int bottomMargin = 30;
 
     QSizeF size;
 
-    QRectF rect = childrenBoundingRect().adjusted(-3,topMargin,0,0);
-
-    size.setWidth(mNoteText->size().width());
-    size.setHeight(mNoteText->size().height());
+    QRectF rect = childrenBoundingRect().adjusted(leftMargin,topMargin,0,0);
 
     if(mNoteImage) {
         size = mNoteImage->boundingRect().size();
+    } else {
+        size = mNoteText->size();
     }
-
-    rect.setWidth(size.width() + 6);
-    rect.setHeight(size.height() + bottomMargin);
+    size += QSize(6, bottomMargin);
+    rect.setSize(size);
 
     return rect;
 }
@@ -91,6 +90,10 @@ void Note::deleteNote()
         d.remove(noteFile);
 
     }
+
+    //FIXME: offer to delete any attachments
+
+    //FIXME: offer to delete any images.
 
 }
 
@@ -253,6 +256,10 @@ void Note::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
             mNoteText->setSize(newSize);
         }
         if(mNoteImage) {
+            if(e->modifiers() == Qt::ShiftModifier) {
+                qreal ratio = qreal(mPixmap.size().width()) / qreal(mPixmap.size().height());
+                newSize.setWidth(ratio * newSize.height());
+            }
             mNoteImage->setPixmap(mPixmap.scaled(newSize.toSize()));
         }
         update();
