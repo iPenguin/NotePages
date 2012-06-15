@@ -245,6 +245,14 @@ void Note::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
         mDiff = (e->scenePos() - e->buttonDownScenePos(Qt::LeftButton));
 
         QSizeF newSize = QSizeF(mOldSize.width() + mDiff.x(), mOldSize.height() + mDiff.y());
+
+        if(mNoteImage) {
+            if(e->modifiers() == Qt::ShiftModifier) {
+                qreal ratio = qreal(mPixmap.size().width()) / qreal(mPixmap.size().height());
+                newSize.setWidth(ratio * newSize.height());
+            }
+        }
+
         qreal headerWidth = mNoteAttachment->document()->size().width() + mNoteOptions->rect().width();
         if( headerWidth > newSize.width())
             newSize.setWidth(headerWidth);
@@ -255,13 +263,10 @@ void Note::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
         if(mNoteText->isVisible()) {
             mNoteText->setSize(newSize);
         }
-        if(mNoteImage) {
-            if(e->modifiers() == Qt::ShiftModifier) {
-                qreal ratio = qreal(mPixmap.size().width()) / qreal(mPixmap.size().height());
-                newSize.setWidth(ratio * newSize.height());
-            }
+
+        if(mNoteImage)
             mNoteImage->setPixmap(mPixmap.scaled(newSize.toSize()));
-        }
+
         update();
         return;
     }
