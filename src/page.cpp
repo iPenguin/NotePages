@@ -162,16 +162,22 @@ void Page::setTextProperties(Page::TextProperty property, bool state)
             nt->setBold(state);
             break;
         case Page::TxtItalic:
+            nt->setItalic(state);
             break;
         case Page::TxtUnderline:
+            nt->setUnderline(state);
             break;
         case Page::TxtLeftJustify:
+            nt->setTextBlockAlignment(Qt::AlignLeft);
             break;
         case Page::TxtCenterJustify:
+            nt->setTextBlockAlignment(Qt::AlignHCenter);
             break;
         case Page::TxtRightJustify:
+            nt->setTextBlockAlignment(Qt::AlignRight);
             break;
         case Page::TxtJustify:
+            nt->setTextBlockAlignment(Qt::AlignJustify);
             break;
         default:
             qDebug() << "Unknown or Unhandled Text Property" << property;

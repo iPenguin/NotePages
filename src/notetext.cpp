@@ -69,7 +69,6 @@ void NoteText::setSize(QSizeF size)
     mSize = size;
 }
 
-
 void NoteText::mergeFormatOnSelection(QTextCharFormat format)
 {
 
@@ -89,4 +88,28 @@ void NoteText::setBold(bool state)
 
     mergeFormatOnSelection(format);
 
+}
+
+void NoteText::setItalic(bool state)
+{
+    QTextCharFormat format = textCursor().charFormat();
+    format.setFontItalic(state);
+
+    mergeFormatOnSelection(format);
+}
+
+void NoteText::setUnderline(bool state)
+{
+    QTextCharFormat format = textCursor().charFormat();
+    format.setFontUnderline(state);
+
+    mergeFormatOnSelection(format);
+}
+
+void NoteText::setTextBlockAlignment(Qt::Alignment align)
+{
+    QTextBlockFormat format = textCursor().blockFormat();
+    format.setAlignment(align);
+
+    textCursor().setBlockFormat(format);
 }

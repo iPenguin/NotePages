@@ -24,8 +24,11 @@ public:
     void setSize(QSizeF size);
     QSizeF size() { return mSize; }
 
-
     void setBold(bool state);
+    void setItalic(bool state);
+    void setUnderline(bool state);
+
+    void setTextBlockAlignment(Qt::Alignment align);
 
 public slots:
 
