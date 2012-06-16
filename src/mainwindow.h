@@ -44,6 +44,9 @@ private slots:
 protected slots:
     void closeTab(int tabNumber);
 
+private slots:
+    void setTextProperties();
+
 private:
     Ui::MainWindow *ui;
 

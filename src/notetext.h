@@ -7,6 +7,8 @@
 #include <QGraphicsTextItem>
 #include <QDateTime>
 
+class QTextCharFormat;
+
 class NoteText : public QGraphicsTextItem
 {
 
@@ -22,12 +24,16 @@ public:
     void setSize(QSizeF size);
     QSizeF size() { return mSize; }
 
+
+    void setBold(bool state);
+
 public slots:
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *e);
     void focusOutEvent(QFocusEvent *e);
 
+    void mergeFormatOnSelection(QTextCharFormat format);
 private:
     QGraphicsItem *mParent;
 

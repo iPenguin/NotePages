@@ -153,11 +153,14 @@ void PageScene::mousePressEvent(QGraphicsSceneMouseEvent *e)
 void PageScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
 {
     QGraphicsItem *i = itemAt(e->scenePos());
-    if(i && i->type() == NoteOptions::Type) {
+    if(i) {
         foreach(QGraphicsItem *itm, selectedItems()) {
             itm->setSelected(false);
         }
         i->setSelected(true);
+    }
+
+    if(i->type() == NoteOptions::Type) {
         showNoteOptions(e->screenPos());
     }
 

@@ -17,6 +17,9 @@ class Page : public QWidget
     Q_OBJECT
     
 public:
+    enum TextProperty { TxtBold = 1, TxtItalic,
+                        TxtUnderline, TxtLeftJustify, TxtCenterJustify, TxtRightJustify, TxtJustify };
+
     explicit Page(QString pagePath, QWidget *parent = 0);
     ~Page();
 
@@ -25,9 +28,13 @@ public:
 
     void savePage();
 
+    bool isSaved();
+
     QUndoStack* undoStack() { return mUndoStack; }
     
     void loadPage();
+
+    void setTextProperties(TextProperty property, bool state);
 
 private:
     Ui::Page *ui;

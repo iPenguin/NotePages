@@ -68,3 +68,25 @@ void NoteText::setSize(QSizeF size)
 
     mSize = size;
 }
+
+
+void NoteText::mergeFormatOnSelection(QTextCharFormat format)
+{
+
+    if(!textCursor().hasSelection())
+        textCursor().select(QTextCursor::WordUnderCursor);
+
+    textCursor().mergeCharFormat(format);
+    //mergeCurrentCharFormat(format);
+
+}
+
+
+void NoteText::setBold(bool state)
+{
+    QTextCharFormat format = textCursor().charFormat();
+    format.setFontWeight(state ? QFont::Bold : QFont::Normal);
+
+    mergeFormatOnSelection(format);
+
+}

@@ -10,6 +10,7 @@
 #include <QXmlStreamReader>
 #include <QDir>
 #include "pagescene.h"
+#include <QTextDocument>
 
 #include "note.h"
 
@@ -83,6 +84,12 @@ void Page::savePage()
 
 }
 
+bool Page::isSaved()
+{
+    //FIXME: check if the page has been saved.
+    return true;
+}
+
 void Page::loadPage()
 {
 
@@ -130,5 +137,43 @@ void Page::loadPage()
                 qDebug() << "TODO: for each child element load each note.";
             }
         }
+    }
+}
+
+void Page::setTextProperties(Page::TextProperty property, bool state)
+{
+    if(mScene->selectedItems().count() <= 0) {
+        qDebug() << "no items selected";
+        return;
+    }
+    QGraphicsItem *i = mScene->selectedItems().first();
+    if(!i)
+        return;
+
+    if(i->type() != NoteText::Type)
+        return;
+
+    NoteText *nt = qgraphicsitem_cast<NoteText*>(i);
+    if(!nt)
+        return;
+
+    switch(property) {
+        case Page::TxtBold:
+            nt->setBold(state);
+            break;
+        case Page::TxtItalic:
+            break;
+        case Page::TxtUnderline:
+            break;
+        case Page::TxtLeftJustify:
+            break;
+        case Page::TxtCenterJustify:
+            break;
+        case Page::TxtRightJustify:
+            break;
+        case Page::TxtJustify:
+            break;
+        default:
+            qDebug() << "Unknown or Unhandled Text Property" << property;
     }
 }

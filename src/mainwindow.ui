@@ -290,6 +290,9 @@
    </property>
   </action>
   <action name="actionBold">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset resource="../desktopWiki.qrc">
      <normaloff>:/images/textbold.png</normaloff>:/images/textbold.png</iconset>
@@ -299,6 +302,9 @@
    </property>
   </action>
   <action name="actionItalic">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset resource="../desktopWiki.qrc">
      <normaloff>:/images/textitalic.png</normaloff>:/images/textitalic.png</iconset>
@@ -308,6 +314,9 @@
    </property>
   </action>
   <action name="actionUnderline">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset resource="../desktopWiki.qrc">
      <normaloff>:/images/textunder.png</normaloff>:/images/textunder.png</iconset>
@@ -317,6 +326,9 @@
    </property>
   </action>
   <action name="actionLeftJustify">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset resource="../desktopWiki.qrc">
      <normaloff>:/images/textleft.png</normaloff>:/images/textleft.png</iconset>
@@ -326,6 +338,9 @@
    </property>
   </action>
   <action name="actionRightJustify">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset resource="../desktopWiki.qrc">
      <normaloff>:/images/textright.png</normaloff>:/images/textright.png</iconset>
@@ -335,6 +350,9 @@
    </property>
   </action>
   <action name="actionCenterJustify">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset resource="../desktopWiki.qrc">
      <normaloff>:/images/textcenter.png</normaloff>:/images/textcenter.png</iconset>
@@ -344,6 +362,9 @@
    </property>
   </action>
   <action name="actionJustify">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset resource="../desktopWiki.qrc">
      <normaloff>:/images/textjustify.png</normaloff>:/images/textjustify.png</iconset>

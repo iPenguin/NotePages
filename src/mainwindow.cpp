@@ -47,6 +47,22 @@ void MainWindow::setupMenubars()
     connect(ui->actionCut, SIGNAL(triggered()), SLOT(cut()));
     connect(ui->actionPaste, SIGNAL(triggered()), SLOT(paste()));
 
+//Toolbar
+    QActionGroup *g = new QActionGroup(this);
+    g->addAction(ui->actionLeftJustify);
+    g->addAction(ui->actionCenterJustify);
+    g->addAction(ui->actionRightJustify);
+    g->addAction(ui->actionJustify);
+    g->setExclusive(true);
+
+    connect(ui->actionBold, SIGNAL(triggered()), SLOT(setTextProperties()));
+    connect(ui->actionItalic, SIGNAL(triggered()), SLOT(setTextProperties()));
+    connect(ui->actionUnderline, SIGNAL(triggered()), SLOT(setTextProperties()));
+
+    connect(ui->actionLeftJustify, SIGNAL(triggered()), SLOT(setTextProperties()));
+    connect(ui->actionCenterJustify, SIGNAL(triggered()), SLOT(setTextProperties()));
+    connect(ui->actionRightJustify, SIGNAL(triggered()), SLOT(setTextProperties()));
+    connect(ui->actionJustify, SIGNAL(triggered()), SLOT(setTextProperties()));
 
 //Help
     connect(ui->actionAbout_DesktopWiki, SIGNAL(triggered()), SLOT(about()));
@@ -259,10 +275,52 @@ void MainWindow::closeTab(int tabNumber)
     QWidget *w = ui->tabWidget->widget(tabNumber);
     ui->tabWidget->removeTab(tabNumber);
     //TODO: test if the tab has been completely saved before even thinking of closing it.
+    if(!w)
+        return;
+
+    Page *p = qobject_cast<Page*>(w);
+    if(!p->isSaved()) {
+        qDebug() << "prompt to save file";
+        p->savePage();
+    }
+
     //TODO: pass tab closure onto the undo stack.
+    //undoStack->push(new CCloseTab());
 
     //NOTE: if I decide to delete the Page then you have to remove the page from the mPages QMap.
     //delete w;
     //w = 0;
 
+}
+
+void MainWindow::setTextProperties()
+{
+    Page::TextProperty property;
+    QAction *a = qobject_cast<QAction*>(sender());
+
+    if(a == ui->actionBold) {
+        property = Page::TxtBold;
+    } else if (a == ui->actionItalic) {
+        property = Page::TxtItalic;
+    } else if (a == ui->actionUnderline) {
+        property = Page::TxtUnderline;
+    } else if (a == ui->actionLeftJustify) {
+        property = Page::TxtLeftJustify;
+    } else if (a == ui->actionCenterJustify) {
+        property = Page::TxtCenterJustify;
+    } else if (a == ui->actionRightJustify) {
+        property = Page::TxtRightJustify;
+    } else if (a == ui->actionJustify) {
+        property = Page::TxtJustify;
+    }
+
+    QWidget *w = ui->tabWidget->currentWidget();
+
+    if(!w)
+        return;
+
+    Page *p = qobject_cast<Page*>(w);
+    if(!p)
+        return;
+    p->setTextProperties(property, a->isChecked());
 }
