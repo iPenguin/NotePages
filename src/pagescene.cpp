@@ -158,12 +158,11 @@ void PageScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
             itm->setSelected(false);
         }
         i->setSelected(true);
-    }
 
-    if(i->type() == NoteOptions::Type) {
-        showNoteOptions(e->screenPos());
+        if(i->type() == NoteOptions::Type) {
+            showNoteOptions(e->screenPos());
+        }
     }
-
     QGraphicsScene::mouseReleaseEvent(e);
 }
 
