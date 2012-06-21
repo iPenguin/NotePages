@@ -28,6 +28,9 @@ Page::Page(QString pagePath, QWidget *parent) :
     //FIXME: move this code into a seperate function.
     mUndoStack = new QUndoStack(this);
 
+//    connect(ui->zoom, SIGNAL(valueChanged(int)), SLOT(zoomChanged(int)));
+    connect(ui->graphicsView, SIGNAL(zoomLevelChanged(int)), SLOT(updateZoomLevel(int)));
+
     loadPage();
 }
 
@@ -182,4 +185,9 @@ void Page::setTextProperties(Page::TextProperty property, bool state)
         default:
             qDebug() << "Unknown or Unhandled Text Property" << property;
     }
+}
+
+void Page::zoomChanged(int value)
+{
+    qDebug() << "value" << value;
 }

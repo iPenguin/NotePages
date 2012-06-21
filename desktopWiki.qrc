@@ -28,5 +28,10 @@
         <file>images/textunder.png</file>
         <file>images/zoomin.png</file>
         <file>images/zoomout.png</file>
+        <file>images/arrow_down.svg</file>
+        <file>images/arrow_up.svg</file>
+        <file>images/minus.svg</file>
+        <file>images/plus.svg</file>
+        <file>images/wrench.svg</file>
     </qresource>
 </RCC>

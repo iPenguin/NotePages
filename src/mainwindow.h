@@ -8,6 +8,9 @@
 #include <QDomElement>
 #include <QTreeWidgetItem>
 #include <QMap>
+#include <QToolButton>
+
+class QXmlStreamWriter;
 
 #include "page.h"
 
@@ -41,8 +44,22 @@ private slots:
 //Help
     void about();
 
+    void addNewPage();
+    void removePages();
+
+    int currentMaxPageId();
+    void setCurrentMaxPageId(int newId);
+
+    void changeItem(QTreeWidgetItem *item, int column);
+
 protected slots:
     void closeTab(int tabNumber);
+
+    void updateZoomLevel(int percent);
+
+protected:
+    void saveIndex(QString path);
+    void saveIndexPages(QXmlStreamWriter *stream, QTreeWidgetItem *item);
 
 private slots:
     void setTextProperties();
@@ -61,14 +78,28 @@ private:
 
     void openPage(int pageNumber);
 
+    void setupStatusBar();
     void setupMenubars();
+
+    int mCurrentMaxPageId;
 
     //A mapping of page_id to object.
     QMap <int, Page*> mPages;
 
-    QString m_wikiFile;
-    QString m_name;
+    QToolButton *mAdd,
+                *mRemove,
+                *mUp,
+                *mDown,
+                *mConfigure;
+
+    QSlider *mZoom;
+
+    QString mWikiFile;
+    QString mName;
     QString mPath;
+
+    //This is a temporary holder of information when loading files.
+    QList<QTreeWidgetItem*> mExpandedItems;
 };
 
 #endif // MAINWINDOW_H

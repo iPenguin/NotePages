@@ -11,18 +11,28 @@
 #include <QMessageBox>
 #include "appinfo.h"
 
+#include <QXmlStreamWriter>
+#include <QTimer>
+
 #include "settings.h"
 
 #include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow),
+    mCurrentMaxPageId(0)
 {
     ui->setupUi(this);
+
+    setupStatusBar();
     setupMenubars();
     setWindowState(Qt::WindowMaximized);
 
+    setUnifiedTitleAndToolBarOnMac(true);
+
+    ui->pageTree->setStyleSheet("QTreeWidget { background: #D6DDE5 }");
+    ui->pageTree->setAttribute(Qt::WA_MacShowFocusRect, 0);
     QString currentFolder = Settings::inst()->value("currentWiki").toString();
     loadFile(currentFolder);
 }
@@ -30,6 +40,38 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::setupStatusBar()
+{
+    mAdd = new QToolButton(this);
+    mAdd->setIcon(QIcon(":/images/plus.svg"));
+    mAdd->setStyleSheet( "background-color: rgba( 255, 255, 255, 0% );" );
+    ui->statusBar->addWidget(mAdd);
+
+    mRemove = new QToolButton(this);
+    mRemove->setIcon(QIcon(":/images/minus.svg"));
+    mRemove->setStyleSheet( "background-color: rgba( 255, 255, 255, 0% );" );
+    ui->statusBar->addWidget(mRemove);
+
+    mUp = new QToolButton(this);
+    mUp->setIcon(QIcon(":/images/arrow_up.svg"));
+    mUp->setStyleSheet( "background-color: rgba( 255, 255, 255, 0% );" );
+    ui->statusBar->addWidget(mUp);
+
+
+    mDown = new QToolButton(this);
+    mDown->setIcon(QIcon(":/images/arrow_down.svg"));
+    mDown->setStyleSheet( "background-color: rgba( 255, 255, 255, 0% );" );
+    ui->statusBar->addWidget(mDown);
+
+    mZoom = new QSlider(this);
+    mZoom->setOrientation(Qt::Horizontal);
+    mZoom->setMinimum(1);
+    mZoom->setMaximum(500);
+    mZoom->setValue(100);
+    mZoom->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred));
+    ui->statusBar->addPermanentWidget(mZoom);
 }
 
 void MainWindow::setupMenubars()
@@ -69,9 +111,30 @@ void MainWindow::setupMenubars()
 
 //Tree
     connect(ui->pageTree, SIGNAL(itemClicked(QTreeWidgetItem*,int)), SLOT(pageSelected(QTreeWidgetItem*)));
+    connect(mAdd, SIGNAL(clicked()), SLOT(addNewPage()));
+    connect(mRemove, SIGNAL(clicked()), SLOT(removePages()));
+    connect(ui->pageTree, SIGNAL(itemChanged(QTreeWidgetItem*,int)), SLOT(changeItem(QTreeWidgetItem*,int)));
 
 //TabWidget
     connect(ui->tabWidget, SIGNAL(tabCloseRequested(int)), SLOT(closeTab(int)));
+
+//
+    connect(mZoom, SIGNAL(valueChanged(int)), SLOT(updateZoomLevel(int)));
+}
+
+void MainWindow::updateZoomLevel(int percent)
+{
+    int value = 100;
+    if(percent <= mZoom->maximum() && percent >= mZoom->minimum())
+        value = percent;
+    else if(percent > mZoom->maximum())
+        value = mZoom->maximum();
+    else if (percent < mZoom->minimum())
+        value = mZoom->minimum();
+
+    mZoom->blockSignals(true);
+    mZoom->setValue(value);
+    mZoom->blockSignals(false);
 }
 
 void MainWindow::open()
@@ -127,6 +190,7 @@ void MainWindow::save()
             return;
     }
 
+    saveIndex(mPath);
     saveFile(mPath);
 
 }
@@ -137,6 +201,8 @@ void MainWindow::loadFile(QString folder)
         return;
 
     mPath = folder;
+
+    setWindowFilePath(folder);
 
     Settings::inst()->setValue("currentWiki", QVariant(folder));
 
@@ -160,7 +226,7 @@ void MainWindow::loadFile(QString folder)
     }
 
     file.close();
-    m_wikiFile = fileName;
+    mWikiFile = fileName;
 
     QDomElement docElem = doc.documentElement();
     QDomNode n = docElem.firstChild();
@@ -170,7 +236,7 @@ void MainWindow::loadFile(QString folder)
         QDomElement e = n.toElement(); // try to convert the node to an element.
         if(!e.isNull()) {
             if(e.tagName() == "name") {
-                m_name = e.text();
+                mName = e.text();
                 //TODO: set titlebar.
             } else if (e.tagName() == "page") {
 
@@ -183,6 +249,8 @@ void MainWindow::loadFile(QString folder)
         n = n.nextSibling();
     }
 
+    foreach(QTreeWidgetItem *i, mExpandedItems)
+        i->setExpanded(true);
 }
 
 void MainWindow::saveFile(QString fileName)
@@ -206,12 +274,16 @@ void MainWindow::saveFile(QString fileName)
 QTreeWidgetItem* MainWindow::loadPage(QDomElement element)
 {
     QTreeWidgetItem *item = new QTreeWidgetItem();
+    QString id = element.attribute("id");
 
-    item->setData(0, Qt::UserRole, QVariant(element.attribute("id")));
+    if(id.toInt() > currentMaxPageId())
+        setCurrentMaxPageId(id.toInt() + 1);
+
+    item->setData(0, Qt::UserRole, QVariant(id));
     item->setData(0, Qt::DisplayRole, QVariant(element.attribute("title")));
-
-
     item->setIcon(0, QIcon(element.attribute("icon")));
+    item->setData(0, Qt::UserRole + 1, QVariant(element.attribute("icon")));
+    bool expanded = bool(element.attribute("expanded").toInt());
 
     QDomNode n = element.firstChild();
     while(!n.isNull()) {
@@ -222,9 +294,12 @@ QTreeWidgetItem* MainWindow::loadPage(QDomElement element)
         }
         n = n.nextSibling();
     }
+
+    if(expanded)
+        mExpandedItems.append(item);
+    item->setFlags(item->flags() | Qt::ItemIsEditable);
     return item;
 }
-
 
 void MainWindow::pageSelected(QTreeWidgetItem *page)
 {
@@ -270,6 +345,67 @@ void MainWindow::about()
 
 }
 
+void MainWindow::addNewPage()
+{
+    QTreeWidgetItem *item = 0;
+
+    if(ui->pageTree->selectedItems().count() <= 0)
+        item = ui->pageTree->topLevelItem(0);
+    else
+        item = ui->pageTree->selectedItems().first();
+
+    QTreeWidgetItem *ni = new QTreeWidgetItem();
+
+    ni->setData(0, Qt::UserRole, QVariant(currentMaxPageId()));
+    ni->setData(0, Qt::DisplayRole, QVariant("New item"));
+    ni->setIcon(0, QIcon(":/images/filenew.png"));
+    ni->setData(0, Qt::UserRole + 1, QVariant(":/images/filenew.png"));
+
+    ni->setFlags(ni->flags() | Qt::ItemIsEditable);
+    item->addChild(ni);
+    item->setExpanded(true);
+}
+
+void MainWindow::removePages()
+{
+
+    if(ui->pageTree->selectedItems().count() <= 0)
+        return;
+
+    foreach(QTreeWidgetItem *i, ui->pageTree->selectedItems()) {
+        //TODO: remove pages from the tabWidget.
+        //TODO: remove items from the pageTree.
+    }
+}
+
+int MainWindow::currentMaxPageId()
+{
+    return mCurrentMaxPageId;
+}
+
+void MainWindow::setCurrentMaxPageId(int newId)
+{
+    mCurrentMaxPageId = newId;
+}
+
+void MainWindow::changeItem(QTreeWidgetItem *item, int column)
+{
+    qDebug() << "changeItem";
+    int pageNumber = item->data(column, Qt::UserRole).toInt();
+    Page *p = mPages.value(pageNumber);
+    if(!p)
+        return;
+
+    int tabIndex = ui->tabWidget->indexOf(p);
+    QString tabText = ui->tabWidget->tabText(tabIndex);
+    if(tabText != item->text(0))
+        ui->tabWidget->setTabText(tabIndex, item->text(0));
+
+    //TODO: find an easy way to only change the icon if it actually changes.
+    ui->tabWidget->setTabIcon(tabIndex, item->icon(0));
+
+}
+
 void MainWindow::closeTab(int tabNumber)
 {
     QWidget *w = ui->tabWidget->widget(tabNumber);
@@ -291,6 +427,53 @@ void MainWindow::closeTab(int tabNumber)
     //delete w;
     //w = 0;
 
+}
+
+void MainWindow::saveIndex(QString path)
+{
+    qDebug() << "save index" << path;
+    if(!QFileInfo(path).exists()) {
+        QDir d(path);
+        d.mkpath(path);
+    }
+
+    QString xmlIndex = path + "/" + "index.wiki";
+    QFile file(xmlIndex);
+
+    if(!file.open(QIODevice::WriteOnly)) {
+        //TODO: some nice dialog to warn the user.
+        qWarning() << "Couldn't open file for reading:" << xmlIndex;
+        return;
+    }
+
+    QXmlStreamWriter stream(&file);
+    stream.setAutoFormatting(true);
+    stream.writeStartDocument();
+
+    stream.writeStartElement("dwiki_index");
+
+    stream.writeTextElement("name", mName);
+
+    saveIndexPages(&stream, ui->pageTree->topLevelItem(0));
+
+    stream.writeEndElement(); //dwiki_index
+    stream.writeEndDocument();
+}
+
+void MainWindow::saveIndexPages(QXmlStreamWriter *stream, QTreeWidgetItem *item)
+{
+    stream->writeStartElement("page");
+    stream->writeAttribute("id", item->data(0,Qt::UserRole).toString());
+    stream->writeAttribute("title", item->data(0, Qt::DisplayRole).toString());
+    stream->writeAttribute("icon", item->data(0, Qt::UserRole + 1).toString());
+    stream->writeAttribute("expanded", QString::number(item->isExpanded()));
+
+    for(int i = 0; i < item->childCount(); i++) {
+        QTreeWidgetItem *child = item->child(i);
+        saveIndexPages(stream, child);
+    }
+
+    stream->writeEndElement(); //page
 }
 
 void MainWindow::setTextProperties()

@@ -59,11 +59,11 @@ if(FORCE_32BIT)
     set(extra_link_flags "-m elf_i386")
 endif()
 
-set(CMAKE_C_FLAGS "${extra_build_flags} -g -W -Wall") #-ansi -pedantic
+set(CMAKE_C_FLAGS "${extra_build_flags} -g -gdwarf-2 -W -Wall") #-ansi -pedantic
 set(CMAKE_CXX_FLAGS ${CMAKE_C_FLAGS})
 set(CMAKE_EXE_LINKER_FLAGS " ${CMAKE_EXE_LINKER_FLAGS}")
 
-set(CMAKE_C_FLAGS_DEBUG "${extra_build_flags} -g -W -Wall") #-march=athlon64 -march=atom, core2, i686, (-mtune=generic, native)
+set(CMAKE_C_FLAGS_DEBUG "${extra_build_flags} -g -gdwarf-2 -W -Wall") #-march=athlon64 -march=atom, core2, i686, (-mtune=generic, native)
 set(CMAKE_CXX_FLAGS_DEBUG ${CMAKE_C_FLAGS_DEBUG})
 set(CMAKE_EXE_LINKER_FLAGS_DEBUG "${extra_link_flags} ${CMAKE_EXE_LINKER_FLAGS}")
 
@@ -71,7 +71,7 @@ set(CMAKE_C_FLAGS_RELEASE "${extra_build_flags} -W -Wall -O2 -s")
 set(CMAKE_CXX_FLAGS_RELEASE ${CMAKE_C_FLAGS_RELEASE})
 set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${extra_link_flags} ${CMAKE_EXE_LINKER_FLAGS}")
 
-set(CMAKE_C_FLAGS_PROFILE "${extra_build_flags} -g -pg -W -Wall")
+set(CMAKE_C_FLAGS_PROFILE "${extra_build_flags} -g -gdwarf-2 -pg -W -Wall")
 set(CMAKE_CXX_FLAGS_PROFILE ${CMAKE_C_FLAGS_PROFILE})
 set(CMAKE_EXE_LINKER_FLAGS_PROFILE "-pg " ${CMAKE_EXE_LINKER_FLAGS})
 

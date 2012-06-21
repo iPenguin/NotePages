@@ -1,0 +1,120 @@
+/********************************************************\
+| Copyright (c) 2012 Brian C. Milco <bcmilco@gmail.com>  |
+\********************************************************/
+#include "pageview.h"
+
+#include <QWheelEvent>
+#include <QDebug>
+#include <QScrollBar>
+
+PageView::PageView(QWidget *parent) :
+    QGraphicsView(parent)
+{
+}
+
+PageView::~PageView()
+{
+}
+
+void PageView::mousePressEvent(QMouseEvent* event)
+{
+    QGraphicsView::mousePressEvent(event);
+}
+
+void PageView::mouseMoveEvent(QMouseEvent* event)
+{
+    int deltaX = 0;
+    int deltaY = 0;
+
+    if(event->buttons() == Qt::LeftButton) {
+
+        if(event->pos().x() < 5) {
+            int diff = horizontalScrollBar()->value() - horizontalScrollBar()->minimum();
+            if(diff < deltaX)
+                deltaX = -diff;
+            else
+                deltaX = -5;
+
+        } else if (event->pos().x() > viewport()->width() - 5) {
+            int diff = horizontalScrollBar()->maximum() - horizontalScrollBar()->value();
+            if(diff < deltaX)
+                deltaX = diff;
+            else
+                deltaX = 5;
+        }
+
+        horizontalScrollBar()->setValue(horizontalScrollBar()->value() + deltaX);
+
+        if(event->pos().y() < 5) {
+            int diff = verticalScrollBar()->value() - verticalScrollBar()->minimum();
+            if(diff < deltaY)
+                deltaY = -diff;
+            else
+                deltaY = -5;
+
+        } else if( event->pos().y() > viewport()->height() - 5) {
+            int diff = verticalScrollBar()->maximum() - verticalScrollBar()->value();
+            if(diff < deltaY)
+                deltaY = diff;
+            else
+                deltaY = 5;
+        }
+
+        verticalScrollBar()->setValue(verticalScrollBar()->value() + deltaY);
+
+        bool isHorizLimit = false;
+        isHorizLimit = (horizontalScrollBar()->value() == horizontalScrollBar()->minimum()) ? true : isHorizLimit;
+        isHorizLimit = (horizontalScrollBar()->value() == horizontalScrollBar()->maximum()) ? true : isHorizLimit;
+
+        bool isVertLimit = false;
+        isVertLimit = (verticalScrollBar()->value() == verticalScrollBar()->minimum()) ? true : isVertLimit;
+        isVertLimit = (verticalScrollBar()->value() == verticalScrollBar()->maximum()) ? true : isVertLimit;
+
+        if((deltaX != 0 && !isHorizLimit) || (deltaY != 0 && !isVertLimit))
+            emit scrollBarChanged(deltaX, deltaY);
+    }
+
+    QGraphicsView::mouseMoveEvent(event);
+}
+
+void PageView::mouseReleaseEvent(QMouseEvent* event)
+{
+    QGraphicsView::mouseReleaseEvent(event);
+}
+
+void PageView::wheelEvent(QWheelEvent* event)
+{
+    if (event->modifiers() && Qt::CTRL)
+        zoom(event->delta());
+    else
+        QGraphicsView::wheelEvent(event);
+}
+
+void PageView::zoomIn()
+{
+    zoomLevel((transform().m11()*100) + 5);
+    emit zoomLevelChanged(transform().m11()*100);
+}
+
+void PageView::zoomOut()
+{
+    zoomLevel((transform().m11()*100) - 5);
+    emit zoomLevelChanged(transform().m11()*100);
+}
+
+void PageView::zoom(int mouseDelta)
+{
+    double scroll = mouseDelta / 120;
+    int delta = 5 * scroll;
+    zoomLevel((transform().m11()*100) + delta);
+    emit zoomLevelChanged(transform().m11()*100);
+}
+
+void PageView::zoomLevel(int percent)
+{
+    qreal pcent = percent / 100.0;
+    if(pcent <= 0)
+        pcent = 0.01;
+    qreal diff = pcent / transform().m11();
+    scale(diff, diff);
+}

@@ -163,6 +163,7 @@ void PageScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
             showNoteOptions(e->screenPos());
         }
     }
+
     QGraphicsScene::mouseReleaseEvent(e);
 }
 

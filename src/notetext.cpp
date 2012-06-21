@@ -20,8 +20,10 @@ NoteText::NoteText(QGraphicsItem *parent, QGraphicsScene *scene) :
     mSize(QSizeF(100,50))
 {
     setFlag(QGraphicsItem::ItemIsSelectable);
-    setTextInteractionFlags(Qt::TextEditorInteraction);
+    setTextInteractionFlags(Qt::TextBrowserInteraction);
     setCursor(QCursor(Qt::IBeamCursor));
+
+    //FIXME: emit selection changed information and pass the correct status of text b/i/u left/right/center/justify.
 }
 
 QRectF NoteText::boundingRect() const

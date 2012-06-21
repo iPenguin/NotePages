@@ -36,6 +36,9 @@ public:
 
     void setTextProperties(TextProperty property, bool state);
 
+protected slots:
+    void zoomChanged(int value);
+
 private:
     Ui::Page *ui;
 
