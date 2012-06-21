@@ -68,7 +68,7 @@ void MainWindow::setupStatusBar()
     mZoom = new QSlider(this);
     mZoom->setOrientation(Qt::Horizontal);
     mZoom->setMinimum(1);
-    mZoom->setMaximum(500);
+    mZoom->setMaximum(200);
     mZoom->setValue(100);
     mZoom->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred));
     ui->statusBar->addPermanentWidget(mZoom);
@@ -117,9 +117,10 @@ void MainWindow::setupMenubars()
 
 //TabWidget
     connect(ui->tabWidget, SIGNAL(tabCloseRequested(int)), SLOT(closeTab(int)));
+    connect(ui->tabWidget, SIGNAL(currentChanged(int)), SLOT(tabChanged(int)));
 
-//
-    connect(mZoom, SIGNAL(valueChanged(int)), SLOT(updateZoomLevel(int)));
+//TODO: on tab change update the zoom slider.
+    connect(mZoom, SIGNAL(valueChanged(int)), SLOT(zoomPage(int)));
 }
 
 void MainWindow::updateZoomLevel(int percent)
@@ -135,6 +136,28 @@ void MainWindow::updateZoomLevel(int percent)
     mZoom->blockSignals(true);
     mZoom->setValue(value);
     mZoom->blockSignals(false);
+}
+
+void MainWindow::zoomPage(int percent)
+{
+    QWidget *w = ui->tabWidget->currentWidget();
+    if(!w)
+        return;
+    Page *p = qobject_cast<Page*>(w);
+    p->zoomChanged(percent);
+}
+
+void MainWindow::tabChanged(int newTab)
+{
+    QWidget *w = ui->tabWidget->widget(newTab);
+    if(!w)
+        return;
+
+    Page *p = qobject_cast<Page*>(w);
+
+    int zoomLevel = p->currentZoomLevel();
+
+    mZoom->setValue(zoomLevel);
 }
 
 void MainWindow::open()
@@ -308,13 +331,14 @@ void MainWindow::pageSelected(QTreeWidgetItem *page)
 
     QString pagePath = mPath + "/pages/" + QString::number(pageNumber);
 
-    Page *p;
+    Page *p = 0;
 
     //if the page hasn't been loaded, load it.
     if(!mPages.contains(pageNumber)) {
 
         p = new Page(pagePath);
 
+        //connect(p, SIGNAL(zoomLevelChanged(int)), SLOT(updateZoomLevel(int)));
         mPages.insert(pageNumber, p);
         ui->tabWidget->addTab(p, page->icon(0), page->data(0, Qt::DisplayRole).toString());
     } else {
@@ -356,7 +380,7 @@ void MainWindow::addNewPage()
 
     QTreeWidgetItem *ni = new QTreeWidgetItem();
 
-    ni->setData(0, Qt::UserRole, QVariant(currentMaxPageId()));
+    ni->setData(0, Qt::UserRole, QVariant(useNextPageId()));
     ni->setData(0, Qt::DisplayRole, QVariant("New item"));
     ni->setIcon(0, QIcon(":/images/filenew.png"));
     ni->setData(0, Qt::UserRole + 1, QVariant(":/images/filenew.png"));

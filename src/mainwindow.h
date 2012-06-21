@@ -49,13 +49,18 @@ private slots:
 
     int currentMaxPageId();
     void setCurrentMaxPageId(int newId);
+    int useNextPageId() { mCurrentMaxPageId++; return mCurrentMaxPageId; }
 
     void changeItem(QTreeWidgetItem *item, int column);
 
 protected slots:
     void closeTab(int tabNumber);
 
+    //set zoom slider to the specified value.
     void updateZoomLevel(int percent);
+    void zoomPage(int percent);
+
+    void tabChanged(int newTab);
 
 protected:
     void saveIndex(QString path);

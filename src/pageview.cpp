@@ -8,7 +8,8 @@
 #include <QScrollBar>
 
 PageView::PageView(QWidget *parent) :
-    QGraphicsView(parent)
+    QGraphicsView(parent),
+    mZoomPercent(100)
 {
 }
 
@@ -117,4 +118,5 @@ void PageView::zoomLevel(int percent)
         pcent = 0.01;
     qreal diff = pcent / transform().m11();
     scale(diff, diff);
+    mZoomPercent = percent;
 }

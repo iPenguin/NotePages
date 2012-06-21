@@ -29,7 +29,7 @@ Page::Page(QString pagePath, QWidget *parent) :
     mUndoStack = new QUndoStack(this);
 
 //    connect(ui->zoom, SIGNAL(valueChanged(int)), SLOT(zoomChanged(int)));
-    connect(ui->graphicsView, SIGNAL(zoomLevelChanged(int)), SLOT(updateZoomLevel(int)));
+    connect(ui->graphicsView, SIGNAL(zoomLevelChanged(int)), SIGNAL(zoomLevelChanged(int)));
 
     loadPage();
 }
@@ -187,7 +187,12 @@ void Page::setTextProperties(Page::TextProperty property, bool state)
     }
 }
 
+int Page::currentZoomLevel()
+{
+    return ui->graphicsView->zoomPercent();
+}
+
 void Page::zoomChanged(int value)
 {
-    qDebug() << "value" << value;
+    ui->graphicsView->zoomLevel(value);
 }

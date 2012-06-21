@@ -20,6 +20,8 @@ public:
     void zoom(int mouseDelta);
     void zoomLevel(int percent);
 
+    int zoomPercent() { return mZoomPercent; }
+
 signals:
     void scrollBarChanged(int dx, int dy);
     void zoomLevelChanged(int percent);
@@ -30,7 +32,7 @@ protected:
     void mouseReleaseEvent(QMouseEvent* event);
     void wheelEvent(QWheelEvent* event);
 
-    
+    int mZoomPercent;
 };
 
 #endif // PAGEVIEW_H

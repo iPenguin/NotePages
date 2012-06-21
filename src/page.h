@@ -36,7 +36,12 @@ public:
 
     void setTextProperties(TextProperty property, bool state);
 
-protected slots:
+    int currentZoomLevel();
+
+signals:
+    void zoomLevelChanged(int value);
+
+public slots:
     void zoomChanged(int value);
 
 private:
