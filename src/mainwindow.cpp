@@ -11,8 +11,12 @@
 #include <QMessageBox>
 #include "appinfo.h"
 
+#include <QPropertyAnimation>
+
 #include <QXmlStreamWriter>
 #include <QTimer>
+
+#include <QListWidgetItem>
 
 #include "settings.h"
 
@@ -24,8 +28,8 @@ MainWindow::MainWindow(QWidget *parent) :
     mCurrentMaxPageId(0)
 {
     ui->setupUi(this);
+    ui->iconList->hide();
 
-    setupStatusBar();
     setupMenubars();
     setWindowState(Qt::WindowMaximized);
 
@@ -35,6 +39,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->pageTree->setAttribute(Qt::WA_MacShowFocusRect, 0);
     QString currentFolder = Settings::inst()->value("currentWiki").toString();
     loadFile(currentFolder);
+
+    setupStatusBar();
 }
 
 MainWindow::~MainWindow()
@@ -48,22 +54,31 @@ void MainWindow::setupStatusBar()
     mAdd->setIcon(QIcon(":/images/plus.svg"));
     mAdd->setStyleSheet( "background-color: rgba( 255, 255, 255, 0% );" );
     ui->statusBar->addWidget(mAdd);
+    connect(mAdd, SIGNAL(clicked()), SLOT(addNewPage()));
 
     mRemove = new QToolButton(this);
     mRemove->setIcon(QIcon(":/images/minus.svg"));
     mRemove->setStyleSheet( "background-color: rgba( 255, 255, 255, 0% );" );
     ui->statusBar->addWidget(mRemove);
+    connect(mRemove, SIGNAL(clicked()), SLOT(removePages()));
 
     mUp = new QToolButton(this);
     mUp->setIcon(QIcon(":/images/arrow_up.svg"));
     mUp->setStyleSheet( "background-color: rgba( 255, 255, 255, 0% );" );
     ui->statusBar->addWidget(mUp);
-
+    connect(mUp, SIGNAL(clicked()), SLOT(moveItemUp()));
 
     mDown = new QToolButton(this);
     mDown->setIcon(QIcon(":/images/arrow_down.svg"));
     mDown->setStyleSheet( "background-color: rgba( 255, 255, 255, 0% );" );
     ui->statusBar->addWidget(mDown);
+    connect(mDown, SIGNAL(clicked()), SLOT(moveItemDown()));
+
+    mConfigure = new QToolButton(this);
+    mConfigure->setIcon(QIcon(":/images/configure.svg"));
+    mConfigure->setStyleSheet( "background-color: rgba( 255, 255, 255, 0% );" );
+    ui->statusBar->addWidget(mConfigure);
+    connect(mConfigure, SIGNAL(clicked()), SLOT(configureItem()));
 
     mZoom = new QSlider(this);
     mZoom->setOrientation(Qt::Horizontal);
@@ -72,6 +87,12 @@ void MainWindow::setupStatusBar()
     mZoom->setValue(100);
     mZoom->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred));
     ui->statusBar->addPermanentWidget(mZoom);
+
+    //TODO: on tab change update the zoom slider.
+    connect(mZoom, SIGNAL(valueChanged(int)), SLOT(zoomPage(int)));
+
+    populateIconList();
+
 }
 
 void MainWindow::setupMenubars()
@@ -111,16 +132,12 @@ void MainWindow::setupMenubars()
 
 //Tree
     connect(ui->pageTree, SIGNAL(itemClicked(QTreeWidgetItem*,int)), SLOT(pageSelected(QTreeWidgetItem*)));
-    connect(mAdd, SIGNAL(clicked()), SLOT(addNewPage()));
-    connect(mRemove, SIGNAL(clicked()), SLOT(removePages()));
     connect(ui->pageTree, SIGNAL(itemChanged(QTreeWidgetItem*,int)), SLOT(changeItem(QTreeWidgetItem*,int)));
 
 //TabWidget
     connect(ui->tabWidget, SIGNAL(tabCloseRequested(int)), SLOT(closeTab(int)));
     connect(ui->tabWidget, SIGNAL(currentChanged(int)), SLOT(tabChanged(int)));
 
-//TODO: on tab change update the zoom slider.
-    connect(mZoom, SIGNAL(valueChanged(int)), SLOT(zoomPage(int)));
 }
 
 void MainWindow::updateZoomLevel(int percent)
@@ -278,6 +295,7 @@ void MainWindow::loadFile(QString folder)
 
 void MainWindow::saveFile(QString fileName)
 {
+    Q_UNUSED(fileName);
 
     QWidget *w = ui->tabWidget->currentWidget();
 
@@ -302,9 +320,13 @@ QTreeWidgetItem* MainWindow::loadPage(QDomElement element)
     if(id.toInt() > currentMaxPageId())
         setCurrentMaxPageId(id.toInt() + 1);
 
+    QString iconPath = element.attribute("icon");
+    if(!iconPath.startsWith(":/"))
+        iconPath.prepend(mPath + "/icons/");
+
     item->setData(0, Qt::UserRole, QVariant(id));
     item->setData(0, Qt::DisplayRole, QVariant(element.attribute("title")));
-    item->setIcon(0, QIcon(element.attribute("icon")));
+    item->setIcon(0, QIcon(iconPath));
     item->setData(0, Qt::UserRole + 1, QVariant(element.attribute("icon")));
     bool expanded = bool(element.attribute("expanded").toInt());
 
@@ -350,6 +372,16 @@ void MainWindow::pageSelected(QTreeWidgetItem *page)
 
     //display page.
     ui->tabWidget->setCurrentWidget(p);
+
+    //FIXME: I'd prefer a matching with the full file path and name.
+    QList<QListWidgetItem *> items = ui->iconList->findItems(QFileInfo(page->data(0, Qt::UserRole + 1).toString()).baseName(), Qt::MatchExactly);
+
+    if(items.count() >= 1) {
+        ui->iconList->blockSignals(true);
+        ui->iconList->setCurrentItem(items.first());
+        ui->iconList->blockSignals(false);
+    }
+
 }
 
 
@@ -396,10 +428,50 @@ void MainWindow::removePages()
     if(ui->pageTree->selectedItems().count() <= 0)
         return;
 
-    foreach(QTreeWidgetItem *i, ui->pageTree->selectedItems()) {
+    //TODO: prompt for confirmation.
+
+    //TODO: foreach(QTreeWidgetItem *i, ui->pageTree->selectedItems())
         //TODO: remove pages from the tabWidget.
         //TODO: remove items from the pageTree.
+
+}
+
+void MainWindow::moveItemUp()
+{
+    qDebug() << "moveItemUp";
+}
+
+void MainWindow::moveItemDown()
+{
+    qDebug() << "moveItemDown";
+}
+
+void MainWindow::configureItem()
+{
+    ui->iconList->setVisible(!ui->iconList->isVisible());
+/*TODO: make this slide in like a real Mac app.
+    QPoint start, end;
+
+    QRect hidden = ui->iconList->rect();
+    hidden.setHeight(1);
+    QRect visible = ui->iconList->rect();
+    visible.setHeight(100);
+
+    if(ui->iconList->isVisible()) {
+        start = ui->iconList->pos();
+        end = QPoint(0,ui->centralWidget->height() - ui->iconList->height());
+    } else {
+        start = QPoint(0,ui->centralWidget->height() + ui->iconList->height());
+        end = QPoint(0,ui->centralWidget->height() - ui->iconList->height());
     }
+    ui->iconList->setVisible(true);
+
+    QPropertyAnimation *animation = new QPropertyAnimation(ui->iconList, "pos");
+    animation->setDuration(150);
+    animation->setStartValue(start);
+    animation->setEndValue(end);
+    animation->start();
+*/
 }
 
 int MainWindow::currentMaxPageId()
@@ -414,7 +486,6 @@ void MainWindow::setCurrentMaxPageId(int newId)
 
 void MainWindow::changeItem(QTreeWidgetItem *item, int column)
 {
-    qDebug() << "changeItem";
     int pageNumber = item->data(column, Qt::UserRole).toInt();
     Page *p = mPages.value(pageNumber);
     if(!p)
@@ -459,6 +530,7 @@ void MainWindow::saveIndex(QString path)
     if(!QFileInfo(path).exists()) {
         QDir d(path);
         d.mkpath(path);
+        d.mkdir("icons");
     }
 
     QString xmlIndex = path + "/" + "index.wiki";
@@ -500,6 +572,43 @@ void MainWindow::saveIndexPages(QXmlStreamWriter *stream, QTreeWidgetItem *item)
     stream->writeEndElement(); //page
 }
 
+void MainWindow::populateIconList()
+{
+    //FIXME: reload the icons with each loaded file.
+
+    //FIXME: don't hard code the first path!
+    QDir d(":/icons/");
+
+    QStringList el = d.entryList(QDir::Files);
+
+   foreach(QString file, el) {
+       file.prepend(":/icons/");
+       QIcon icon = QIcon(file);
+       QString name = QFileInfo(file).baseName();
+       QListWidgetItem* item = new QListWidgetItem(icon, name, ui->iconList);
+       item->setData(Qt::UserRole, QVariant(file));
+       item->setToolTip(name);
+       ui->iconList->addItem(item);
+   }
+
+   d.setPath(mPath+"/icons/");
+   el = d.entryList(QDir::Files);
+
+   foreach(QString file, el) {
+       file.prepend(mPath+"/icons/");
+
+       QIcon icon = QIcon(file);
+       QString name = QFileInfo(file).baseName();
+       QListWidgetItem* item = new QListWidgetItem(icon, name, ui->iconList);
+       item->setData(Qt::UserRole, QVariant(file));
+       item->setToolTip(name);
+       ui->iconList->addItem(item);
+   }
+
+   connect(ui->iconList, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)), SLOT(updateItemIcon(QListWidgetItem*,QListWidgetItem*)));
+
+}
+
 void MainWindow::setTextProperties()
 {
     Page::TextProperty property;
@@ -530,4 +639,12 @@ void MainWindow::setTextProperties()
     if(!p)
         return;
     p->setTextProperties(property, a->isChecked());
+}
+
+void MainWindow::updateItemIcon(QListWidgetItem *newItem, QListWidgetItem *oldItem)
+{
+    qDebug() << "update item icons" << oldItem->data(Qt::EditRole) << newItem->data(Qt::EditRole);
+    QTreeWidgetItem *pageItem = ui->pageTree->currentItem();
+    pageItem->setIcon(0, newItem->icon());
+
 }

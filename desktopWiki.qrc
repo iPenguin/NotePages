@@ -33,5 +33,6 @@
         <file>images/minus.svg</file>
         <file>images/plus.svg</file>
         <file>images/wrench.svg</file>
+        <file>images/configure.svg</file>
     </qresource>
 </RCC>

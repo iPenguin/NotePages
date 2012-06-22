@@ -135,12 +135,48 @@ void Page::loadPage()
             } else if (name == "note") {
                 Note *n = new Note(0, mScene);
                 n->loadNote(&stream, mScene->pagePath());
+                updateSceneRect(n);
 
             } else if (name == "group") {
                 qDebug() << "TODO: for each child element load each note.";
             }
         }
     }
+}
+
+void Page::updateSceneRect(Note *n)
+{
+    qDebug() << n->id() << n->pos() << n->boundingRect();
+    qreal left, right, top, bottom;
+
+    qDebug() << "left" << n->boundingRect().left() << mScene->sceneRect().left();
+    if(n->pos().x() < mScene->sceneRect().left()) {
+        left = n->pos().x();
+    } else {
+        left = mScene->sceneRect().left();
+    }
+    qDebug() << "top" << n->boundingRect().top() << mScene->sceneRect().top();
+    if(n->pos().y() < mScene->sceneRect().top()) {
+        top = n->pos().y();
+    } else {
+        top = mScene->sceneRect().top();
+    }
+    qDebug() << "right" << n->boundingRect().right() << mScene->sceneRect().right();
+    if(n->boundingRect().right() > mScene->sceneRect().right()) {
+        right = n->boundingRect().right();
+    } else {
+        right = mScene->sceneRect().right();
+    }
+    qDebug() << "bottom" << n->boundingRect().bottom() << mScene->sceneRect().bottom();
+    if(n->boundingRect().bottom() > mScene->sceneRect().bottom()) {
+        bottom = n->boundingRect().bottom();
+    } else {
+        bottom = mScene->sceneRect().bottom();
+    }
+
+    //FIXME: don't hardcode a margin for the chrome of the notes.
+    mScene->setSceneRect(left - 10, top - 10, right - left, bottom - top);
+    qDebug() << mScene->sceneRect();
 }
 
 void Page::setTextProperties(Page::TextProperty property, bool state)

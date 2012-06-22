@@ -10,6 +10,7 @@
 #include <QMap>
 #include <QToolButton>
 
+class QListWidgetItem;
 class QXmlStreamWriter;
 
 #include "page.h"
@@ -47,6 +48,11 @@ private slots:
     void addNewPage();
     void removePages();
 
+    void moveItemUp();
+    void moveItemDown();
+
+    void configureItem();
+
     int currentMaxPageId();
     void setCurrentMaxPageId(int newId);
     int useNextPageId() { mCurrentMaxPageId++; return mCurrentMaxPageId; }
@@ -66,8 +72,12 @@ protected:
     void saveIndex(QString path);
     void saveIndexPages(QXmlStreamWriter *stream, QTreeWidgetItem *item);
 
+    void populateIconList();
+
 private slots:
     void setTextProperties();
+
+    void updateItemIcon(QListWidgetItem *newItem, QListWidgetItem *oldItem);
 
 private:
     Ui::MainWindow *ui;

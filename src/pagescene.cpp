@@ -23,7 +23,7 @@ PageScene::PageScene(QObject *parent) :
     QGraphicsScene(parent),
     mCurMaxNoteId(1)
 {
-    setSceneRect(-500, -500, 1500,1500);
+    setSceneRect(0, 0, 1500,1500);
 
 }
 

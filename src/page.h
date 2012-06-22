@@ -44,6 +44,9 @@ signals:
 public slots:
     void zoomChanged(int value);
 
+protected:
+    void updateSceneRect(Note *n);
+
 private:
     Ui::Page *ui;
 
