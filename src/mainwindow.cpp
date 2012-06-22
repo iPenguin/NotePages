@@ -643,8 +643,10 @@ void MainWindow::setTextProperties()
 
 void MainWindow::updateItemIcon(QListWidgetItem *newItem, QListWidgetItem *oldItem)
 {
-    qDebug() << "update item icons" << oldItem->data(Qt::EditRole) << newItem->data(Qt::EditRole);
+    Q_UNUSED(oldItem);
+
     QTreeWidgetItem *pageItem = ui->pageTree->currentItem();
     pageItem->setIcon(0, newItem->icon());
+    pageItem->setData(0, Qt::UserRole + 1, newItem->data(Qt::UserRole));
 
 }
