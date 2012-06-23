@@ -10,6 +10,7 @@ set(dw_qobject_headers  mainwindow.h
                         settingsui.h
                         pageproperties.h
                         pageview.h
+                        macmenubar.h
                         )
 
 set(dw_resources

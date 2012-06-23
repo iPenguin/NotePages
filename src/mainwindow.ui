@@ -18,12 +18,12 @@
     <normaloff>:/images/icon.png</normaloff>:/images/icon.png</iconset>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QVBoxLayout" name="verticalLayout_2">
+   <layout class="QVBoxLayout" name="verticalLayout">
     <property name="margin">
      <number>0</number>
     </property>
     <item>
-     <widget class="QSplitter" name="splitter">
+     <widget class="QSplitter" name="splitter_2">
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>
@@ -33,70 +33,79 @@
       <property name="handleWidth">
        <number>1</number>
       </property>
-      <widget class="QWidget" name="layoutWidget">
-       <layout class="QVBoxLayout" name="verticalLayout">
-        <item>
-         <widget class="QTreeWidget" name="pageTree">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="frameShape">
-           <enum>QFrame::NoFrame</enum>
-          </property>
-          <property name="frameShadow">
-           <enum>QFrame::Plain</enum>
-          </property>
-          <property name="lineWidth">
-           <number>1</number>
-          </property>
-          <property name="dragEnabled">
-           <bool>true</bool>
-          </property>
-          <property name="dragDropMode">
-           <enum>QAbstractItemView::DragDrop</enum>
-          </property>
-          <property name="defaultDropAction">
-           <enum>Qt::MoveAction</enum>
-          </property>
-          <property name="iconSize">
-           <size>
-            <width>32</width>
-            <height>32</height>
-           </size>
-          </property>
-          <property name="rootIsDecorated">
-           <bool>true</bool>
-          </property>
-          <attribute name="headerVisible">
-           <bool>false</bool>
-          </attribute>
-          <column>
-           <property name="text">
-            <string notr="true">Pages</string>
-           </property>
-          </column>
-         </widget>
-        </item>
-        <item>
-         <widget class="QListWidget" name="iconList">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="iconSize">
-           <size>
-            <width>24</width>
-            <height>24</height>
-           </size>
-          </property>
-         </widget>
-        </item>
-       </layout>
+      <property name="childrenCollapsible">
+       <bool>false</bool>
+      </property>
+      <widget class="QSplitter" name="splitter">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="opaqueResize">
+        <bool>false</bool>
+       </property>
+       <property name="handleWidth">
+        <number>1</number>
+       </property>
+       <property name="childrenCollapsible">
+        <bool>false</bool>
+       </property>
+       <widget class="QTreeWidget" name="pageTree">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::NoFrame</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Plain</enum>
+        </property>
+        <property name="lineWidth">
+         <number>1</number>
+        </property>
+        <property name="dragEnabled">
+         <bool>true</bool>
+        </property>
+        <property name="dragDropMode">
+         <enum>QAbstractItemView::DragDrop</enum>
+        </property>
+        <property name="defaultDropAction">
+         <enum>Qt::MoveAction</enum>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>32</width>
+          <height>32</height>
+         </size>
+        </property>
+        <property name="rootIsDecorated">
+         <bool>true</bool>
+        </property>
+        <attribute name="headerVisible">
+         <bool>false</bool>
+        </attribute>
+        <column>
+         <property name="text">
+          <string notr="true">Pages</string>
+         </property>
+        </column>
+       </widget>
+       <widget class="QListWidget" name="iconList">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>24</width>
+          <height>24</height>
+         </size>
+        </property>
+       </widget>
       </widget>
       <widget class="QTabWidget" name="tabWidget">
        <property name="sizePolicy">
@@ -141,6 +150,7 @@
     <property name="title">
      <string>File</string>
     </property>
+    <addaction name="actionNew"/>
     <addaction name="actionOpen"/>
     <addaction name="separator"/>
     <addaction name="actionSave"/>
@@ -208,7 +218,7 @@
   <action name="actionOpen">
    <property name="icon">
     <iconset resource="../desktopWiki.qrc">
-     <normaloff>:/images/fileopen.png</normaloff>:/images/fileopen.png</iconset>
+     <normaloff>:/images/fileopen.svgz</normaloff>:/images/fileopen.svgz</iconset>
    </property>
    <property name="text">
     <string>Open</string>
@@ -220,7 +230,7 @@
   <action name="actionSave">
    <property name="icon">
     <iconset resource="../desktopWiki.qrc">
-     <normaloff>:/images/filesave.png</normaloff>:/images/filesave.png</iconset>
+     <normaloff>:/images/filesave.svgz</normaloff>:/images/filesave.svgz</iconset>
    </property>
    <property name="text">
     <string>Save</string>
@@ -248,7 +258,7 @@
   <action name="actionExport">
    <property name="icon">
     <iconset resource="../desktopWiki.qrc">
-     <normaloff>:/images/exportpdf.png</normaloff>:/images/exportpdf.png</iconset>
+     <normaloff>:/images/document_export.svgz</normaloff>:/images/document_export.svgz</iconset>
    </property>
    <property name="text">
     <string>Export</string>
@@ -257,7 +267,7 @@
   <action name="actionCopy">
    <property name="icon">
     <iconset resource="../desktopWiki.qrc">
-     <normaloff>:/images/editcopy.png</normaloff>:/images/editcopy.png</iconset>
+     <normaloff>:/images/edit_copy.svgz</normaloff>:/images/edit_copy.svgz</iconset>
    </property>
    <property name="text">
     <string>Copy</string>
@@ -269,7 +279,7 @@
   <action name="actionCut">
    <property name="icon">
     <iconset resource="../desktopWiki.qrc">
-     <normaloff>:/images/editcut.png</normaloff>:/images/editcut.png</iconset>
+     <normaloff>:/images/edit_cut.svgz</normaloff>:/images/edit_cut.svgz</iconset>
    </property>
    <property name="text">
     <string>Cut</string>
@@ -281,7 +291,7 @@
   <action name="actionPaste">
    <property name="icon">
     <iconset resource="../desktopWiki.qrc">
-     <normaloff>:/images/editpaste.png</normaloff>:/images/editpaste.png</iconset>
+     <normaloff>:/images/edit_paste.svgz</normaloff>:/images/edit_paste.svgz</iconset>
    </property>
    <property name="text">
     <string>Paste</string>
@@ -306,7 +316,7 @@
    </property>
    <property name="icon">
     <iconset resource="../desktopWiki.qrc">
-     <normaloff>:/images/textbold.png</normaloff>:/images/textbold.png</iconset>
+     <normaloff>:/images/text_bold.svgz</normaloff>:/images/text_bold.svgz</iconset>
    </property>
    <property name="text">
     <string>Bold</string>
@@ -318,7 +328,7 @@
    </property>
    <property name="icon">
     <iconset resource="../desktopWiki.qrc">
-     <normaloff>:/images/textitalic.png</normaloff>:/images/textitalic.png</iconset>
+     <normaloff>:/images/text_italic.svgz</normaloff>:/images/text_italic.svgz</iconset>
    </property>
    <property name="text">
     <string>Italic</string>
@@ -330,7 +340,7 @@
    </property>
    <property name="icon">
     <iconset resource="../desktopWiki.qrc">
-     <normaloff>:/images/textunder.png</normaloff>:/images/textunder.png</iconset>
+     <normaloff>:/images/text_under.svgz</normaloff>:/images/text_under.svgz</iconset>
    </property>
    <property name="text">
     <string>Underline</string>
@@ -342,7 +352,7 @@
    </property>
    <property name="icon">
     <iconset resource="../desktopWiki.qrc">
-     <normaloff>:/images/textleft.png</normaloff>:/images/textleft.png</iconset>
+     <normaloff>:/images/text_left.svgz</normaloff>:/images/text_left.svgz</iconset>
    </property>
    <property name="text">
     <string>Left Justify</string>
@@ -354,7 +364,7 @@
    </property>
    <property name="icon">
     <iconset resource="../desktopWiki.qrc">
-     <normaloff>:/images/textright.png</normaloff>:/images/textright.png</iconset>
+     <normaloff>:/images/text_right.svgz</normaloff>:/images/text_right.svgz</iconset>
    </property>
    <property name="text">
     <string>Right Justify</string>
@@ -366,7 +376,7 @@
    </property>
    <property name="icon">
     <iconset resource="../desktopWiki.qrc">
-     <normaloff>:/images/textcenter.png</normaloff>:/images/textcenter.png</iconset>
+     <normaloff>:/images/text_center.svgz</normaloff>:/images/text_center.svgz</iconset>
    </property>
    <property name="text">
     <string>Center</string>
@@ -378,7 +388,7 @@
    </property>
    <property name="icon">
     <iconset resource="../desktopWiki.qrc">
-     <normaloff>:/images/textjustify.png</normaloff>:/images/textjustify.png</iconset>
+     <normaloff>:/images/text_block.svgz</normaloff>:/images/text_block.svgz</iconset>
    </property>
    <property name="text">
     <string>Justify</string>
@@ -397,6 +407,21 @@
   <action name="actionInsertTable">
    <property name="text">
     <string>Insert Table</string>
+   </property>
+  </action>
+  <action name="actionNew">
+   <property name="icon">
+    <iconset resource="../desktopWiki.qrc">
+     <normaloff>:/images/filenew.svgz</normaloff>:/images/filenew.svgz</iconset>
+   </property>
+   <property name="text">
+    <string>New...</string>
+   </property>
+   <property name="toolTip">
+    <string>New document</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
    </property>
   </action>
  </widget>

@@ -24,9 +24,12 @@ class MainWindow : public QMainWindow
     Q_OBJECT
     
 public:
-    explicit MainWindow(QWidget *parent = 0);
+    explicit MainWindow(bool autoLoad = true, QWidget *parent = 0);
     ~MainWindow();
     
+public slots:
+    void loadFile(QString folder);
+
 private slots:
 //File
     void open();
@@ -34,12 +37,12 @@ private slots:
     void quit();
     void save();
 
+    void fileNewFile();
+
 //Edit
     void copy();
     void cut();
     void paste();
-
-    void loadFile(QString folder);
 
     void pageSelected(QTreeWidgetItem* page);
 //Help

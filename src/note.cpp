@@ -112,7 +112,6 @@ void Note::loadNote(QXmlStreamReader* stream, QString pagePath)
 
     int id = stream->attributes().value("id").toString().toInt();
     setId(id);
-    qDebug() << "load note id" << id;
 
     setPath(pagePath);
     setPos(x, y);
@@ -333,8 +332,6 @@ void Note::setImage(QString img, QSizeF size)
 
     mImage = img;
     if(!mImage.isEmpty()) {
-        qDebug() << "setImage (size): " << br << size;
-        qDebug() << (size.isEmpty() ? br.size().toSize() : size.toSize());
         mPixmap = QPixmap(size.isEmpty() ? br.size().toSize() : size.toSize());
         mPixmap.load(mPath + "/" + img);
 

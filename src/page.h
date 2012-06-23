@@ -38,6 +38,8 @@ public:
 
     int currentZoomLevel();
 
+    void deletePage();
+
 signals:
     void zoomLevelChanged(int value);
 

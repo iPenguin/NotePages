@@ -22,7 +22,7 @@
 
 #include <QDebug>
 
-MainWindow::MainWindow(QWidget *parent) :
+MainWindow::MainWindow(bool autoLoad, QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
     mCurrentMaxPageId(0)
@@ -35,47 +35,70 @@ MainWindow::MainWindow(QWidget *parent) :
 
     setUnifiedTitleAndToolBarOnMac(true);
 
+    setAttribute(Qt::WA_DeleteOnClose);
+
+
     ui->pageTree->setStyleSheet("QTreeWidget { background: #D6DDE5 }");
     ui->pageTree->setAttribute(Qt::WA_MacShowFocusRect, 0);
-    QString currentFolder = Settings::inst()->value("currentWiki").toString();
-    loadFile(currentFolder);
+    QPalette palette = ui->pageTree->palette();
+    QColor macSidebarColor(231, 237, 246);
+    QColor macSidebarHighlightColor(168, 183, 205);
+    palette.setColor(QPalette::Base, macSidebarColor);
+    palette.setColor(QPalette::Highlight, macSidebarHighlightColor);
+    ui->pageTree->setPalette(palette);
+    ui->pageTree->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
+    if(autoLoad) {
+        QString currentFolder = Settings::inst()->value("currentWiki").toString();
+        loadFile(currentFolder);
+    }
 
     setupStatusBar();
+
+#ifdef Q_OS_MACX
+    QApplication::setQuitOnLastWindowClosed(false);
+#endif
+    //QSettings settings;
+
+    restoreGeometry(Settings::inst()->value("Geometry").toByteArray());
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+    //Settings::inst()->setValue("Geometry", saveGeometry());
+    QSettings settings;
+    settings.setValue("Geometry", saveGeometry());
 }
 
 void MainWindow::setupStatusBar()
 {
     mAdd = new QToolButton(this);
-    mAdd->setIcon(QIcon(":/images/plus.svg"));
+    mAdd->setIcon(QIcon(":/images/list_add.svgz"));
     mAdd->setStyleSheet( "background-color: rgba( 255, 255, 255, 0% );" );
     ui->statusBar->addWidget(mAdd);
     connect(mAdd, SIGNAL(clicked()), SLOT(addNewPage()));
 
     mRemove = new QToolButton(this);
-    mRemove->setIcon(QIcon(":/images/minus.svg"));
+    mRemove->setIcon(QIcon(":/images/list_remove.svgz"));
     mRemove->setStyleSheet( "background-color: rgba( 255, 255, 255, 0% );" );
     ui->statusBar->addWidget(mRemove);
     connect(mRemove, SIGNAL(clicked()), SLOT(removePages()));
 
     mUp = new QToolButton(this);
-    mUp->setIcon(QIcon(":/images/arrow_up.svg"));
+    mUp->setIcon(QIcon(":/images/up.svgz"));
     mUp->setStyleSheet( "background-color: rgba( 255, 255, 255, 0% );" );
     ui->statusBar->addWidget(mUp);
     connect(mUp, SIGNAL(clicked()), SLOT(moveItemUp()));
 
     mDown = new QToolButton(this);
-    mDown->setIcon(QIcon(":/images/arrow_down.svg"));
+    mDown->setIcon(QIcon(":/images/down.svgz"));
     mDown->setStyleSheet( "background-color: rgba( 255, 255, 255, 0% );" );
     ui->statusBar->addWidget(mDown);
     connect(mDown, SIGNAL(clicked()), SLOT(moveItemDown()));
 
     mConfigure = new QToolButton(this);
-    mConfigure->setIcon(QIcon(":/images/configure.svg"));
+    mConfigure->setIcon(QIcon(":/images/configure.svgz"));
     mConfigure->setStyleSheet( "background-color: rgba( 255, 255, 255, 0% );" );
     ui->statusBar->addWidget(mConfigure);
     connect(mConfigure, SIGNAL(clicked()), SLOT(configureItem()));
@@ -104,6 +127,7 @@ void MainWindow::setupMenubars()
     connect(ui->actionSave, SIGNAL(triggered()), SLOT(save()));
 
     connect(ui->actionQuit, SIGNAL(triggered()), SLOT(quit()));
+    connect(ui->actionNew, SIGNAL(triggered()), SLOT(fileNewFile()));
 
 //Edit
     connect(ui->actionCopy, SIGNAL(triggered()), SLOT(copy()));
@@ -189,7 +213,8 @@ void MainWindow::closeFile()
 
 void MainWindow::quit()
 {
-    QApplication::quit();
+    qDebug() << "quit";
+    QApplication::closeAllWindows();
 }
 
 void MainWindow::copy()
@@ -233,6 +258,14 @@ void MainWindow::save()
     saveIndex(mPath);
     saveFile(mPath);
 
+}
+
+void MainWindow::fileNewFile()
+{
+    MainWindow *mainWin = new MainWindow(false);
+    mainWin->rect().setX(mainWin->rect().x() + 10);
+    mainWin->rect().setY(mainWin->rect().y() + 10);
+    mainWin->show();
 }
 
 void MainWindow::loadFile(QString folder)
@@ -414,8 +447,8 @@ void MainWindow::addNewPage()
 
     ni->setData(0, Qt::UserRole, QVariant(useNextPageId()));
     ni->setData(0, Qt::DisplayRole, QVariant("New item"));
-    ni->setIcon(0, QIcon(":/images/filenew.png"));
-    ni->setData(0, Qt::UserRole + 1, QVariant(":/images/filenew.png"));
+    ni->setIcon(0, QIcon(":/images/filenew.svgz"));
+    ni->setData(0, Qt::UserRole + 1, QVariant(":/images/filenew.svgz"));
 
     ni->setFlags(ni->flags() | Qt::ItemIsEditable);
     item->addChild(ni);
@@ -430,6 +463,20 @@ void MainWindow::removePages()
 
     //TODO: prompt for confirmation.
 
+    QTreeWidgetItem *i = ui->pageTree->currentItem();
+    if(!i)
+        return;
+    int pageNumber = i->data(0,Qt::UserRole).toInt();
+    qDebug() << "page number" << pageNumber;
+
+    Page *p = mPages.value(pageNumber);
+    p->deletePage();
+    mPages.remove(pageNumber);
+
+    //delete ui->pageTree->takeTopLevelItem(ui->pageTree->);
+
+    //i->parent()->removeChild(i);
+    //ui->pageTree->removeItemWidget(i, 0);
     //TODO: foreach(QTreeWidgetItem *i, ui->pageTree->selectedItems())
         //TODO: remove pages from the tabWidget.
         //TODO: remove items from the pageTree.
