@@ -17,8 +17,9 @@ class MacMenuBar : public QObject
 {
     Q_OBJECT
 public:
-    MacMenuBar() {
-
+    MacMenuBar()
+    {
+        //TODO: Add Help, About, and etc that should work even when the window is closed.
         QMenu* fileMenu = new QMenu("&File");
         QAction *newAction = fileMenu->addAction("New...");
         QAction *openAction = fileMenu->addAction("Open");

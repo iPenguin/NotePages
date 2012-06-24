@@ -203,18 +203,20 @@ void MainWindow::tabChanged(int newTab)
 
 void MainWindow::open()
 {
+
+    //FIXME: check if the file is already open and switch if it is.
     load();
 }
 
 void MainWindow::closeFile()
 {
-
+    deleteLater();
 }
 
 void MainWindow::quit()
 {
-    qDebug() << "quit";
-    QApplication::closeAllWindows();
+
+    QApplication::quit();
 }
 
 void MainWindow::copy()

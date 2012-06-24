@@ -20,7 +20,6 @@ int main(int argc, char *argv[])
     qApp->setOrganizationName(AppInfo::inst()->appOrg);
     qApp->setOrganizationDomain(AppInfo::inst()->appOrgDomain);
 
-
 #ifdef Q_OS_MAC
     QMenuBar *menuBar = new QMenuBar(0);
     MacMenuBar *mb = new MacMenuBar();
@@ -31,8 +30,6 @@ int main(int argc, char *argv[])
 
     MainWindow *mainWin = new MainWindow;
     mainWin->show();
-
-
 
     return a.exec();
 }

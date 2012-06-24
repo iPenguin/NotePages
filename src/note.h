@@ -63,6 +63,10 @@ protected:
     void mouseMoveEvent(QGraphicsSceneMouseEvent *e);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *e);
 
+    void hoverEnterEvent(QGraphicsSceneHoverEvent *e);
+    //void hoverMoveEvent(QGraphicsSceneHoverEvent *e);
+    void hoverLeaveEvent(QGraphicsSceneHoverEvent *e);
+
 private:
     bool mSizeHandle;
 
@@ -83,6 +87,8 @@ private:
     QGraphicsPixmapItem *mNoteImage;
 
     QString mPath;
+
+    bool mHovering;
 };
 
 #endif // NOTE_H

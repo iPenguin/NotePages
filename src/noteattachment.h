@@ -5,6 +5,7 @@
 #define NOTEATTACHMENT_H
 
 #include <QGraphicsTextItem>
+#include <QIcon>
 
 class NoteAttachment : public QGraphicsTextItem
 {
@@ -26,6 +27,7 @@ protected:
 private:
     QString mPath;
     QString mFile;
+    QIcon mIcon;
 };
 
 #endif // NOTEATTACHMENT_H

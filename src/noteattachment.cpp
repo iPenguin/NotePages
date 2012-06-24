@@ -10,8 +10,12 @@
 #include <QCursor>
 #include <QUrl>
 
+#include <QFileIconProvider>
+#include <QFileInfo>
+
 NoteAttachment::NoteAttachment(QGraphicsItem *parent, QGraphicsScene *scene)
-    : QGraphicsTextItem(parent, scene)
+    : QGraphicsTextItem(parent, scene),
+      mIcon(QIcon())
 {
     setAcceptHoverEvents(true);
     setFlag(QGraphicsItem::ItemIsSelectable);
@@ -21,13 +25,14 @@ NoteAttachment::NoteAttachment(QGraphicsItem *parent, QGraphicsScene *scene)
 QRectF NoteAttachment::boundingRect() const
 {
 
-    return QGraphicsTextItem::boundingRect();
+    return QGraphicsTextItem::boundingRect().adjusted(0,0,64,64);
 }
 
 void NoteAttachment::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
 
     QGraphicsTextItem::paint(painter, option, widget);
+    painter->drawPixmap(0,0,64,64, mIcon.pixmap(64,64));
 }
 
 void NoteAttachment::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
@@ -44,8 +49,11 @@ void NoteAttachment::setAttachment(QString path, QString fileName)
         mFile = fileName;
         hide();
     } else {
+        QFileInfo fInfo(path + "/" + fileName);
+        QFileIconProvider *fip = new QFileIconProvider();
+        mIcon = fip->icon(fInfo);
 
-        setHtml("<a href=\"file://" + fileName +"\"><img src=\"/Users/brian/projects/desktopWiki/images/attachment.svg\" height=16 width=16 />" + fileName + "</a>");
+        setHtml("<a href=\"file://" + fileName +"\">" + fileName + "</a>");
         mPath = path;
         mFile = fileName;
         show();

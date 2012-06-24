@@ -22,7 +22,8 @@ Note::Note(QGraphicsItem *parent, QGraphicsScene *scene) :
     mImage(""),
     mDiff(QPointF(3,20)),
     mOldSize(QSizeF(100,50)),
-    mNoteImage(0)
+    mNoteImage(0),
+    mHovering(false)
 {
 
     mNoteText = new NoteText(this, scene);
@@ -31,6 +32,7 @@ Note::Note(QGraphicsItem *parent, QGraphicsScene *scene) :
 
     setFlag(QGraphicsItem::ItemIsMovable);
     setCursor(QCursor(Qt::OpenHandCursor));
+    setAcceptHoverEvents(true);
     mAdded = QDateTime::currentDateTime();
 
     mNoteAttachment = new NoteAttachment(this, scene);
@@ -39,6 +41,7 @@ Note::Note(QGraphicsItem *parent, QGraphicsScene *scene) :
 
     mNoteOptions = new NoteOptions(this, scene);
     mNoteOptions->setPos(0,-24);
+    //mNoteOptions->hide();
 
 }
 
@@ -68,19 +71,20 @@ void Note::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     Q_UNUSED(option);
     Q_UNUSED(widget);
 
-    QRectF br = boundingRect();
+//    if(mHovering) {
+        QRectF br = boundingRect();
 
-    painter->setPen(Qt::gray);
-    painter->setBrush(QBrush(QColor(225,225,225, 128)));
-    painter->drawRoundedRect(br.toRect(), 5, 5);
+        painter->setPen(Qt::gray);
+        painter->setBrush(QBrush(QColor(225,225,225, 128)));
+        painter->drawRoundedRect(br.toRect(), 5, 5);
 
-    //DEBUG: show id
-    //painter->drawText(0,0, QString::number(id()));
+        //DEBUG: show id
+        //painter->drawText(0,0, QString::number(id()));
 
-    //draw resize handle.
-    painter->drawLine(QPointF(br.right(), br.bottom() - 15), QPointF(br.right() - 15, br.bottom()));
-    painter->drawLine(QPointF(br.right() -3, br.bottom() - 7), QPointF(br.right() - 7, br.bottom() - 3));
-
+        //draw resize handle.
+        painter->drawLine(QPointF(br.right(), br.bottom() - 15), QPointF(br.right() - 15, br.bottom()));
+        painter->drawLine(QPointF(br.right() -3, br.bottom() - 7), QPointF(br.right() - 7, br.bottom() - 3));
+//    }
 }
 
 void Note::deleteNote()
@@ -289,6 +293,25 @@ void Note::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
     QGraphicsItem::mouseReleaseEvent(e);
 
     setCursor(QCursor(Qt::OpenHandCursor));
+}
+
+void Note::hoverEnterEvent(QGraphicsSceneHoverEvent *e)
+{
+
+    mHovering = true;
+    //mNoteAttachment->show();
+    //mNoteOptions->show();
+    setZValue(100);
+    QGraphicsItem::hoverEnterEvent(e);
+}
+
+void Note::hoverLeaveEvent(QGraphicsSceneHoverEvent *e)
+{
+    mHovering = false;
+    //mNoteAttachment->hide();
+    //mNoteOptions->hide();
+    setZValue(0);
+    QGraphicsItem::hoverLeaveEvent(e);
 }
 
 
