@@ -16,7 +16,8 @@
 
 Page::Page(QString pagePath, QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::Page)
+    ui(new Ui::Page),
+    mDeleted(false)
 {
     ui->setupUi(this);
 
@@ -36,7 +37,8 @@ Page::Page(QString pagePath, QWidget *parent) :
 
 Page::~Page()
 {
-    savePage();
+    if(!mDeleted)
+        savePage();
     delete ui;
 }
 
@@ -96,12 +98,16 @@ bool Page::isSaved()
 
 void Page::loadPage()
 {
-
-    QString xmlIndex = mScene->pagePath() + "/page.xml";
+    QString pagePath = mScene->pagePath();
+    QString xmlIndex = pagePath + "/page.xml";
 
     if(!QFileInfo(xmlIndex).exists()) {
-        qDebug() << "TODO: Create" << xmlIndex;
-        //TODO: create pagePath and some basic data.
+        if(!QFileInfo(pagePath).exists()) {
+            QString parentDir = QFileInfo(pagePath).path();
+            QString dir = QFileInfo(pagePath).baseName();
+            QDir d(parentDir);
+            d.mkdir(dir);
+        }
     }
 
     QFile file(xmlIndex);
@@ -229,7 +235,20 @@ int Page::currentZoomLevel()
 void Page::deletePage()
 {
     //FIXME: delete files on disk and data.
+    foreach(QGraphicsItem *i, mScene->items()) {
+        if(i->type() == Note::Type) {
+            Note *n = qgraphicsitem_cast<Note*>(i);
+            n->deleteNote();
+        }
+    }
+
+
+    QDir d(QFileInfo(mScene->pagePath()).path());
+    d.remove(QFileInfo(mScene->pagePath()).fileName() + "/page.xml");
+    d.rmdir(QFileInfo(mScene->pagePath()).fileName());
+
     deleteLater();
+    mDeleted = true;
 }
 
 void Page::zoomChanged(int value)

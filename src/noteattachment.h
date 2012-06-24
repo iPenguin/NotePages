@@ -20,6 +20,7 @@ public:
 
     void setAttachment(QString path, QString fileName);
 
+    //short file name.
     QString file() { return mFile; }
 protected:
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *e);

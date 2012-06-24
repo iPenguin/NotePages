@@ -90,18 +90,27 @@ void Note::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
 void Note::deleteNote()
 {
     QString noteFile = mPath + "/note" + QString::number(mId) + ".html";
-    qDebug() << noteFile;
+
     if(QFileInfo(noteFile).exists()) {
-        qDebug() << mPath;
         QDir d(mPath);
         d.remove(noteFile);
 
     }
 
-    //FIXME: offer to delete any attachments
+    //TODO: prompt to delete any attachments
+    QString attachment = mNoteAttachment->file();
+    if(QFileInfo(attachment).exists()) {
+        QDir d(mPath);
+        d.remove(attachment);
+    }
 
-    //FIXME: offer to delete any images.
-
+    //TODO: prompt to delete any images.
+    QString image = mImage;
+    qDebug() << mPath << image << QFileInfo(image).exists();
+    if(QFileInfo(mPath + "/" +image).exists()) {
+        QDir d(mPath);
+        d.remove(image);
+    }
 }
 
 void Note::loadNote(QXmlStreamReader* stream, QString pagePath)

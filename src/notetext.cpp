@@ -56,7 +56,6 @@ void NoteText::mousePressEvent(QGraphicsSceneMouseEvent *e)
 void NoteText::focusOutEvent(QFocusEvent *e)
 {
     setTextInteractionFlags(Qt::NoTextInteraction);
-
     QGraphicsTextItem::focusOutEvent(e);
 }
 

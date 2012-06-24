@@ -57,6 +57,8 @@ private:
     int mId;
 
     QUndoStack *mUndoStack;
+
+    bool mDeleted;
 };
 
 #endif // PAGE_H
