@@ -32,21 +32,21 @@ public slots:
 
 private slots:
 //File
-    void open();
-    void closeFile();
-    void quit();
-    void save();
+    void fileOpen();
+    void fileClose();
+    void fileQuit();
+    void fileSave();
 
-    void fileNewFile();
+    void fileNew();
 
 //Edit
-    void copy();
-    void cut();
-    void paste();
+    void editCopy();
+    void editCut();
+    void editPaste();
 
     void pageSelected(QTreeWidgetItem* page);
 //Help
-    void about();
+    void helpAbout();
 
     void addNewPage();
     void removePages();

@@ -65,6 +65,7 @@ MainWindow::MainWindow(bool autoLoad, QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
+    saveIndex(mPath);
     delete ui;
     //Settings::inst()->setValue("Geometry", saveGeometry());
     QSettings settings;
@@ -122,17 +123,17 @@ void MainWindow::setupMenubars()
 {
 
 //File
-    connect(ui->actionOpen, SIGNAL(triggered()), SLOT(open()));
-    connect(ui->actionClose, SIGNAL(triggered()), SLOT(closeFile()));
-    connect(ui->actionSave, SIGNAL(triggered()), SLOT(save()));
+    connect(ui->actionOpen, SIGNAL(triggered()), SLOT(fileOpen()));
+    connect(ui->actionClose, SIGNAL(triggered()), SLOT(fileClose()));
+    connect(ui->actionSave, SIGNAL(triggered()), SLOT(fileSave()));
 
-    connect(ui->actionQuit, SIGNAL(triggered()), SLOT(quit()));
-    connect(ui->actionNew, SIGNAL(triggered()), SLOT(fileNewFile()));
+    connect(ui->actionQuit, SIGNAL(triggered()), SLOT(fileQuit()));
+    connect(ui->actionNew, SIGNAL(triggered()), SLOT(fileNew()));
 
 //Edit
-    connect(ui->actionCopy, SIGNAL(triggered()), SLOT(copy()));
-    connect(ui->actionCut, SIGNAL(triggered()), SLOT(cut()));
-    connect(ui->actionPaste, SIGNAL(triggered()), SLOT(paste()));
+    connect(ui->actionCopy, SIGNAL(triggered()), SLOT(editCopy()));
+    connect(ui->actionCut, SIGNAL(triggered()), SLOT(editCut()));
+    connect(ui->actionPaste, SIGNAL(triggered()), SLOT(editPaste()));
 
 //Toolbar
     QActionGroup *g = new QActionGroup(this);
@@ -152,7 +153,7 @@ void MainWindow::setupMenubars()
     connect(ui->actionJustify, SIGNAL(triggered()), SLOT(setTextProperties()));
 
 //Help
-    connect(ui->actionAbout_DesktopWiki, SIGNAL(triggered()), SLOT(about()));
+    connect(ui->actionAbout_DesktopWiki, SIGNAL(triggered()), SLOT(helpAbout()));
 
 //Tree
     connect(ui->pageTree, SIGNAL(itemClicked(QTreeWidgetItem*,int)), SLOT(pageSelected(QTreeWidgetItem*)));
@@ -201,35 +202,35 @@ void MainWindow::tabChanged(int newTab)
     mZoom->setValue(zoomLevel);
 }
 
-void MainWindow::open()
+void MainWindow::fileOpen()
 {
 
     //FIXME: check if the file is already open and switch if it is.
     load();
 }
 
-void MainWindow::closeFile()
+void MainWindow::fileClose()
 {
     deleteLater();
 }
 
-void MainWindow::quit()
+void MainWindow::fileQuit()
 {
 
     QApplication::quit();
 }
 
-void MainWindow::copy()
+void MainWindow::editCopy()
 {
 
 }
 
-void MainWindow::cut()
+void MainWindow::editCut()
 {
 
 }
 
-void MainWindow::paste()
+void MainWindow::editPaste()
 {
 
 }
@@ -246,7 +247,7 @@ void MainWindow::load()
 
 }
 
-void MainWindow::save()
+void MainWindow::fileSave()
 {
     //FIXME: use a QFileDialog as load() above.
     if(mPath.isEmpty()) {
@@ -262,7 +263,7 @@ void MainWindow::save()
 
 }
 
-void MainWindow::fileNewFile()
+void MainWindow::fileNew()
 {
     MainWindow *mainWin = new MainWindow(false);
     mainWin->rect().setX(mainWin->rect().x() + 10);
@@ -420,19 +421,9 @@ void MainWindow::pageSelected(QTreeWidgetItem *page)
 }
 
 
-void MainWindow::about()
+void MainWindow::helpAbout()
 {
-    QString aboutInfo = QString(tr("<h1>%1</h1>"
-                                       "<p>Version: %2 (built on %3)</p>"
-                                       "<p>Copyright (c) 2012 Brian Milco</p>"
-                                       "<p>This software is a note taking application with the"
-                                        "ability to do cross-references like an online wiki.</p>")
-                                    .arg(qApp->applicationName())
-                                    .arg(qApp->applicationVersion())
-                                    .arg(AppInfo::inst()->appBuildInfo)
-                                    );
-
-    QMessageBox::about(this, tr("About desktopWiki"), aboutInfo);
+    AppInfo::inst()->helpAbout();
 
 }
 
@@ -464,21 +455,17 @@ void MainWindow::removePages()
         return;
 
     //TODO: prompt for confirmation.
-
     QTreeWidgetItem *i = ui->pageTree->currentItem();
     if(!i)
         return;
     int pageNumber = i->data(0,Qt::UserRole).toInt();
-    qDebug() << "page number" << pageNumber;
 
     Page *p = mPages.value(pageNumber);
     p->deletePage();
     mPages.remove(pageNumber);
 
-    //delete ui->pageTree->takeTopLevelItem(ui->pageTree->);
+    delete i;
 
-    //i->parent()->removeChild(i);
-    //ui->pageTree->removeItemWidget(i, 0);
     //TODO: foreach(QTreeWidgetItem *i, ui->pageTree->selectedItems())
         //TODO: remove pages from the tabWidget.
         //TODO: remove items from the pageTree.
