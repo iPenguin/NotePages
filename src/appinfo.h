@@ -51,6 +51,8 @@ public:
     const quint32 magicNumber;
     const quint32 magicNumberSet;
 
+    void helpAbout();
+
 private:
     static AppInfo* mInstance;
     

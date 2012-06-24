@@ -3,6 +3,9 @@
 \********************************************************/
 #include "appinfo.h"
 
+#include <QMessageBox>
+#include <QApplication>
+
 AppInfo* AppInfo::mInstance = NULL;
 
 AppInfo::AppInfo() :
@@ -29,4 +32,20 @@ AppInfo::AppInfo() :
     magicNumber(0x95969530),
     magicNumberSet(0x53095969)
 {
+}
+
+void AppInfo::helpAbout()
+{
+
+    QString aboutInfo = QString(QObject::tr("<h1>%1</h1>"
+                                       "<p>Version: %2 (built on %3)</p>"
+                                       "<p>Copyright (c) 2012 Brian Milco</p>"
+                                       "<p>This software is a note taking application with the"
+                                        "ability to do cross-references like an online wiki.</p>")
+                                    .arg(qApp->applicationName())
+                                    .arg(qApp->applicationVersion())
+                                    .arg(appBuildInfo)
+                                    );
+
+    QMessageBox::about(qApp->activeWindow(), QObject::tr("About desktopWiki"), aboutInfo);
 }

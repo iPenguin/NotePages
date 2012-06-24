@@ -1,3 +1,6 @@
+/********************************************************\
+| Copyright (c) 2012 Brian C. Milco <bcmilco@gmail.com>  |
+\********************************************************/
 #ifndef MACMENUBAR_H
 #define MACMENUBAR_H
 
@@ -12,21 +15,20 @@
 
 #include <QDebug>
 
+#include "appinfo.h"
+
+#include <QApplication>
 #include "mainwindow.h"
+
 class MacMenuBar : public QObject
 {
     Q_OBJECT
 public:
     MacMenuBar()
     {
-        //TODO: Add Help, About, and etc that should work even when the window is closed.
-        QMenu* fileMenu = new QMenu("&File");
-        QAction *newAction = fileMenu->addAction("New...");
-        QAction *openAction = fileMenu->addAction("Open");
-        connect(newAction, SIGNAL(triggered()), SLOT(newDocument()));
-        connect(openAction, SIGNAL(triggered()), SLOT(openDocument()));
+        //reconnectMenu();
 
-        menus.append(fileMenu);
+        connect(qApp, SIGNAL(lastWindowClosed()), SLOT(reconnectMenu()));
     }
 
     QList<QMenu*> menus;
@@ -48,6 +50,34 @@ public slots:
         MainWindow *mainWin = new MainWindow(false);
         mainWin->loadFile(document);
         mainWin->show();
+    }
+
+    void helpAbout()
+    {
+
+        AppInfo::inst()->helpAbout();
+    }
+
+    void reconnectMenu()
+    {
+
+        QMenuBar *menuBar = new QMenuBar(0);
+        qDebug() << "reconnect menus";
+        //TODO: Add Help, About, and etc that should work even when the window is closed.
+        QMenu *fileMenu = new QMenu("&File");
+        QAction *newAction = fileMenu->addAction("New...");
+        QAction *openAction = fileMenu->addAction("Open");
+        connect(newAction, SIGNAL(triggered()), SLOT(newDocument()));
+        connect(openAction, SIGNAL(triggered()), SLOT(openDocument()));
+        QMenu *helpMenu = new QMenu("&Help");
+        QAction *a = new QAction("About desktopWiki", 0);
+        a->setMenuRole(QAction::TextHeuristicRole);
+        helpMenu->addAction(a);
+
+        connect(a, SIGNAL(triggered()), SLOT(helpAbout()));
+
+        menuBar->addMenu(fileMenu);
+        menuBar->addMenu(helpMenu);
     }
 };
 
