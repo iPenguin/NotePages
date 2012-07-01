@@ -26,7 +26,7 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(bool autoLoad = true, QWidget *parent = 0);
     ~MainWindow();
-    
+
 public slots:
     void loadFile(QString folder);
 
@@ -62,6 +62,8 @@ private slots:
 
     void changeItem(QTreeWidgetItem *item, int column);
 
+    void loadPageFromLink(QString link);
+
 protected slots:
     void closeTab(int tabNumber);
 
@@ -77,6 +79,8 @@ protected:
 
     void populateIconList();
 
+    void selectPage(int pageNumber);
+
 private slots:
     void setTextProperties();
 
@@ -86,6 +90,8 @@ private:
     Ui::MainWindow *ui;
 
     void load();
+
+    QTreeWidgetItem* findPage(int pageNumber);
 
     //update the titlebar, and other pointers to the current page.
     void setCurrentPage(int pageId);

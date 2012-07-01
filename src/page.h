@@ -42,9 +42,11 @@ public:
 
 signals:
     void zoomLevelChanged(int value);
+    void changePage(QString link);
 
 public slots:
     void zoomChanged(int value);
+    void nextPage(QString link);
 
 protected:
     void updateSceneRect(Note *n);

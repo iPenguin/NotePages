@@ -24,15 +24,18 @@ Page::Page(QString pagePath, QWidget *parent) :
     mScene = new PageScene(this);
     mScene->setPagePath(pagePath);
 
+    connect(mScene, SIGNAL(changePage(QString)), SLOT(nextPage(QString)));
     ui->graphicsView->setScene(mScene);
 
     //FIXME: move this code into a seperate function.
     mUndoStack = new QUndoStack(this);
 
-//    connect(ui->zoom, SIGNAL(valueChanged(int)), SLOT(zoomChanged(int)));
     connect(ui->graphicsView, SIGNAL(zoomLevelChanged(int)), SIGNAL(zoomLevelChanged(int)));
 
     loadPage();
+
+    ui->graphicsView->ensureVisible(QRectF(0,0,50,50));
+
 }
 
 Page::~Page()
@@ -76,7 +79,7 @@ void Page::savePage()
 
         foreach(QGraphicsItem *i, mScene->items()) {
             if(i->type() != Note::Type) {
-                qDebug() << "Unknown QGraphicsItem::Type" << i->type();
+                //qDebug() << "Unknown QGraphicsItem::Type" << i->type();
                 continue;
             }
 
@@ -93,7 +96,7 @@ void Page::savePage()
 bool Page::isSaved()
 {
     //FIXME: check if the page has been saved.
-    return true;
+    return false;
 }
 
 void Page::loadPage()
@@ -143,7 +146,7 @@ void Page::loadPage()
                 Note *n = new Note(0, mScene);
                 n->loadNote(&stream, mScene->pagePath());
                 updateSceneRect(n);
-
+                connect(n, SIGNAL(pageLinkClicked(QString)), SLOT(nextPage(QString)));
             } else if (name == "group") {
                 qDebug() << "TODO: for each child element load each note.";
             }
@@ -186,7 +189,6 @@ void Page::updateSceneRect(Note *n)
 void Page::setTextProperties(Page::TextProperty property, bool state)
 {
     if(mScene->selectedItems().count() <= 0) {
-        qDebug() << "no items selected";
         return;
     }
     QGraphicsItem *i = mScene->selectedItems().first();
@@ -254,4 +256,9 @@ void Page::deletePage()
 void Page::zoomChanged(int value)
 {
     ui->graphicsView->zoomLevel(value);
+}
+
+void Page::nextPage(QString link)
+{
+    emit changePage(link);
 }

@@ -11,6 +11,7 @@ class QTextCharFormat;
 
 class NoteText : public QGraphicsTextItem
 {
+    Q_OBJECT
 
 public:
     NoteText(QGraphicsItem *parent = 0, QGraphicsScene *scene = 0);
@@ -30,10 +31,17 @@ public:
 
     void setTextBlockAlignment(Qt::Alignment align);
 
-public slots:
+signals:
+    void pageLink(QString link);
+
+protected slots:
+    void hoveringOverLink(QString link);
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *e);
+    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *e);
+
+    void hoverMoveEvent(QGraphicsSceneHoverEvent *e);
     void focusOutEvent(QFocusEvent *e);
 
     void mergeFormatOnSelection(QTextCharFormat format);

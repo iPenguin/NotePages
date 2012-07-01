@@ -11,6 +11,7 @@ PageView::PageView(QWidget *parent) :
     QGraphicsView(parent),
     mZoomPercent(100)
 {
+    setInteractive(true);
 }
 
 PageView::~PageView()

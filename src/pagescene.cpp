@@ -133,6 +133,11 @@ void PageScene::loadImage(QString fileName)
 
 }
 
+void PageScene::pageLinkClicked(QString link)
+{
+    emit changePage(link);
+}
+
 void PageScene::drawBackground(QPainter *painter, const QRectF &rect)
 {
     QGraphicsScene::drawBackground(painter, rect);
@@ -145,8 +150,8 @@ void PageScene::mousePressEvent(QGraphicsSceneMouseEvent *e)
         Note *n = createNewNote();
         n->setPos(e->scenePos());
         n->setPath(mPagePath);
-
     }
+
     QGraphicsScene::mousePressEvent(e);
 }
 
@@ -213,11 +218,12 @@ Note* PageScene::createNewNote(int noteId)
     } else { //create a new note.
         newId = mCurMaxNoteId;
         mCurMaxNoteId++;
+        n->setTextEditMode(true);
     }
 
     n->setId(newId);
     n->setSize(QSizeF(100,50));
     addItem(n);
-
+    connect(n, SIGNAL(pageLinkClicked(QString)), SLOT(pageLinkClicked(QString)));
     return n;
 }

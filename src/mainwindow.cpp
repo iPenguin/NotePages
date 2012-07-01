@@ -72,6 +72,22 @@ MainWindow::~MainWindow()
     settings.setValue("Geometry", saveGeometry());
 }
 
+void MainWindow::loadPageFromLink(QString link)
+{
+
+    if(link.startsWith("dwiki://"))
+        link = link.remove("dwiki://");
+
+    QString page, note;
+    if(link.contains("#")) {
+        int idx = link.indexOf("#");
+        note = link.right(link.length() - (idx + 1));
+        page = link.left(idx);
+    }
+
+    selectPage(page.toInt());
+}
+
 void MainWindow::setupStatusBar()
 {
     mAdd = new QToolButton(this);
@@ -247,6 +263,18 @@ void MainWindow::load()
 
 }
 
+QTreeWidgetItem *MainWindow::findPage(int pageNumber)
+{
+    QTreeWidgetItemIterator it(ui->pageTree);
+     while (*it) {
+         if ((*it)->data(0, Qt::UserRole).toInt() == pageNumber)
+             return *it;
+         ++it;
+     }
+
+     return 0;
+}
+
 void MainWindow::fileSave()
 {
     //FIXME: use a QFileDialog as load() above.
@@ -386,18 +414,34 @@ void MainWindow::pageSelected(QTreeWidgetItem *page)
 {
 
     int pageNumber = page->data(0, Qt::UserRole).toInt();
+    selectPage(pageNumber);
+
+}
+
+void MainWindow::selectPage(int pageNumber)
+{
 
     QString pagePath = mPath + "/pages/" + QString::number(pageNumber);
 
     Page *p = 0;
+
+    QTreeWidgetItem *page = findPage(pageNumber);
+
+    if(!page) {
+        return;
+    }
+
+    //update the user selection
+    ui->pageTree->currentItem()->setSelected(false);
+    page->setSelected(true);
 
     //if the page hasn't been loaded, load it.
     if(!mPages.contains(pageNumber)) {
 
         p = new Page(pagePath);
 
-        //connect(p, SIGNAL(zoomLevelChanged(int)), SLOT(updateZoomLevel(int)));
         mPages.insert(pageNumber, p);
+
         ui->tabWidget->addTab(p, page->icon(0), page->data(0, Qt::DisplayRole).toString());
     } else {
         p = mPages.value(pageNumber);
@@ -406,6 +450,7 @@ void MainWindow::pageSelected(QTreeWidgetItem *page)
         }
     }
 
+    connect(p, SIGNAL(changePage(QString)), SLOT(loadPageFromLink(QString)));
     //display page.
     ui->tabWidget->setCurrentWidget(p);
 
@@ -417,9 +462,7 @@ void MainWindow::pageSelected(QTreeWidgetItem *page)
         ui->iconList->setCurrentItem(items.first());
         ui->iconList->blockSignals(false);
     }
-
 }
-
 
 void MainWindow::helpAbout()
 {
@@ -438,10 +481,16 @@ void MainWindow::addNewPage()
 
     QTreeWidgetItem *ni = new QTreeWidgetItem();
 
+    QString newIcon;
+    if(ui->pageTree->currentItem())
+        newIcon = ui->pageTree->currentItem()->data(0, Qt::UserRole + 1).toString();
+    else
+        newIcon = ":/images/filenew.svgz";
+
     ni->setData(0, Qt::UserRole, QVariant(useNextPageId()));
-    ni->setData(0, Qt::DisplayRole, QVariant("New item"));
-    ni->setIcon(0, QIcon(":/images/filenew.svgz"));
-    ni->setData(0, Qt::UserRole + 1, QVariant(":/images/filenew.svgz"));
+    ni->setData(0, Qt::DisplayRole, QVariant("New page"));
+    ni->setIcon(0, QIcon(newIcon));
+    ni->setData(0, Qt::UserRole + 1, QVariant(newIcon));
 
     ni->setFlags(ni->flags() | Qt::ItemIsEditable);
     item->addChild(ni);
@@ -562,7 +611,7 @@ void MainWindow::closeTab(int tabNumber)
 
 void MainWindow::saveIndex(QString path)
 {
-    qDebug() << "save index" << path;
+
     if(!QFileInfo(path).exists()) {
         QDir d(path);
         d.mkpath(path);

@@ -19,13 +19,16 @@ public:
     void setPagePath(QString pp) { mPagePath = pp; }
 
 signals:
-    
+    void changePage(QString newPage);
+
 public slots:
     void deleteNote();
     void addAttachment();
     void loadAttachment(QString fileName);
     void addImage();
     void loadImage(QString fileName);
+
+    void pageLinkClicked(QString link);
 
 private slots:
     void showNoteOptions(QPointF screenPos);

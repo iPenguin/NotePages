@@ -8,9 +8,10 @@ set(dw_qobject_headers  mainwindow.h
                         pagescene.h
                         settings.h
                         settingsui.h
-                        pageproperties.h
                         pageview.h
                         macmenubar.h
+                        notetext.h
+                        note.h
                         )
 
 set(dw_resources

@@ -10,12 +10,8 @@
 #include <QCursor>
 #include <QUrl>
 
-#include <QFileIconProvider>
-#include <QFileInfo>
-
 NoteAttachment::NoteAttachment(QGraphicsItem *parent, QGraphicsScene *scene)
-    : QGraphicsTextItem(parent, scene),
-      mIcon(QIcon())
+    : QGraphicsTextItem(parent, scene)
 {
     setAcceptHoverEvents(true);
     setFlag(QGraphicsItem::ItemIsSelectable);
@@ -49,10 +45,6 @@ void NoteAttachment::setAttachment(QString path, QString fileName)
         mFile = fileName;
         hide();
     } else {
-        QFileInfo fInfo(path + "/" + fileName);
-        QFileIconProvider *fip = new QFileIconProvider();
-        mIcon = fip->icon(fInfo);
-
         setHtml("<a href=\"file://" + fileName +"\">" + fileName + "</a>");
         mPath = path;
         mFile = fileName;

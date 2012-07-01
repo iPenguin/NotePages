@@ -14,6 +14,8 @@
 #include <QTextDocument>
 #include <math.h>
 
+#include <QFileIconProvider>
+
 #include <QCursor>
 
 Note::Note(QGraphicsItem *parent, QGraphicsScene *scene) :
@@ -28,11 +30,12 @@ Note::Note(QGraphicsItem *parent, QGraphicsScene *scene) :
 
     mNoteText = new NoteText(this, scene);
     mNoteText->setPos(0,0);
-    mNoteText->setTextInteractionFlags(Qt::TextEditorInteraction);
+    connect(mNoteText, SIGNAL(linkActivated(QString)), SLOT(signalSend(QString)));
 
     setFlag(QGraphicsItem::ItemIsMovable);
-    setCursor(QCursor(Qt::OpenHandCursor));
+    //setCursor(QCursor(Qt::OpenHandCursor));
     setAcceptHoverEvents(true);
+
     mAdded = QDateTime::currentDateTime();
 
     mNoteAttachment = new NoteAttachment(this, scene);
@@ -106,7 +109,6 @@ void Note::deleteNote()
 
     //TODO: prompt to delete any images.
     QString image = mImage;
-    qDebug() << mPath << image << QFileInfo(image).exists();
     if(QFileInfo(mPath + "/" +image).exists()) {
         QDir d(mPath);
         d.remove(image);
@@ -177,7 +179,7 @@ void Note::loadNote(QXmlStreamReader* stream, QString pagePath)
             stream->skipCurrentElement();
 
         } else {
-            qDebug() << "Unknown note element, skipping" << stream->name().toString();
+            //qDebug() << "Unknown note element, skipping" << stream->name().toString();
         }
 
     }
@@ -196,7 +198,7 @@ void Note::saveNote(QXmlStreamWriter *stream)
     stream->writeAttribute("lastModified", lastModified().toString("yyyy-MM-dd hh:mm:ss"));
     stream->writeAttribute("added", addedDate().toString("yyyy-MM-dd hh:mm:ss"));
 
-    qDebug() << "TODO: connect string for pointers";
+    qDebug() << "TODO: add connect strings for links between notes";
     //TODO: foreach connection create an xml fragment.
     stream->writeStartElement("connect");
     stream->writeAttribute("id", "");
@@ -225,7 +227,7 @@ void Note::saveNote(QXmlStreamWriter *stream)
         QFile f(mPath + "/" + noteFile);
 
         if(!f.open(QFile::WriteOnly)) {
-            qDebug() << "error opeing file for writing: " << f.fileName();
+            qDebug() << "error opening file for writing: " << f.fileName();
         }
 
         QTextStream out(&f);
@@ -250,7 +252,7 @@ void Note::mousePressEvent(QGraphicsSceneMouseEvent *e)
         mOldSize = (mNoteImage ? QSizeF(mNoteImage->pixmap().size()) : mNoteText->size());
     }
 
-    setCursor(QCursor(Qt::ClosedHandCursor));
+    //setCursor(QCursor(Qt::ClosedHandCursor));
 }
 
 void Note::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
@@ -294,14 +296,14 @@ void Note::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
 
     if(mSizeHandle) {
         mDiff = QPointF(0,0);
-        setCursor(QCursor(Qt::OpenHandCursor));
+        //setCursor(QCursor(Qt::OpenHandCursor));
         mSizeHandle = false;
         update();
     }
 
     QGraphicsItem::mouseReleaseEvent(e);
 
-    setCursor(QCursor(Qt::OpenHandCursor));
+    //setCursor(QCursor(Qt::OpenHandCursor));
 }
 
 void Note::hoverEnterEvent(QGraphicsSceneHoverEvent *e)
@@ -376,4 +378,9 @@ void Note::setImage(QString img, QSizeF size)
     } else
         mNoteText->show();
 
+}
+
+void Note::signalSend(QString link)
+{
+    emit pageLinkClicked(link);
 }

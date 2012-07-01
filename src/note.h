@@ -5,6 +5,7 @@
 #define NOTE_H
 
 #include <QGraphicsItem>
+#include <QObject>
 #include <QDateTime>
 #include <QXmlStreamReader>
 
@@ -12,9 +13,9 @@
 #include "noteattachment.h"
 #include "noteoptions.h"
 
-class Note : public QGraphicsItem
+class Note : public QObject, public QGraphicsItem
 {
-
+    Q_OBJECT
 public:
     explicit Note(QGraphicsItem *parent = 0, QGraphicsScene *scene = 0);
     
@@ -57,6 +58,15 @@ public:
 
     //perminantly delete the contents of the note.
     void deleteNote();
+
+    void setTextEditMode(bool value) { mNoteText->setTextInteractionFlags(value ? Qt::TextEditorInteraction
+                                             : Qt::TextBrowserInteraction); }
+
+signals:
+    void pageLinkClicked(QString link);
+
+public slots:
+    void signalSend(QString link);
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *e);

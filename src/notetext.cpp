@@ -11,6 +11,7 @@
 #include <QStyleOptionGraphicsItem>
 
 #include <QFocusEvent>
+#include <QString>
 
 #include <QDebug>
 
@@ -20,9 +21,11 @@ NoteText::NoteText(QGraphicsItem *parent, QGraphicsScene *scene) :
     mSize(QSizeF(100,50))
 {
     setFlag(QGraphicsItem::ItemIsSelectable);
-    setTextInteractionFlags(Qt::TextBrowserInteraction);
-    setCursor(QCursor(Qt::IBeamCursor));
+    setTextInteractionFlags(Qt::TextBrowserInteraction); //Qt::TextEditorInteraction);
+    //setCursor(QCursor(Qt::IBeamCursor));
+    setOpenExternalLinks(false);
 
+    connect(this, SIGNAL(linkHovered(QString)), SLOT(hoveringOverLink(QString)));
     //FIXME: emit selection changed information and pass the correct status of text b/i/u left/right/center/justify.
 }
 
@@ -47,16 +50,39 @@ void NoteText::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
 void NoteText::mousePressEvent(QGraphicsSceneMouseEvent *e)
 {
 
-    if (textInteractionFlags() == Qt::NoTextInteraction)
-        setTextInteractionFlags(Qt::TextEditorInteraction);
+
+    /** Code needed to make Spell Checking work for suggested replacements, when right clicking..
+     *QTextCursor c = textCursor();
+     *c.setPosition(document()->documentLayout()->hitTest(event->pos(), Qt::FuzzyHit));
+     *c.select(QTextCursor::WordUnderCursor);
+     *qDebug() << "selected text:" << c.selectedText();
+     **/
 
     QGraphicsTextItem::mousePressEvent(e);
 }
 
+void NoteText::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *e)
+{
+    if (textInteractionFlags() == Qt::TextBrowserInteraction)
+        setTextInteractionFlags(Qt::TextEditorInteraction);
+
+    QGraphicsTextItem::mouseDoubleClickEvent(e);
+}
+
+void NoteText::hoverMoveEvent(QGraphicsSceneHoverEvent *e)
+{
+    QGraphicsTextItem::hoverMoveEvent(e);
+}
+
 void NoteText::focusOutEvent(QFocusEvent *e)
 {
-    setTextInteractionFlags(Qt::NoTextInteraction);
+    setTextInteractionFlags(Qt::TextBrowserInteraction);
     QGraphicsTextItem::focusOutEvent(e);
+}
+
+void NoteText::hoveringOverLink(QString link)
+{
+    setCursor(QCursor(Qt::PointingHandCursor));
 }
 
 void NoteText::setSize(QSizeF size)

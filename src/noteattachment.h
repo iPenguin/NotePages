@@ -28,7 +28,6 @@ protected:
 private:
     QString mPath;
     QString mFile;
-    QIcon mIcon;
 };
 
 #endif // NOTEATTACHMENT_H
