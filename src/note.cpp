@@ -346,7 +346,21 @@ void Note::setSize(QSizeF size)
 
 void Note::setAttachment(QString attchmnt)
 {
+    QRectF br = boundingRect();
     mNoteAttachment->setAttachment(mPath, attchmnt);
+
+    if(!attchmnt.isEmpty()) {
+        QFileInfo fInfo(mPath + "/" + attchmnt);
+        QFileIconProvider *fip = new QFileIconProvider();
+        mPixmap = fip->icon(fInfo).pixmap(128);
+        mNoteImage = scene()->addPixmap(mPixmap);
+        mNoteImage->setParentItem(this);
+        mNoteImage->setPos(0,0);
+        mNoteImage->show();
+
+        mNoteText->hide();
+        mNoteText->setTextWidth(1);
+    }
 }
 
 void Note::removeAttachment()

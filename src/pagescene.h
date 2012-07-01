@@ -39,6 +39,11 @@ protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *e);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *e);
 
+    void dragEnterEvent(QGraphicsSceneDragDropEvent *e);
+    void dragMoveEvent(QGraphicsSceneDragDropEvent *e);
+    void dragLeaveEvent(QGraphicsSceneDragDropEvent *e);
+    void dropEvent(QGraphicsSceneDragDropEvent *e);
+
     Note* createNewNote(int noteId = -1);
 
 private:

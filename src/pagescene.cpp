@@ -17,6 +17,10 @@
 #include <QMessageBox>
 #include <QFileDialog>
 
+#include <QImageReader>
+#include <QUrl>
+#include <QString>
+
 #include <QDebug>
 
 PageScene::PageScene(QObject *parent) :
@@ -170,6 +174,46 @@ void PageScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
     }
 
     QGraphicsScene::mouseReleaseEvent(e);
+}
+
+void PageScene::dragEnterEvent(QGraphicsSceneDragDropEvent *e)
+{
+}
+
+void PageScene::dragMoveEvent(QGraphicsSceneDragDropEvent *e)
+{
+}
+
+void PageScene::dragLeaveEvent(QGraphicsSceneDragDropEvent *e)
+{
+}
+
+void PageScene::dropEvent(QGraphicsSceneDragDropEvent *e)
+{
+    const QMimeData* mime = e->mimeData();
+
+    // Is an image present?
+    if (mime->hasUrls()) {
+        QList<QUrl> urls = mime->urls();
+        foreach(QUrl u, urls) {
+
+            QString url = u.toString().remove(QRegExp("^[a-zA-Z].*://"));
+
+            QFile::copy(QFileInfo(url).path() + "/" + QFileInfo(url).fileName(), mPagePath + "/" + QFileInfo(url).fileName());
+
+            Note *n = createNewNote();
+            //QByteArray imageFormat = QImageReader::imageFormat(url);
+
+            qDebug() << "drag file: " << QFileInfo(url).fileName();
+            if(!true) {
+                n->setAttachment(QFileInfo(url).fileName());
+            } else {
+                n->setImage(QFileInfo(url).fileName(), QSizeF());
+            }
+        }
+    }
+    e->setAccepted(mime->hasUrls());
+    //QGraphicsScene::dropEvent(e);
 }
 
 void PageScene::showNoteOptions(QPointF screenPos)

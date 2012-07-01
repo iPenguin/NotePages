@@ -28,7 +28,6 @@ void NoteAttachment::paint(QPainter *painter, const QStyleOptionGraphicsItem *op
 {
 
     QGraphicsTextItem::paint(painter, option, widget);
-    painter->drawPixmap(0,0,64,64, mIcon.pixmap(64,64));
 }
 
 void NoteAttachment::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
