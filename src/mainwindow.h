@@ -12,11 +12,12 @@
 
 class QListWidgetItem;
 class QXmlStreamWriter;
+class LinkDialog;
 
 #include "page.h"
 
 namespace Ui {
-class MainWindow;
+    class MainWindow;
 }
 
 class MainWindow : public QMainWindow
@@ -86,8 +87,12 @@ private slots:
 
     void updateItemIcon(QListWidgetItem *newItem, QListWidgetItem *oldItem);
 
+    void addLink();
+    void addLinkToNote(QString link);
+
 private:
     Ui::MainWindow *ui;
+    LinkDialog *mLinkDialog;
 
     void load();
 

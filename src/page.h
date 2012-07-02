@@ -40,6 +40,8 @@ public:
 
     void deletePage();
 
+    void addLinkToNote(QString link);
+
 signals:
     void zoomLevelChanged(int value);
     void changePage(QString link);

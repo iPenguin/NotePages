@@ -12,6 +12,7 @@ set(dw_qobject_headers  mainwindow.h
                         macmenubar.h
                         notetext.h
                         note.h
+                        linkdialog.h
                         )
 
 set(dw_resources

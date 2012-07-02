@@ -198,8 +198,8 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
-   <addaction name="actionOpen"/>
-   <addaction name="actionSave"/>
+   <addaction name="actionBack"/>
+   <addaction name="actionForward"/>
    <addaction name="separator"/>
    <addaction name="actionCopy"/>
    <addaction name="actionCut"/>
@@ -213,6 +213,8 @@
    <addaction name="actionCenterJustify"/>
    <addaction name="actionRightJustify"/>
    <addaction name="actionJustify"/>
+   <addaction name="separator"/>
+   <addaction name="actionAddLink"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionOpen">
@@ -422,6 +424,33 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+N</string>
+   </property>
+  </action>
+  <action name="actionAddLink">
+   <property name="icon">
+    <iconset resource="../desktopWiki.qrc">
+     <normaloff>:/images/insert_link.svgz</normaloff>:/images/insert_link.svgz</iconset>
+   </property>
+   <property name="text">
+    <string>Add Link</string>
+   </property>
+  </action>
+  <action name="actionBack">
+   <property name="icon">
+    <iconset resource="../desktopWiki.qrc">
+     <normaloff>:/images/back.svgz</normaloff>:/images/back.svgz</iconset>
+   </property>
+   <property name="text">
+    <string>Back</string>
+   </property>
+  </action>
+  <action name="actionForward">
+   <property name="icon">
+    <iconset resource="../desktopWiki.qrc">
+     <normaloff>:/images/forward.svgz</normaloff>:/images/forward.svgz</iconset>
+   </property>
+   <property name="text">
+    <string>Forward</string>
    </property>
   </action>
  </widget>

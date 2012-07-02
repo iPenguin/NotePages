@@ -253,6 +253,23 @@ void Page::deletePage()
     mDeleted = true;
 }
 
+void Page::addLinkToNote(QString link)
+{
+    if(mScene->selectedItems().count() <= 0) {
+        qWarning() << "consider creating a note and adding the link to it";
+        return;
+    }
+
+    QGraphicsItem *i = mScene->selectedItems().first();
+    if(i->type() != NoteText::Type) {
+        qWarning() << "Not a Note: " << i->type();
+        return;
+    }
+
+    Note *n = qgraphicsitem_cast<Note*>(i);
+    qDebug() << "TODO: Add link to Note:" << n->id();
+}
+
 void Page::zoomChanged(int value)
 {
     ui->graphicsView->zoomLevel(value);

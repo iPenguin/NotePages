@@ -4,6 +4,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include "linkdialog.h"
+
 #include <QFileDialog>
 #include <QDomDocument>
 #include <QDomElement>
@@ -25,6 +27,7 @@
 MainWindow::MainWindow(bool autoLoad, QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
+    mLinkDialog(0),
     mCurrentMaxPageId(0)
 {
     ui->setupUi(this);
@@ -167,6 +170,8 @@ void MainWindow::setupMenubars()
     connect(ui->actionCenterJustify, SIGNAL(triggered()), SLOT(setTextProperties()));
     connect(ui->actionRightJustify, SIGNAL(triggered()), SLOT(setTextProperties()));
     connect(ui->actionJustify, SIGNAL(triggered()), SLOT(setTextProperties()));
+
+    connect(ui->actionAddLink, SIGNAL(triggered()), SLOT(addLink()));
 
 //Help
     connect(ui->actionAbout_DesktopWiki, SIGNAL(triggered()), SLOT(helpAbout()));
@@ -734,4 +739,24 @@ void MainWindow::updateItemIcon(QListWidgetItem *newItem, QListWidgetItem *oldIt
     pageItem->setIcon(0, newItem->icon());
     pageItem->setData(0, Qt::UserRole + 1, newItem->data(Qt::UserRole));
 
+}
+
+void MainWindow::addLink()
+{
+    if(!mLinkDialog) {
+        mLinkDialog = new LinkDialog(ui->pageTree, this);
+        connect(mLinkDialog, SIGNAL(linkCreated(QString)), SLOT(addLinkToNote(QString)));
+    }
+    mLinkDialog->open();
+}
+
+void MainWindow::addLinkToNote(QString link)
+{
+    QWidget *w = ui->tabWidget->currentWidget();
+    if(!w)
+        return;
+
+    Page *p = qobject_cast<Page*>(w);
+
+    p->addLinkToNote(link);
 }

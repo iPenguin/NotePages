@@ -137,8 +137,6 @@
         <file>icons/voicecall.png</file>
         <file>icons/wallet_closed.png</file>
         <file>icons/wallet_open.png</file>
-        <file>images/insertImg.jpg</file>
-        <file>images/insertLink.jpg</file>
         <file>images/list_add.svgz</file>
         <file>images/list_remove.svgz</file>
         <file>images/text_block.svgz</file>
@@ -174,5 +172,9 @@
         <file>images/filesaveas.svgz</file>
         <file>images/redo.svgz</file>
         <file>images/undo.svgz</file>
+        <file>images/back.svgz</file>
+        <file>images/edit_create_symbolic_link.svgz</file>
+        <file>images/forward.svgz</file>
+        <file>images/insert_link.svgz</file>
     </qresource>
 </RCC>
