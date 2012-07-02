@@ -55,7 +55,7 @@ void LinkDialog::generateLink()
         int index = ui->pageLink->currentIndex();
         QString pageNumber = ui->pageLink->itemData(index, Qt::UserRole).toString();
 
-        link = "dwiki://" + pageNumber;
+        link = "npage://" + pageNumber;
     } else {
         QString ulink = ui->urlLink->text().toLower();
         QUrl url = QUrl(ulink, QUrl::TolerantMode);

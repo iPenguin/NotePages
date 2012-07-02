@@ -70,7 +70,7 @@ void Page::savePage()
     stream.setAutoFormatting(true);
     stream.writeStartDocument();
 
-    stream.writeStartElement("dwiki_page");
+    stream.writeStartElement("npage_page");
 
         stream.writeStartElement("properties");
         stream.writeAttribute("bgColor", "#ff00ff");
@@ -87,7 +87,7 @@ void Page::savePage()
             n->saveNote(&stream);
         }
 
-    stream.writeEndElement(); //dwiki_page
+    stream.writeEndElement(); //npage_page
     stream.writeEndDocument();
     file.close();
 

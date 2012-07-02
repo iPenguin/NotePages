@@ -78,8 +78,8 @@ MainWindow::~MainWindow()
 void MainWindow::loadPageFromLink(QString link)
 {
 
-    if(link.startsWith("dwiki://"))
-        link = link.remove("dwiki://");
+    if(link.startsWith("npage://"))
+        link = link.remove("npage://");
 
     QString page, note;
     if(link.contains("#")) {
@@ -174,7 +174,7 @@ void MainWindow::setupMenubars()
     connect(ui->actionAddLink, SIGNAL(triggered()), SLOT(addLink()));
 
 //Help
-    connect(ui->actionAbout_DesktopWiki, SIGNAL(triggered()), SLOT(helpAbout()));
+    connect(ui->actionAboutNotePages, SIGNAL(triggered()), SLOT(helpAbout()));
 
 //Tree
     connect(ui->pageTree, SIGNAL(itemClicked(QTreeWidgetItem*,int)), SLOT(pageSelected(QTreeWidgetItem*)));
@@ -284,8 +284,8 @@ void MainWindow::fileSave()
 {
     //FIXME: use a QFileDialog as load() above.
     if(mPath.isEmpty()) {
-        mPath = QFileDialog::getSaveFileName(this, tr("Save a Desktop Wiki"),
-                                                    "", tr("Desktop Wiki (*.dwiki)"));
+        mPath = QFileDialog::getSaveFileName(this, tr("Save Note Pages"),
+                                                    "", tr("Note Pages (*.npages)"));
 
         if(mPath.isEmpty())
             return;
@@ -313,11 +313,11 @@ void MainWindow::loadFile(QString folder)
 
     setWindowFilePath(folder);
 
-    Settings::inst()->setValue("currentWiki", QVariant(folder));
+    Settings::inst()->setValue("currentNotePages", QVariant(folder));
 
-    QString fileName = folder + "/index.wiki";
+    QString fileName = folder + "/pages.index";
 
-    QDomDocument doc("dWikiIndex");
+    QDomDocument doc("nPagesIndex");
     QFile file(fileName);
 
     if (!file.open(QIODevice::ReadOnly)) {
@@ -636,13 +636,13 @@ void MainWindow::saveIndex(QString path)
     stream.setAutoFormatting(true);
     stream.writeStartDocument();
 
-    stream.writeStartElement("dwiki_index");
+    stream.writeStartElement("npage_index");
 
     stream.writeTextElement("name", mName);
 
     saveIndexPages(&stream, ui->pageTree->topLevelItem(0));
 
-    stream.writeEndElement(); //dwiki_index
+    stream.writeEndElement(); //npage_index
     stream.writeEndDocument();
 }
 

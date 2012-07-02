@@ -9,11 +9,11 @@
 AppInfo* AppInfo::mInstance = NULL;
 
 AppInfo::AppInfo() :
-    appName("DesktopWiki"),
+    appName("Note Pages"),
     appOrg("Brian C. Milco"),
     
-    appOrgDomain("desktopWiki.org"),
-    appOrgContact("http://desktopWiki.org/contact"),
+    appOrgDomain("NotePages.org"),
+    appOrgContact("http://NotePages.org/contact"),
 
     appVersion(gGIT_VERSION),
     appVersionShort(gGIT_VERSION_SHORT),
@@ -21,16 +21,12 @@ AppInfo::AppInfo() :
 
     emailRegExp(QRegExp("[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,4}")),
 
-    liveLicensePage("http://desktopWiki.org/custom/license.php"),
-    liveLicensePageVals("?dw_sn=%1&dw_email=%2&dw_fname=%3&dw_lname=%4"),
+    liveLicensePage("http://NotePages.org/custom/license.php"),
+    liveLicensePageVals("?np_sn=%1&np_email=%2&np_fname=%3&np_lname=%4"),
 
-    liveUpdatePage("http://desktopWiki.org/custom/update.php"),
-    liveUpdatePageVals("?dw_software=%1&dw_version=%2&dw_os=%3&dw_sn=%4&dw_arch=%5"),
+    liveUpdatePage("http://NotePages.org/custom/update.php"),
+    liveUpdatePageVals("?np_software=%1&np_version=%2&np_os=%3&np_sn=%4&np_arch=%5")
 
-    demoString(QObject::tr("DesktopWiki - Demo Version  -  ")),
-
-    magicNumber(0x95969530),
-    magicNumberSet(0x53095969)
 {
 }
 
@@ -47,5 +43,5 @@ void AppInfo::helpAbout()
                                     .arg(appBuildInfo)
                                     );
 
-    QMessageBox::about(qApp->activeWindow(), QObject::tr("About desktopWiki"), aboutInfo);
+    QMessageBox::about(qApp->activeWindow(), QObject::tr("About Note Pages"), aboutInfo);
 }

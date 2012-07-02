@@ -46,11 +46,6 @@ public:
     const QString liveUpdatePage;
     const QString liveUpdatePageVals;
 
-    const QString demoString;
-    
-    const quint32 magicNumber;
-    const quint32 magicNumberSet;
-
     void helpAbout();
 
 private:
