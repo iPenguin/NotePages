@@ -6,7 +6,6 @@
         <file>icons/person_female.png</file>
         <file>icons/person_male.png</file>
         <file>icons/book.svg</file>
-        <file>images/notePages.icns</file>
         <file>images/wrench.svg</file>
         <file>images/configure.svg</file>
         <file>icons/1day.png</file>
@@ -176,5 +175,6 @@
         <file>images/edit_create_symbolic_link.svgz</file>
         <file>images/forward.svgz</file>
         <file>images/insert_link.svgz</file>
+        <file>images/Note Pages.icns</file>
     </qresource>
 </RCC>

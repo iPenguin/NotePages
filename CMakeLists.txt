@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8)
-project(notePages)
+project("Note Pages")
 
 set(NP_PROJECT_NAME "Note Pages")
 

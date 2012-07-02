@@ -100,7 +100,7 @@ QVariant Settings::defaultValue ( const QString& key ) const
 
 void Settings::setupValueList()
 {
-    mValueList["currentWiki"] = QVariant("");
+    mValueList["currentNotePages"] = QVariant("");
 
     mValueList["geometry"] = QVariant("");
     mValueList["windowState"] = QVariant(" "); //use a space because it works for the comparison when saving variables.

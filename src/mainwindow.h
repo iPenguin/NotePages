@@ -123,7 +123,7 @@ private:
 
     QSlider *mZoom;
 
-    QString mWikiFile;
+    QString mPagesFile;
     QString mName;
     QString mPath;
 

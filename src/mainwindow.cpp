@@ -52,7 +52,7 @@ MainWindow::MainWindow(bool autoLoad, QWidget *parent) :
     ui->pageTree->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
     if(autoLoad) {
-        QString currentFolder = Settings::inst()->value("currentWiki").toString();
+        QString currentFolder = Settings::inst()->value("currentNotePages").toString();
         loadFile(currentFolder);
     }
 
@@ -328,14 +328,14 @@ void MainWindow::loadFile(QString folder)
     QString errorMsg;
     int errorLine;
     if (!doc.setContent(&file, &errorMsg, &errorLine)) {
-        qWarning() << "failed to load wiki data: " << errorMsg << "line" << errorLine;
+        qWarning() << "failed to load pages data: " << errorMsg << "line" << errorLine;
 
         file.close();
         return;
     }
 
     file.close();
-    mWikiFile = fileName;
+    mPagesFile = fileName;
 
     QDomElement docElem = doc.documentElement();
     QDomNode n = docElem.firstChild();
@@ -623,7 +623,7 @@ void MainWindow::saveIndex(QString path)
         d.mkdir("icons");
     }
 
-    QString xmlIndex = path + "/" + "index.wiki";
+    QString xmlIndex = path + "/" + "pages.index";
     QFile file(xmlIndex);
 
     if(!file.open(QIODevice::WriteOnly)) {
