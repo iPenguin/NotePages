@@ -9,6 +9,7 @@
 #include <QAbstractTextDocumentLayout>
 #include <QPainter>
 
+#include <QDataStream>
 #include <QMenu>
 #include <QAction>
 #include "noteoptions.h"
@@ -202,6 +203,7 @@ void PageScene::dropEvent(QGraphicsSceneDragDropEvent *e)
             QFile::copy(QFileInfo(url).path() + "/" + QFileInfo(url).fileName(), mPagePath + "/" + QFileInfo(url).fileName());
 
             Note *n = createNewNote();
+            n->setPos(e->scenePos());
             //QByteArray imageFormat = QImageReader::imageFormat(url);
 
             qDebug() << "drag file: " << QFileInfo(url).fileName();
@@ -211,7 +213,26 @@ void PageScene::dropEvent(QGraphicsSceneDragDropEvent *e)
                 n->setImage(QFileInfo(url).fileName(), QSizeF());
             }
         }
+    } else if (mime->hasText()) {
+        QString text = mime->text();
+        Note *n = createNewNote();
+        n->setPos(e->scenePos());
+        n->setHtml(text);
+
+    } else if (mime->hasImage()) {
+        Note *n = createNewNote();
+        QString fileName = QString::number(n->id()) + ".png";
+
+        n->setPos(e->scenePos());
+
+        QFile f(mPagePath + "/" + fileName);
+        QDataStream ds(&f);
+        mime->imageData().save(ds);
+        QSizeF sz = mime->imageData().toSizeF();
+        n->setImage(fileName, sz);
+
     }
+
     e->setAccepted(mime->hasUrls());
     //QGraphicsScene::dropEvent(e);
 }
