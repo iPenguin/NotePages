@@ -105,6 +105,11 @@ void Settings::setupValueList()
     mValueList["geometry"] = QVariant("");
     mValueList["windowState"] = QVariant(" "); //use a space because it works for the comparison when saving variables.
 
+    QString userDocs = QDesktopServices::storageLocation(QDesktopServices::DocumentsLocation);
+
+    mValueList["checkForUpdates"] = QVariant(true);
+    mValueList["fileLocation"] = QVariant(userDocs);
+    mValueList["maxRecentFiles"] = QVariant(5);
 }
 
 void Settings::addRecentFile(QString fileName)

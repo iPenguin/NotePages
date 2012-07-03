@@ -198,9 +198,6 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
-   <addaction name="actionBack"/>
-   <addaction name="actionForward"/>
-   <addaction name="separator"/>
    <addaction name="actionCopy"/>
    <addaction name="actionCut"/>
    <addaction name="actionPaste"/>
@@ -433,24 +430,6 @@
    </property>
    <property name="text">
     <string>Add Link</string>
-   </property>
-  </action>
-  <action name="actionBack">
-   <property name="icon">
-    <iconset resource="../notePages.qrc">
-     <normaloff>:/images/back.svgz</normaloff>:/images/back.svgz</iconset>
-   </property>
-   <property name="text">
-    <string>Back</string>
-   </property>
-  </action>
-  <action name="actionForward">
-   <property name="icon">
-    <iconset resource="../notePages.qrc">
-     <normaloff>:/images/forward.svgz</normaloff>:/images/forward.svgz</iconset>
-   </property>
-   <property name="text">
-    <string>Forward</string>
    </property>
   </action>
  </widget>

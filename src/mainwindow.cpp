@@ -21,6 +21,8 @@
 #include <QListWidgetItem>
 
 #include "settings.h"
+#include "history.h"
+#include "settingsui.h"
 
 #include <QDebug>
 
@@ -28,7 +30,9 @@ MainWindow::MainWindow(bool autoLoad, QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
     mLinkDialog(0),
-    mCurrentMaxPageId(0)
+    mSettingsUi(0),
+    mCurrentMaxPageId(0),
+    mHistory(new QUndoStack)
 {
     ui->setupUi(this);
     ui->iconList->hide();
@@ -37,9 +41,7 @@ MainWindow::MainWindow(bool autoLoad, QWidget *parent) :
     setWindowState(Qt::WindowMaximized);
 
     setUnifiedTitleAndToolBarOnMac(true);
-
     setAttribute(Qt::WA_DeleteOnClose);
-
 
     ui->pageTree->setStyleSheet("QTreeWidget { background: #D6DDE5 }");
     ui->pageTree->setAttribute(Qt::WA_MacShowFocusRect, 0);
@@ -86,9 +88,12 @@ void MainWindow::loadPageFromLink(QString link)
         int idx = link.indexOf("#");
         note = link.right(link.length() - (idx + 1));
         page = link.left(idx);
+    } else {
+        page = link;
     }
 
-    selectPage(page.toInt());
+    int currentPage = ui->pageTree->currentItem()->data(0, Qt::UserRole).toInt();
+    mHistory->push(new History(this, currentPage, page.toInt()));
 }
 
 void MainWindow::setupStatusBar()
@@ -173,16 +178,28 @@ void MainWindow::setupMenubars()
 
     connect(ui->actionAddLink, SIGNAL(triggered()), SLOT(addLink()));
 
+//Tools
+    connect(ui->actionOptions, SIGNAL(triggered()), SLOT(toolsSettings()));
+
 //Help
     connect(ui->actionAboutNotePages, SIGNAL(triggered()), SLOT(helpAbout()));
 
 //Tree
-    connect(ui->pageTree, SIGNAL(itemClicked(QTreeWidgetItem*,int)), SLOT(pageSelected(QTreeWidgetItem*)));
+    connect(ui->pageTree, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)), SLOT(pageSelected(QTreeWidgetItem*,QTreeWidgetItem*)));
     connect(ui->pageTree, SIGNAL(itemChanged(QTreeWidgetItem*,int)), SLOT(changeItem(QTreeWidgetItem*,int)));
 
 //TabWidget
     connect(ui->tabWidget, SIGNAL(tabCloseRequested(int)), SLOT(closeTab(int)));
     connect(ui->tabWidget, SIGNAL(currentChanged(int)), SLOT(tabChanged(int)));
+
+//History
+    QAction *redo = mHistory->createRedoAction(this);
+    QAction *undo = mHistory->createUndoAction(this);
+    redo->setIcon(QIcon(":/images/forward.svgz"));
+    undo->setIcon(QIcon(":/images/back.svgz"));
+    ui->mainToolBar->insertAction(ui->actionCopy, undo);
+    ui->mainToolBar->insertAction(ui->actionCopy, redo);
+    ui->mainToolBar->insertSeparator(ui->actionCopy);
 
 }
 
@@ -415,12 +432,27 @@ QTreeWidgetItem* MainWindow::loadPage(QDomElement element)
     return item;
 }
 
-void MainWindow::pageSelected(QTreeWidgetItem *page)
+void MainWindow::pageSelected(QTreeWidgetItem *current, QTreeWidgetItem *previous)
 {
 
-    int pageNumber = page->data(0, Qt::UserRole).toInt();
-    selectPage(pageNumber);
+    int curPgNumber = current->data(0, Qt::UserRole).toInt();
+    int prevPgNumber = -1;
+    if(previous) {
+        prevPgNumber = previous->data(0, Qt::UserRole).toInt();
+        previous->setSelected(false);
+    }
 
+    mHistory->push(new History(this, prevPgNumber, curPgNumber));
+
+}
+
+void MainWindow::toolsSettings()
+{
+    if(!mSettingsUi) {
+        mSettingsUi = new SettingsUi(this);
+    }
+
+    mSettingsUi->open();
 }
 
 void MainWindow::selectPage(int pageNumber)
@@ -445,6 +477,7 @@ void MainWindow::selectPage(int pageNumber)
 
         p = new Page(pagePath);
 
+        connect(p, SIGNAL(changePage(QString)), SLOT(loadPageFromLink(QString)));
         mPages.insert(pageNumber, p);
 
         ui->tabWidget->addTab(p, page->icon(0), page->data(0, Qt::DisplayRole).toString());
@@ -455,7 +488,6 @@ void MainWindow::selectPage(int pageNumber)
         }
     }
 
-    connect(p, SIGNAL(changePage(QString)), SLOT(loadPageFromLink(QString)));
     //display page.
     ui->tabWidget->setCurrentWidget(p);
 

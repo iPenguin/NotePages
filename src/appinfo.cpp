@@ -6,6 +6,8 @@
 #include <QMessageBox>
 #include <QApplication>
 
+#include "settingsui.h"
+
 AppInfo* AppInfo::mInstance = NULL;
 
 AppInfo::AppInfo() :
@@ -44,4 +46,13 @@ void AppInfo::helpAbout()
                                     );
 
     QMessageBox::about(qApp->activeWindow(), QObject::tr("About Note Pages"), aboutInfo);
+}
+
+void AppInfo::toolsSettings()
+{
+
+    if(!mSettingsUi) {
+        mSettingsUi = new SettingsUi(qApp->activeWindow());
+    }
+    mSettingsUi->open();
 }

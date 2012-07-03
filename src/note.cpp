@@ -33,7 +33,7 @@ Note::Note(QGraphicsItem *parent, QGraphicsScene *scene) :
     connect(mNoteText, SIGNAL(linkActivated(QString)), SLOT(signalSend(QString)));
 
     setFlag(QGraphicsItem::ItemIsMovable);
-    //setCursor(QCursor(Qt::OpenHandCursor));
+    setCursor(QCursor(Qt::OpenHandCursor));
     setAcceptHoverEvents(true);
 
     mAdded = QDateTime::currentDateTime();
@@ -252,7 +252,7 @@ void Note::mousePressEvent(QGraphicsSceneMouseEvent *e)
         mOldSize = (mNoteImage ? QSizeF(mNoteImage->pixmap().size()) : mNoteText->size());
     }
 
-    //setCursor(QCursor(Qt::ClosedHandCursor));
+    setCursor(QCursor(Qt::ClosedHandCursor));
 }
 
 void Note::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
@@ -296,14 +296,13 @@ void Note::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
 
     if(mSizeHandle) {
         mDiff = QPointF(0,0);
-        //setCursor(QCursor(Qt::OpenHandCursor));
         mSizeHandle = false;
         update();
     }
 
     QGraphicsItem::mouseReleaseEvent(e);
 
-    //setCursor(QCursor(Qt::OpenHandCursor));
+    setCursor(QCursor(Qt::OpenHandCursor));
 }
 
 void Note::hoverEnterEvent(QGraphicsSceneHoverEvent *e)

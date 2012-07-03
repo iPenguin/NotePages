@@ -22,7 +22,7 @@ NoteText::NoteText(QGraphicsItem *parent, QGraphicsScene *scene) :
 {
     setFlag(QGraphicsItem::ItemIsSelectable);
     setTextInteractionFlags(Qt::TextBrowserInteraction); //Qt::TextEditorInteraction);
-    //setCursor(QCursor(Qt::IBeamCursor));
+    setCursor(QCursor(Qt::IBeamCursor));
     setOpenExternalLinks(false);
 
     connect(this, SIGNAL(linkHovered(QString)), SLOT(hoveringOverLink(QString)));

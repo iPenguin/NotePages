@@ -9,6 +9,7 @@
 #include <QRegExp>
 #include <qobject.h>
 
+class SettingsUi;
 /**
  * singleton class to supply general application-wide info to all classes.
  */
@@ -47,9 +48,11 @@ public:
     const QString liveUpdatePageVals;
 
     void helpAbout();
+    void toolsSettings();
 
 private:
     static AppInfo* mInstance;
+    SettingsUi *mSettingsUi;
     
     AppInfo();
     

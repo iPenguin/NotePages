@@ -13,6 +13,7 @@
 class QListWidgetItem;
 class QXmlStreamWriter;
 class LinkDialog;
+class SettingsUi;
 
 #include "page.h"
 
@@ -23,10 +24,13 @@ namespace Ui {
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
-    
+
 public:
     explicit MainWindow(bool autoLoad = true, QWidget *parent = 0);
     ~MainWindow();
+
+    //This function should mainly be called from the History class, for undo/redo.
+    void selectPage(int pageNumber);
 
 public slots:
     void loadFile(QString folder);
@@ -45,7 +49,10 @@ private slots:
     void editCut();
     void editPaste();
 
-    void pageSelected(QTreeWidgetItem* page);
+    void pageSelected(QTreeWidgetItem *current, QTreeWidgetItem *previous);
+
+    void toolsSettings();
+
 //Help
     void helpAbout();
 
@@ -80,8 +87,6 @@ protected:
 
     void populateIconList();
 
-    void selectPage(int pageNumber);
-
 private slots:
     void setTextProperties();
 
@@ -93,6 +98,7 @@ private slots:
 private:
     Ui::MainWindow *ui;
     LinkDialog *mLinkDialog;
+    SettingsUi *mSettingsUi;
 
     void load();
 
@@ -126,6 +132,8 @@ private:
     QString mPagesFile;
     QString mName;
     QString mPath;
+
+    QUndoStack *mHistory;
 
     //This is a temporary holder of information when loading files.
     QList<QTreeWidgetItem*> mExpandedItems;

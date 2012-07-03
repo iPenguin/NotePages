@@ -52,6 +52,11 @@ public slots:
         mainWin->show();
     }
 
+    void toolsOptions()
+    {
+        AppInfo::inst()->toolsSettings();
+    }
+
     void helpAbout()
     {
 
@@ -69,6 +74,11 @@ public slots:
         QAction *openAction = fileMenu->addAction("Open");
         connect(newAction, SIGNAL(triggered()), SLOT(newDocument()));
         connect(openAction, SIGNAL(triggered()), SLOT(openDocument()));
+
+        QMenu *toolMenu = new QMenu("&Tools");
+        QAction *optionsAction = toolMenu->addAction("&Options");
+        connect(optionsAction, SIGNAL(triggered()), SLOT(toolsOptions()));
+
         QMenu *helpMenu = new QMenu("&Help");
         QAction *a = new QAction("About desktopWiki", 0);
         a->setMenuRole(QAction::TextHeuristicRole);
@@ -77,6 +87,7 @@ public slots:
         connect(a, SIGNAL(triggered()), SLOT(helpAbout()));
 
         menuBar->addMenu(fileMenu);
+        menuBar->addMenu(toolMenu);
         menuBar->addMenu(helpMenu);
     }
 };
