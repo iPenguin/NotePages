@@ -13,6 +13,8 @@
 #include "noteattachment.h"
 #include "noteoptions.h"
 
+#include "arrow.h"
+
 class Note : public QObject, public QGraphicsItem
 {
     Q_OBJECT
@@ -77,6 +79,14 @@ protected:
     //void hoverMoveEvent(QGraphicsSceneHoverEvent *e);
     void hoverLeaveEvent(QGraphicsSceneHoverEvent *e);
 
+    QVariant itemChange(GraphicsItemChange change, const QVariant &value);
+
+public:
+    QPixmap mPixmap;
+
+    void addArrow(Arrow *a);
+    void removeArrow(Arrow *a);
+
 private:
     bool mSizeHandle;
 
@@ -84,7 +94,6 @@ private:
     QDateTime mAdded;
 
     QString mImage;
-    QPixmap mPixmap;
 
     QPointF mDiff;
     QSizeF mOldSize;
@@ -95,6 +104,8 @@ private:
     NoteAttachment *mNoteAttachment;
     NoteOptions* mNoteOptions;
     QGraphicsPixmapItem *mNoteImage;
+
+    QList<Arrow*> mArrows;
 
     QString mPath;
 

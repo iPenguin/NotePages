@@ -53,6 +53,12 @@ private slots:
 
     void toolsSettings();
 
+//View
+    void viewFullScreen();
+
+//Tools
+    void toolsConnect();
+
 //Help
     void helpAbout();
 

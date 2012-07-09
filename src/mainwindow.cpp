@@ -159,6 +159,12 @@ void MainWindow::setupMenubars()
     connect(ui->actionCut, SIGNAL(triggered()), SLOT(editCut()));
     connect(ui->actionPaste, SIGNAL(triggered()), SLOT(editPaste()));
 
+//View
+    connect(ui->actionFullScreen, SIGNAL(triggered()), SLOT(viewFullScreen()));
+
+//Tools
+    connect(ui->actionConnect, SIGNAL(triggered()), SLOT(toolsConnect()));
+
 //Toolbar
     QActionGroup *g = new QActionGroup(this);
     g->addAction(ui->actionLeftJustify);
@@ -453,6 +459,30 @@ void MainWindow::toolsSettings()
     }
 
     mSettingsUi->open();
+
+}
+
+void MainWindow::viewFullScreen()
+{
+    if(isFullScreen())
+        showNormal();
+    else
+        showFullScreen();
+}
+
+void MainWindow::toolsConnect()
+{
+    bool state = false;
+    if(ui->actionConnect->isChecked()) {
+        state = true;
+    }
+
+    QWidget *w = ui->tabWidget->currentWidget();
+    if(!w)
+        return;
+
+    Page *p = qobject_cast<Page*>(w);
+    p->setDrawLines(state);
 }
 
 void MainWindow::selectPage(int pageNumber)

@@ -35,6 +35,7 @@ Note::Note(QGraphicsItem *parent, QGraphicsScene *scene) :
     connect(mNoteText, SIGNAL(linkActivated(QString)), SLOT(signalSend(QString)));
 
     setFlag(QGraphicsItem::ItemIsMovable);
+    setFlag(QGraphicsItem::ItemSendsGeometryChanges);
     setCursor(QCursor(Qt::OpenHandCursor));
     setAcceptHoverEvents(true);
 
@@ -325,6 +326,27 @@ void Note::hoverLeaveEvent(QGraphicsSceneHoverEvent *e)
     QGraphicsItem::hoverLeaveEvent(e);
 }
 
+QVariant Note::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value)
+{
+
+    if (change == QGraphicsItem::ItemPositionChange) {
+        foreach (Arrow *arrow, mArrows) {
+            arrow->updatePosition();
+        }
+    }
+
+    return value; //QGraphicsItem::itemChange(change, value);
+}
+
+void Note::addArrow(Arrow *a)
+{
+    mArrows.append(a);
+}
+
+void Note::removeArrow(Arrow *a)
+{
+    mArrows.removeAll(a);
+}
 
 void Note::setLastModified(QDateTime dt)
 {
