@@ -51,21 +51,25 @@ void LinkDialog::generateBasketList(QTreeWidget *tree, QTreeWidgetItem *item, in
 
 void LinkDialog::generateLink()
 {
-
-    QString link;
+    QStringList link;
+    QString linkUrl;
     if(ui->pageBttn->isChecked()) {
 
         int index = ui->pageLink->currentIndex();
         QString pageNumber = ui->pageLink->itemData(index, Qt::UserRole).toString();
 
-        link = "npage://" + pageNumber;
+        linkUrl = "npage://" + pageNumber;
     } else {
         QString ulink = ui->urlLink->text().toLower();
         QUrl url = QUrl(ulink, QUrl::TolerantMode);
-        link = url.toString();
-        if(!link.contains(QRegExp("^[a-zA-Z].*://")))
-            link.prepend("http://");
+        linkUrl = url.toString();
+        if(!linkUrl.contains(QRegExp("^[a-zA-Z].*://")))
+            linkUrl.prepend("http://");
     }
+
+    //pass along the pretty text and the url.
+    link.append(ui->linkText->text());
+    link.append(linkUrl);
     emit linkCreated(link);
 }
 

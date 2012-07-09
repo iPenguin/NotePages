@@ -15,6 +15,8 @@
 #include <math.h>
 
 #include <QFileIconProvider>
+#include <QDesktopServices>
+#include <QUrl>
 
 #include <QCursor>
 
@@ -44,7 +46,6 @@ Note::Note(QGraphicsItem *parent, QGraphicsScene *scene) :
 
     mNoteOptions = new NoteOptions(this, scene);
     mNoteOptions->setPos(0,-24);
-    //mNoteOptions->hide();
 
 }
 
@@ -395,5 +396,8 @@ void Note::setImage(QString img, QSizeF size)
 
 void Note::signalSend(QString link)
 {
-    emit pageLinkClicked(link);
+    if(link.startsWith("npage://"))
+        emit pageLinkClicked(link);
+    else
+        QDesktopServices::openUrl(QUrl(link));
 }

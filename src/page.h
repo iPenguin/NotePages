@@ -40,7 +40,9 @@ public:
 
     void deletePage();
 
-    void addLinkToNote(QString link);
+    void addLinkToNote(QStringList link);
+
+    void setDrawLines(bool state) { Q_ASSERT(mScene); mScene->setDrawLines(state); }
 
 signals:
     void zoomLevelChanged(int value);
@@ -55,7 +57,6 @@ protected:
 
 private:
     Ui::Page *ui;
-
     PageScene *mScene;
 
     int mId;

@@ -140,3 +140,9 @@ void NoteText::setTextBlockAlignment(Qt::Alignment align)
 
     textCursor().setBlockFormat(format);
 }
+
+void NoteText::addLink(QStringList link)
+{
+
+    textCursor().insertHtml("<a href=\""+link.last()+"\">"+link.first()+"</a>");
+}

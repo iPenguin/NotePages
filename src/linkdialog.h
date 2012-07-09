@@ -23,7 +23,7 @@ public:
     void generateBasketList(QTreeWidget *tree, QTreeWidgetItem *item, int indent);
 
 signals:
-    void linkCreated(QString link);
+    void linkCreated(QStringList link);
 
 private:
     Ui::LinkDialog *ui;

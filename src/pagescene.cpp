@@ -193,7 +193,6 @@ void PageScene::dropEvent(QGraphicsSceneDragDropEvent *e)
 {
     const QMimeData* mime = e->mimeData();
 
-    // Is an image present?
     if (mime->hasUrls()) {
         QList<QUrl> urls = mime->urls();
         foreach(QUrl u, urls) {
@@ -204,9 +203,7 @@ void PageScene::dropEvent(QGraphicsSceneDragDropEvent *e)
 
             Note *n = createNewNote();
             n->setPos(e->scenePos());
-            //QByteArray imageFormat = QImageReader::imageFormat(url);
 
-            qDebug() << "drag file: " << QFileInfo(url).fileName();
             if(!true) {
                 n->setAttachment(QFileInfo(url).fileName());
             } else {

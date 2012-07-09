@@ -145,6 +145,7 @@ void Page::loadPage()
             } else if (name == "note") {
                 Note *n = new Note(0, mScene);
                 n->loadNote(&stream, mScene->pagePath());
+                mScene->incrementMaxNoteId();
                 updateSceneRect(n);
                 connect(n, SIGNAL(pageLinkClicked(QString)), SLOT(nextPage(QString)));
             } else if (name == "group") {
@@ -253,7 +254,7 @@ void Page::deletePage()
     mDeleted = true;
 }
 
-void Page::addLinkToNote(QString link)
+void Page::addLinkToNote(QStringList link)
 {
     if(mScene->selectedItems().count() <= 0) {
         qWarning() << "consider creating a note and adding the link to it";
@@ -266,8 +267,14 @@ void Page::addLinkToNote(QString link)
         return;
     }
 
-    Note *n = qgraphicsitem_cast<Note*>(i);
-    qDebug() << "TODO: Add link to Note:" << n->id();
+    NoteText *nt = qgraphicsitem_cast<NoteText*>(i);
+    if(!nt) {
+        qDebug() << "Couldn't find noteText!";
+        return;
+    }
+
+    nt->addLink(link);
+
 }
 
 void Page::zoomChanged(int value)

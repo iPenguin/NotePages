@@ -777,12 +777,12 @@ void MainWindow::addLink()
 {
     if(!mLinkDialog) {
         mLinkDialog = new LinkDialog(ui->pageTree, this);
-        connect(mLinkDialog, SIGNAL(linkCreated(QString)), SLOT(addLinkToNote(QString)));
+        connect(mLinkDialog, SIGNAL(linkCreated(QStringList)), SLOT(addLinkToNote(QStringList)));
     }
     mLinkDialog->open();
 }
 
-void MainWindow::addLinkToNote(QString link)
+void MainWindow::addLinkToNote(QStringList link)
 {
     QWidget *w = ui->tabWidget->currentWidget();
     if(!w)

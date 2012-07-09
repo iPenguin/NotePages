@@ -31,6 +31,8 @@ public:
 
     void setTextBlockAlignment(Qt::Alignment align);
 
+    void addLink(QStringList link);
+
 signals:
     void pageLink(QString link);
 

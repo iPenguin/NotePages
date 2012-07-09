@@ -93,7 +93,7 @@ private slots:
     void updateItemIcon(QListWidgetItem *newItem, QListWidgetItem *oldItem);
 
     void addLink();
-    void addLinkToNote(QString link);
+    void addLinkToNote(QStringList link);
 
 private:
     Ui::MainWindow *ui;
