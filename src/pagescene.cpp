@@ -281,8 +281,8 @@ Note* PageScene::createNewNote(int noteId)
         newId = noteId;
 
     } else { //create a new note.
-        newId = mCurMaxNoteId;
         mCurMaxNoteId++;
+        newId = mCurMaxNoteId;
         n->setTextEditMode(true);
     }
 

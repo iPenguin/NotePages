@@ -80,11 +80,8 @@ public slots:
         connect(optionsAction, SIGNAL(triggered()), SLOT(toolsOptions()));
 
         QMenu *helpMenu = new QMenu("&Help");
-        QAction *a = new QAction("About desktopWiki", 0);
-        a->setMenuRole(QAction::TextHeuristicRole);
-        helpMenu->addAction(a);
-
-        connect(a, SIGNAL(triggered()), SLOT(helpAbout()));
+        QAction *about = helpMenu->addAction("About Note Pages");
+        connect(about, SIGNAL(triggered()), SLOT(helpAbout()));
 
         menuBar->addMenu(fileMenu);
         menuBar->addMenu(toolMenu);

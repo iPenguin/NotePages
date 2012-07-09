@@ -18,6 +18,9 @@ public:
     QString pagePath() { return mPagePath; }
     void setPagePath(QString pp) { mPagePath = pp; }
 
+    void incrementMaxNoteId() { mCurMaxNoteId++; }
+    void setDrawLines(bool state) { mDrawLines = state; }
+
 signals:
     void changePage(QString newPage);
 
@@ -49,6 +52,8 @@ protected:
 private:
 
     int mCurMaxNoteId;
+    bool mDrawLines;
+    Note *mLineStart;
 
     //requires a path seperator after it.
     QString mPagePath;

@@ -23,9 +23,9 @@ SettingsUi::SettingsUi(QWidget* parent)
     ui->tabWidget->setCurrentIndex(0);
 
 #ifdef Q_WS_MAC
-    this->setWindowTitle(tr("Preferences"));
+    setWindowTitle(tr("Preferences"));
 #else
-    this->setWindowTitle(tr("Options"));
+    setWindowTitle(tr("Options"));
 #endif //Q_WS_MAC
 
     connect(ui->buttonBox, SIGNAL(clicked(QAbstractButton*)), SLOT(buttonClicked(QAbstractButton*)));
@@ -38,6 +38,7 @@ SettingsUi::SettingsUi(QWidget* parent)
                 load(obj);
         }
     }
+
 }
 
 SettingsUi::~SettingsUi()

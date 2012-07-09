@@ -52,7 +52,7 @@ void AppInfo::toolsSettings()
 {
 
     if(!mSettingsUi) {
-        mSettingsUi = new SettingsUi(qApp->activeWindow());
+        mSettingsUi = new SettingsUi(0);
     }
     mSettingsUi->open();
 }
