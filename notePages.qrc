@@ -176,5 +176,6 @@
         <file>images/forward.svgz</file>
         <file>images/insert_link.svgz</file>
         <file>images/Note Pages.icns</file>
+        <file>images/connection_line.svgz</file>
     </qresource>
 </RCC>
