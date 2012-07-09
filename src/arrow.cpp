@@ -2,6 +2,9 @@
 
 #include "note.h"
 #include <QPen>
+#include <math.h>
+#include <QPainter>
+#include <QPolygonF>
 
 Arrow::Arrow(Note *start, Note *end, QGraphicsItem *parent, QGraphicsScene *scene)
     : QGraphicsLineItem(parent, scene),
@@ -13,8 +16,9 @@ Arrow::Arrow(Note *start, Note *end, QGraphicsItem *parent, QGraphicsScene *scen
 
     setFlag(QGraphicsItem::ItemIsSelectable);
     setPen(QPen(QBrush(Qt::black), 3));
-    setLine(QLineF(mStart->pos(), mEnd->pos()));
-
+    QLineF centerLine(mapFromItem(mStart, mStart->boundingRect().center()), mapFromItem(mEnd, mEnd->boundingRect().center()));
+    setLine(centerLine);
+    setZValue(-10);
 }
 
 QRectF Arrow::boundingRect() const
@@ -29,12 +33,19 @@ QRectF Arrow::boundingRect() const
 
 void Arrow::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
+    if (mStart->collidesWithItem(mEnd))
+        return;
+
+    QPen pen = QPen();
+    pen.setWidth(3);
+    painter->setPen(pen);
 
     QGraphicsLineItem::paint(painter, option, widget);
 }
 
 void Arrow::updatePosition()
 {
-    QLineF line(mapFromItem(mStart, 0, 0), mapFromItem(mEnd, 0, 0));
-    setLine(line);
+    QLineF centerLine(mapFromItem(mStart, mStart->boundingRect().center()), mapFromItem(mEnd, mEnd->boundingRect().center()));
+    //QLineF line(mapFromItem(mStart, 0, 0), mapFromItem(mEnd, 0, 0));
+    setLine(centerLine);
 }

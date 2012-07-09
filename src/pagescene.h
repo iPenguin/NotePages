@@ -40,6 +40,7 @@ protected:
     void drawBackground(QPainter *painter, const QRectF &rect);
 
     void mousePressEvent(QGraphicsSceneMouseEvent *e);
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *e);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *e);
 
     void dragEnterEvent(QGraphicsSceneDragDropEvent *e);

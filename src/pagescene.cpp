@@ -181,6 +181,17 @@ void PageScene::mousePressEvent(QGraphicsSceneMouseEvent *e)
     }
 }
 
+void PageScene::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
+{
+/*
+    if (mDrawLines && line != 0) {
+        QLineF newLine(line->line().p1(), mouseEvent->scenePos());
+        line->setLine(newLine);
+    }
+*/
+    QGraphicsScene::mouseMoveEvent(e);
+}
+
 void PageScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
 {
     QGraphicsItem *i = itemAt(e->scenePos());
