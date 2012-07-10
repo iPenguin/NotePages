@@ -161,8 +161,12 @@ void PageScene::keyReleaseEvent(QKeyEvent *e)
         if(!i)
             return;
 
-        if(i->type() == Arrow::Type)
+        if(i->type() == Arrow::Type) {
+            Arrow *a = qgraphicsitem_cast<Arrow*>(i);
+            a->startItem()->removeArrow(a);
+            a->endItem()->removeArrow(a);
             delete i;
+        }
     }
 
     QGraphicsScene::keyReleaseEvent(e);
@@ -217,6 +221,8 @@ void PageScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
     if(mDrawLines && mLineStart) {
 
         if(!i)
+            return;
+        if(i == mLineStart)
             return;
 
         Note *n = 0;

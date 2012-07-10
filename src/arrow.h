@@ -22,6 +22,9 @@ public:
     void updatePosition();
     void saveArrow(QXmlStreamWriter *stream);
 
+    Note* startItem() { return mStart; }
+    Note* endItem() { return mEnd; }
+
 private:
 
     QPointer<Note> mStart,
