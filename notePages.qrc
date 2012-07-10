@@ -1,7 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file>images/icon.png</file>
-        <file>images/icon.svg</file>
         <file>images/attachment.svg</file>
         <file>icons/person_female.png</file>
         <file>icons/person_male.png</file>
@@ -177,5 +175,8 @@
         <file>images/insert_link.svgz</file>
         <file>images/Note Pages.icns</file>
         <file>images/connection_line.svgz</file>
+        <file>images/Note Pages.ico</file>
+        <file>images/Note Pages.png</file>
+        <file>images/Note Pages.svg</file>
     </qresource>
 </RCC>

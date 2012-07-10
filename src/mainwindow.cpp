@@ -806,15 +806,15 @@ void MainWindow::addLink()
         mLinkDialog = new LinkDialog(ui->pageTree, this);
         connect(mLinkDialog, SIGNAL(linkCreated(QStringList)), SLOT(addLinkToNote(QStringList)));
     }
-    qDebug() << "link dialog";
+
     Page *p = currentPage();
     if(!p)
         return;
-qDebug() << "link dialog page";
+
     Note *n = p->currentNote();
     if(!n)
         return;
-qDebug() << "link dialog note";
+
     QString text = n->textSelection();
     mLinkDialog->open();
     mLinkDialog->setLinkText(text);

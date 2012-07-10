@@ -15,7 +15,7 @@
   </property>
   <property name="windowIcon">
    <iconset resource="../notePages.qrc">
-    <normaloff>:/images/icon.png</normaloff>:/images/icon.png</iconset>
+    <normaloff>:/images/Note Pages.png</normaloff>:/images/Note Pages.png</iconset>
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout">
