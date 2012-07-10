@@ -116,6 +116,10 @@ void Note::deleteNote()
         QDir d(mPath);
         d.remove(image);
     }
+
+    foreach(Arrow *a, mArrows) {
+        delete a;
+    }
 }
 
 QString Note::textSelection()

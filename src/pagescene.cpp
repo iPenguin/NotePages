@@ -267,11 +267,14 @@ void PageScene::dropEvent(QGraphicsSceneDragDropEvent *e)
                 n->setImage(QFileInfo(url).fileName(), QSizeF());
             }
         }
+        e->setAccepted(true);
+
     } else if (mime->hasText()) {
         QString text = mime->text();
         Note *n = createNewNote();
         n->setPos(e->scenePos());
         n->setHtml(text);
+        e->setAccepted(true);
 
     } else if (mime->hasImage()) {
         Note *n = createNewNote();
@@ -289,11 +292,9 @@ void PageScene::dropEvent(QGraphicsSceneDragDropEvent *e)
         qDebug() << "fileName" << mPagePath + "/" + fileName << QFileInfo(mPagePath + "/" + fileName).exists();
         n->setImage(fileName, ireader->size());
         n->mPixmap.loadFromData(mime->imageData().toByteArray());
-
+        e->setAccepted(true);
     }
 
-    e->setAccepted(mime->hasUrls());
-    //QGraphicsScene::dropEvent(e);
 }
 
 void PageScene::showNoteOptions(QPointF screenPos)

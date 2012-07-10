@@ -10,6 +10,7 @@ class Arrow : public QGraphicsLineItem
 {
 public:
     Arrow(Note *start, Note *end, QGraphicsItem *parent = 0, QGraphicsScene *scene = 0);
+    ~Arrow();
 
     enum { Type = UserType + 15 };
     int type () const { return Arrow::Type; }

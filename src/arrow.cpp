@@ -6,6 +6,8 @@
 #include <QPainter>
 #include <QPolygonF>
 
+#include <QDebug>
+
 Arrow::Arrow(Note *start, Note *end, QGraphicsItem *parent, QGraphicsScene *scene)
     : QGraphicsLineItem(parent, scene),
       mStart(start),
@@ -19,6 +21,12 @@ Arrow::Arrow(Note *start, Note *end, QGraphicsItem *parent, QGraphicsScene *scen
     QLineF centerLine(mapFromItem(mStart, mStart->boundingRect().center()), mapFromItem(mEnd, mEnd->boundingRect().center()));
     setLine(centerLine);
     setZValue(-10);
+}
+
+Arrow::~Arrow()
+{
+    mStart->removeArrow(this);
+    mEnd->removeArrow(this);
 }
 
 QRectF Arrow::boundingRect() const
