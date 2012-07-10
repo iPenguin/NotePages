@@ -10,7 +10,9 @@ set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules ${CMAKE_MODULE_P
 include(MacroOutOfSourceBuild)
 macro_ensure_out_of_source_build("${NP_PROJECT_NAME} requires an out of source build.")
 
-set(QT_QMAKE_EXECUTABLE "/Users/brian/QtSDK/Desktop/Qt/4.8.0/gcc/bin/qmake")
+if(APPLE)
+    set(QT_QMAKE_EXECUTABLE "/Users/brian/QtSDK/Desktop/Qt/4.8.0/gcc/bin/qmake")
+endif()
 
 set(CMAKE_CONFIGURATION_TYPES Debug Release Profile CACHE TYPE INTERNAL FORCE)
 if(CMAKE_BUILD_TYPE STREQUAL "")
