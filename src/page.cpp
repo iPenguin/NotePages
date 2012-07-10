@@ -47,9 +47,11 @@ Page::~Page()
 
 void Page::savePage()
 {
+    //FIXME: don't hard code paths. Simplify and streamline paths.
     QString pagePath = mScene->pagePath();
     QString xmlIndex = pagePath + "/page.xml";
-    if(!QFileInfo(xmlIndex).exists()) {
+    QString xmlIndexTemp = xmlIndex + ".tmp";
+    if(!QFileInfo(xmlIndexTemp).exists()) {
         if(!QFileInfo(pagePath).exists()) {
             QString parentDir = QFileInfo(pagePath).path();
             QString dir = QFileInfo(pagePath).baseName();
@@ -58,11 +60,11 @@ void Page::savePage()
         }
     }
 
-    QFile file(xmlIndex);
+    QFile file(xmlIndexTemp);
 
     if(!file.open(QIODevice::WriteOnly)) {
         //TODO: some nice dialog to warn the user.
-        qWarning() << "Couldn't open file for reading:" << xmlIndex;
+        qWarning() << "Couldn't open file for reading:" << xmlIndexTemp;
         return;
     }
 
@@ -79,7 +81,6 @@ void Page::savePage()
 
         foreach(QGraphicsItem *i, mScene->items()) {
             if(i->type() != Note::Type) {
-                //qDebug() << "Unknown QGraphicsItem::Type" << i->type();
                 continue;
             }
 
@@ -87,10 +88,21 @@ void Page::savePage()
             n->saveNote(&stream);
         }
 
+        foreach(QGraphicsItem *i, mScene->items()) {
+            if(i->type() != Arrow::Type) {
+                continue;
+            }
+
+            Arrow *a = qgraphicsitem_cast<Arrow*>(i);
+            a->saveArrow(&stream);
+        }
     stream.writeEndElement(); //npage_page
     stream.writeEndDocument();
     file.close();
-
+    QDir d(pagePath);
+    d.remove("page.xml");
+    if(file.copy(xmlIndex))
+        file.remove();
 }
 
 bool Page::isSaved()
