@@ -30,7 +30,8 @@ PageScene::PageScene(QObject *parent) :
     QGraphicsScene(parent),
     mCurMaxNoteId(1),
     mDrawLines(false),
-    mLineStart(0)
+    mLineStart(0),
+    mTempLine(0)
 {
     setSceneRect(0, 0, 1500,1500);
 
@@ -169,6 +170,8 @@ void PageScene::mousePressEvent(QGraphicsSceneMouseEvent *e)
         }
         mLineStart = n;
 
+        mTempLine = new QGraphicsLineItem(QLineF(e->scenePos(), e->scenePos()), 0, this);
+
     } else {
 
         if(!i) {
@@ -183,12 +186,12 @@ void PageScene::mousePressEvent(QGraphicsSceneMouseEvent *e)
 
 void PageScene::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
 {
-/*
-    if (mDrawLines && line != 0) {
-        QLineF newLine(line->line().p1(), mouseEvent->scenePos());
-        line->setLine(newLine);
+
+    if (mDrawLines && mTempLine != 0) {
+        QLineF newLine(mTempLine->line().p1(), e->scenePos());
+        mTempLine->setLine(newLine);
     }
-*/
+
     QGraphicsScene::mouseMoveEvent(e);
 }
 
@@ -212,7 +215,8 @@ void PageScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
             return;
 
         Arrow *a = new Arrow(mLineStart, n, 0, this);
-
+        delete mTempLine;
+        mTempLine = 0;
     } else {
 
         if(i) {

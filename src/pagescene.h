@@ -56,6 +56,7 @@ private:
     bool mDrawLines;
     Note *mLineStart;
 
+    QGraphicsLineItem *mTempLine;
     //requires a path seperator after it.
     QString mPagePath;
 };
