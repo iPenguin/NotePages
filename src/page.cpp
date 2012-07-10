@@ -148,6 +148,25 @@ void Page::loadPage()
                 mScene->incrementMaxNoteId();
                 updateSceneRect(n);
                 connect(n, SIGNAL(pageLinkClicked(QString)), SLOT(nextPage(QString)));
+            } else if (name == "arrow") {
+                int start, end;
+                Note *startNote = 0, *endNote = 0;
+                start = stream.attributes().value("start-id").toString().toInt();
+                end = stream.attributes().value("end-id").toString().toInt();
+
+                foreach(QGraphicsItem *i, mScene->items()) {
+
+                    if(i->type() == Note::Type) {
+                        Note *n = qgraphicsitem_cast<Note*>(i);
+                        if(n->id() == start)
+                            startNote = n;
+                        if(n->id() == end)
+                            endNote = n;
+                    }
+                }
+                Arrow *a = new Arrow(startNote, endNote, 0, mScene);
+
+
             } else if (name == "group") {
                 qDebug() << "TODO: for each child element load each note.";
             }
@@ -269,7 +288,7 @@ void Page::addLinkToNote(QStringList link)
 
     NoteText *nt = qgraphicsitem_cast<NoteText*>(i);
     if(!nt) {
-        qDebug() << "Couldn't find noteText!";
+        qWarning() << "Couldn't find noteText!";
         return;
     }
 

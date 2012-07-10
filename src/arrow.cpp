@@ -49,3 +49,12 @@ void Arrow::updatePosition()
     //QLineF line(mapFromItem(mStart, 0, 0), mapFromItem(mEnd, 0, 0));
     setLine(centerLine);
 }
+
+void Arrow::saveArrow(QXmlStreamWriter *stream)
+{
+    stream->writeStartElement("arrow");
+    stream->writeAttribute("start-id", QString::number(mStart->id()));
+    stream->writeAttribute("end-id", QString::number(mEnd->id()));
+    stream->writeEndElement(); //arrow
+
+}

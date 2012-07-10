@@ -146,16 +146,7 @@ void Note::loadNote(QXmlStreamReader* stream, QString pagePath)
         stream->readNextStartElement();
         QString tag = stream->name().toString();
 
-        if (tag == "connect") {
-            int connectedNote = stream->attributes().value("id").toString().toInt();
-            //TODO:  make this a qlist that is used to id connections to draw in the painting routines. ?
-            if(connectedNote > 0) {
-                qDebug() << "TODO: connect this note to note" << connectedNote;
-
-            }
-            stream->skipCurrentElement();
-
-        } else if (tag == "image") {
+        if (tag == "image") {
             QString imageFile = stream->attributes().value("file").toString();
             qreal width = stream->attributes().value("width").toString().toFloat();
             qreal height = stream->attributes().value("height").toString().toFloat();
@@ -200,12 +191,6 @@ void Note::saveNote(QXmlStreamWriter *stream)
     stream->writeAttribute("lastModified", lastModified().toString("yyyy-MM-dd hh:mm:ss"));
     stream->writeAttribute("added", addedDate().toString("yyyy-MM-dd hh:mm:ss"));
 
-    qDebug() << "TODO: add connect strings for links between notes";
-    //TODO: foreach connection create an xml fragment.
-    stream->writeStartElement("connect");
-    stream->writeAttribute("id", "");
-    stream->writeEndElement(); //connect
-
     stream->writeStartElement("attachment");
     stream->writeAttribute("file", attachment());
     stream->writeEndElement(); //attachment
@@ -237,7 +222,6 @@ void Note::saveNote(QXmlStreamWriter *stream)
         f.flush();
         f.close();
     }
-
 }
 
 void Note::mousePressEvent(QGraphicsSceneMouseEvent *e)
@@ -285,6 +269,10 @@ void Note::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
 
         if(mNoteImage)
             mNoteImage->setPixmap(mPixmap.scaled(newSize.toSize()));
+
+        foreach(Arrow *a, mArrows) {
+            a->updatePosition();
+        }
 
         update();
         return;
