@@ -226,10 +226,10 @@ void MainWindow::updateZoomLevel(int percent)
 
 void MainWindow::zoomPage(int percent)
 {
-    QWidget *w = ui->tabWidget->currentWidget();
-    if(!w)
+    Page *p = currentPage();
+    if(!p)
         return;
-    Page *p = qobject_cast<Page*>(w);
+
     p->zoomChanged(percent);
 }
 
@@ -389,19 +389,11 @@ void MainWindow::saveFile(QString fileName)
 {
     Q_UNUSED(fileName);
 
-    QWidget *w = ui->tabWidget->currentWidget();
-
-    if(!w)
-        return;
-
-    Page *p = qobject_cast<Page*>(w);
-
+    Page *p = currentPage();
     if(!p)
         return;
 
     p->savePage();
-
-
 }
 
 QTreeWidgetItem* MainWindow::loadPage(QDomElement element)
@@ -477,11 +469,10 @@ void MainWindow::toolsConnect()
         state = true;
     }
 
-    QWidget *w = ui->tabWidget->currentWidget();
-    if(!w)
+    Page *p = currentPage();
+    if(!p)
         return;
 
-    Page *p = qobject_cast<Page*>(w);
     p->setDrawLines(state);
 }
 
@@ -761,6 +752,15 @@ void MainWindow::populateIconList()
 
 }
 
+Page *MainWindow::currentPage()
+{
+    QWidget *w = ui->tabWidget->currentWidget();
+    if(!w)
+        return 0;
+
+    return qobject_cast<Page*>(w);
+}
+
 void MainWindow::setTextProperties()
 {
     Page::TextProperty property;
@@ -782,14 +782,10 @@ void MainWindow::setTextProperties()
         property = Page::TxtJustify;
     }
 
-    QWidget *w = ui->tabWidget->currentWidget();
-
-    if(!w)
-        return;
-
-    Page *p = qobject_cast<Page*>(w);
+    Page *p = currentPage();
     if(!p)
         return;
+
     p->setTextProperties(property, a->isChecked());
 }
 
@@ -809,16 +805,17 @@ void MainWindow::addLink()
         mLinkDialog = new LinkDialog(ui->pageTree, this);
         connect(mLinkDialog, SIGNAL(linkCreated(QStringList)), SLOT(addLinkToNote(QStringList)));
     }
+
+    Page *p = ui->tabWidget->curre
     mLinkDialog->open();
 }
 
 void MainWindow::addLinkToNote(QStringList link)
 {
-    QWidget *w = ui->tabWidget->currentWidget();
-    if(!w)
-        return;
+    Page *p = currentPage();
 
-    Page *p = qobject_cast<Page*>(w);
+    if(!p)
+        return;
 
     p->addLinkToNote(link);
 }

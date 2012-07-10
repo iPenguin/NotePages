@@ -93,6 +93,9 @@ protected:
 
     void populateIconList();
 
+    //return the current tab as a Page, or 0 if no page.
+    Page* currentPage();
+
 private slots:
     void setTextProperties();
 
