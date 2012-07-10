@@ -86,6 +86,7 @@ public:
 
     void addArrow(Arrow *a);
     void removeArrow(Arrow *a);
+    void removeAllArrows();
 
 private:
     bool mSizeHandle;

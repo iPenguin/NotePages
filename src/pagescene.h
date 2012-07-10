@@ -39,6 +39,8 @@ private slots:
 protected:
     void drawBackground(QPainter *painter, const QRectF &rect);
 
+    void keyReleaseEvent(QKeyEvent *e);
+
     void mousePressEvent(QGraphicsSceneMouseEvent *e);
     void mouseMoveEvent(QGraphicsSceneMouseEvent *e);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *e);

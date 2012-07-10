@@ -95,12 +95,12 @@ void Note::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
 
 void Note::deleteNote()
 {
+
     QString noteFile = mPath + "/note" + QString::number(mId) + ".html";
 
     if(QFileInfo(noteFile).exists()) {
         QDir d(mPath);
         d.remove(noteFile);
-
     }
 
     //TODO: prompt to delete any attachments
@@ -118,7 +118,7 @@ void Note::deleteNote()
     }
 
     foreach(Arrow *a, mArrows) {
-        delete a;
+        removeArrow(a);
     }
 }
 
@@ -358,7 +358,19 @@ void Note::addArrow(Arrow *a)
 
 void Note::removeArrow(Arrow *a)
 {
-    mArrows.removeAll(a);
+    int index = mArrows.indexOf(a);
+
+    if (index != -1) {
+        scene()->removeItem(a);
+        mArrows.removeAt(index);
+    }
+}
+
+void Note::removeAllArrows()
+{
+    foreach(Arrow *a, mArrows) {
+        removeArrow(a);
+    }
 }
 
 void Note::setLastModified(QDateTime dt)

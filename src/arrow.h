@@ -3,6 +3,7 @@
 
 #include <QGraphicsLineItem>
 #include <QXmlStreamWriter>
+#include <QPointer>
 
 class Note;
 
@@ -23,8 +24,8 @@ public:
 
 private:
 
-    Note *mStart,
-         *mEnd;
+    QPointer<Note> mStart,
+                   mEnd;
 };
 
 #endif // ARROW_H

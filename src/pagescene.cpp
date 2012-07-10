@@ -43,6 +43,7 @@ void PageScene::deleteNote()
     QList<QGraphicsItem*> items = selectedItems();
     QGraphicsItem *i = items.first();
     Note *n = qgraphicsitem_cast<Note*>(i->parentItem());
+    n->removeAllArrows();
     n->deleteNote();
     delete n;
     i = 0; n = 0;
@@ -151,6 +152,20 @@ void PageScene::pageLinkClicked(QString link)
 void PageScene::drawBackground(QPainter *painter, const QRectF &rect)
 {
     QGraphicsScene::drawBackground(painter, rect);
+}
+
+void PageScene::keyReleaseEvent(QKeyEvent *e)
+{
+    if(e->key() == Qt::Key_Delete || e->key() == Qt::Key_Backspace) {
+        QGraphicsItem *i = selectedItems().first();
+        if(!i)
+            return;
+
+        if(i->type() == Arrow::Type)
+            delete i;
+    }
+
+    QGraphicsScene::keyReleaseEvent(e);
 }
 
 void PageScene::mousePressEvent(QGraphicsSceneMouseEvent *e)

@@ -25,8 +25,6 @@ Arrow::Arrow(Note *start, Note *end, QGraphicsItem *parent, QGraphicsScene *scen
 
 Arrow::~Arrow()
 {
-    mStart->removeArrow(this);
-    mEnd->removeArrow(this);
 }
 
 QRectF Arrow::boundingRect() const
@@ -41,6 +39,11 @@ QRectF Arrow::boundingRect() const
 
 void Arrow::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
+    if(!mStart || !mEnd) {
+        qWarning() << "no start or end items";
+        return;
+    }
+
     if (mStart->collidesWithItem(mEnd))
         return;
 
@@ -53,6 +56,9 @@ void Arrow::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWi
 
 void Arrow::updatePosition()
 {
+    if(!mStart || !mEnd)
+        return;
+
     QLineF centerLine(mapFromItem(mStart, mStart->boundingRect().center()), mapFromItem(mEnd, mEnd->boundingRect().center()));
     //QLineF line(mapFromItem(mStart, 0, 0), mapFromItem(mEnd, 0, 0));
     setLine(centerLine);
@@ -60,6 +66,9 @@ void Arrow::updatePosition()
 
 void Arrow::saveArrow(QXmlStreamWriter *stream)
 {
+    if(!mStart || !mEnd)
+        return;
+
     stream->writeStartElement("arrow");
     stream->writeAttribute("start-id", QString::number(mStart->id()));
     stream->writeAttribute("end-id", QString::number(mEnd->id()));
