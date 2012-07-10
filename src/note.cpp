@@ -18,6 +18,7 @@
 #include <QDesktopServices>
 #include <QUrl>
 
+#include <QTextCursor>
 #include <QCursor>
 
 Note::Note(QGraphicsItem *parent, QGraphicsScene *scene) :
@@ -115,6 +116,12 @@ void Note::deleteNote()
         QDir d(mPath);
         d.remove(image);
     }
+}
+
+QString Note::textSelection()
+{
+    Q_ASSERT(mNoteText);
+    return mNoteText->textCursor().selectedText();
 }
 
 void Note::loadNote(QXmlStreamReader* stream, QString pagePath)

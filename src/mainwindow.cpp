@@ -23,6 +23,7 @@
 #include "settings.h"
 #include "history.h"
 #include "settingsui.h"
+#include "note.h"
 
 #include <QDebug>
 
@@ -805,9 +806,18 @@ void MainWindow::addLink()
         mLinkDialog = new LinkDialog(ui->pageTree, this);
         connect(mLinkDialog, SIGNAL(linkCreated(QStringList)), SLOT(addLinkToNote(QStringList)));
     }
-
-    Page *p = ui->tabWidget->curre
+    qDebug() << "link dialog";
+    Page *p = currentPage();
+    if(!p)
+        return;
+qDebug() << "link dialog page";
+    Note *n = p->currentNote();
+    if(!n)
+        return;
+qDebug() << "link dialog note";
+    QString text = n->textSelection();
     mLinkDialog->open();
+    mLinkDialog->setLinkText(text);
 }
 
 void MainWindow::addLinkToNote(QStringList link)

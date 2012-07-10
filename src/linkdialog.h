@@ -22,6 +22,8 @@ public:
     QString linkText();
     void generateBasketList(QTreeWidget *tree, QTreeWidgetItem *item, int indent);
 
+    void setLinkText(QString text);
+
 signals:
     void linkCreated(QStringList link);
 

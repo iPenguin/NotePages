@@ -63,7 +63,7 @@ public:
 
     void setTextEditMode(bool value) { mNoteText->setTextInteractionFlags(value ? Qt::TextEditorInteraction
                                              : Qt::TextBrowserInteraction); }
-
+    QString textSelection();
 signals:
     void pageLinkClicked(QString link);
 

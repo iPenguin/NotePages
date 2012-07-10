@@ -49,6 +49,11 @@ void LinkDialog::generateBasketList(QTreeWidget *tree, QTreeWidgetItem *item, in
     }
 }
 
+void LinkDialog::setLinkText(QString text)
+{
+    ui->linkText->setText(text);
+}
+
 void LinkDialog::generateLink()
 {
     QStringList link;

@@ -26,23 +26,24 @@ public:
     int id() { return mId; }
     void setId(int id) { mId = id; }
 
+    void loadPage();
     void savePage();
-
     bool isSaved();
+    //delete and remove data.
+    void deletePage();
 
     QUndoStack* undoStack() { return mUndoStack; }
-    
-    void loadPage();
 
+    //Set properties on selected text, ie, bold, italics, underline, etc.
     void setTextProperties(TextProperty property, bool state);
 
     int currentZoomLevel();
 
-    void deletePage();
-
     void addLinkToNote(QStringList link);
 
     void setDrawLines(bool state) { Q_ASSERT(mScene); mScene->setDrawLines(state); }
+
+    Note* currentNote();
 
 signals:
     void zoomLevelChanged(int value);

@@ -308,6 +308,17 @@ void Page::addLinkToNote(QStringList link)
 
 }
 
+Note *Page::currentNote()
+{
+    QGraphicsItem *i = mScene->selectedItems().first();
+    if(!i)
+        return 0;
+    if(i->type() == Note::Type)
+        return qgraphicsitem_cast<Note*>(i);
+    else if(i->type() != Arrow::Type) //FIXME: do a metter job of checking the item type.
+        return qgraphicsitem_cast<Note*>(i->parentItem());
+}
+
 void Page::zoomChanged(int value)
 {
     ui->graphicsView->zoomLevel(value);
