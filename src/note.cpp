@@ -278,6 +278,20 @@ void Note::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
         return;
     }
 
+    if(scene()) {
+        QRectF itemRect = scene()->itemsBoundingRect();
+        QRectF sceneRect = scene()->sceneRect();
+        if(itemRect.left() < sceneRect.left())
+            sceneRect.setLeft(itemRect.left());
+        if(itemRect.right() > sceneRect.right())
+            sceneRect.setRight(itemRect.right());
+        if(itemRect.top() < sceneRect.top())
+            sceneRect.setTop(itemRect.top());
+        if(itemRect.bottom() > sceneRect.bottom())
+            sceneRect.setBottom(itemRect.bottom());
+        scene()->setSceneRect(sceneRect);
+    }
+
     QGraphicsItem::mouseMoveEvent(e);
 }
 
