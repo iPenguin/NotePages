@@ -73,12 +73,12 @@ void Page::savePage()
     stream.writeStartDocument();
 
     stream.writeStartElement("npage_page");
-
+/*
         stream.writeStartElement("properties");
         stream.writeAttribute("bgColor", "#ff00ff");
         stream.writeAttribute("bgImage", "");
         stream.writeEndElement(); //properties
-
+*/
         foreach(QGraphicsItem *i, mScene->items()) {
             if(i->type() != Note::Type) {
                 continue;
@@ -152,7 +152,7 @@ void Page::loadPage()
             QString name = stream.name().toString();
 
             if (name == "properties") {
-                qDebug() << "TODO: properties - create parser function to get properties.";
+                //qDebug() << "TODO: properties - create parser function to get properties.";
 
             } else if (name == "note") {
                 Note *n = new Note(0, mScene);
