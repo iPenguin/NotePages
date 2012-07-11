@@ -94,6 +94,12 @@ void MainWindow::loadPageFromLink(QString link)
     }
 
     int currentPage = ui->pageTree->currentItem()->data(0, Qt::UserRole).toInt();
+
+    foreach(QTreeWidgetItem *i ,ui->pageTree->selectedItems()) {
+        if(i)
+            i->setSelected(false);
+    }
+
     mHistory->push(new History(this, currentPage, page.toInt()));
 }
 
