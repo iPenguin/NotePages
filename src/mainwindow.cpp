@@ -336,6 +336,13 @@ void MainWindow::fileNew()
 
 void MainWindow::loadFile(QString folder)
 {
+    if(ui->pageTree->topLevelItemCount() > 0) {
+        MainWindow *mw = new MainWindow(false);
+        mw->loadFile(folder);
+        mw->show();
+        return;
+    }
+
     if(folder.isEmpty())
         return;
 
@@ -539,10 +546,11 @@ void MainWindow::addNewPage()
 {
     QTreeWidgetItem *item = 0;
 
-    if(ui->pageTree->selectedItems().count() <= 0)
+    if(ui->pageTree->selectedItems().count() <= 0) {
         item = ui->pageTree->topLevelItem(0);
-    else
+    } else {
         item = ui->pageTree->selectedItems().first();
+    }
 
     QTreeWidgetItem *ni = new QTreeWidgetItem();
 
@@ -558,8 +566,13 @@ void MainWindow::addNewPage()
     ni->setData(0, Qt::UserRole + 1, QVariant(newIcon));
 
     ni->setFlags(ni->flags() | Qt::ItemIsEditable);
-    item->addChild(ni);
-    item->setExpanded(true);
+
+    if(item) {
+        item->addChild(ni);
+        item->setExpanded(true);
+    } else {
+        ui->pageTree->addTopLevelItem(ni);
+    }
 }
 
 void MainWindow::removePages()
