@@ -13,6 +13,7 @@
 #include <QTextDocument>
 
 #include "note.h"
+#include "notetext.h"
 
 Page::Page(QString pagePath, QWidget *parent) :
     QWidget(parent),
@@ -73,12 +74,7 @@ void Page::savePage()
     stream.writeStartDocument();
 
     stream.writeStartElement("npage_page");
-/*
-        stream.writeStartElement("properties");
-        stream.writeAttribute("bgColor", "#ff00ff");
-        stream.writeAttribute("bgImage", "");
-        stream.writeEndElement(); //properties
-*/
+
         foreach(QGraphicsItem *i, mScene->items()) {
             if(i->type() != Note::Type) {
                 continue;
@@ -151,12 +147,8 @@ void Page::loadPage()
         if (stream.isStartElement()) {
             QString name = stream.name().toString();
 
-            if (name == "properties") {
-                //qDebug() << "TODO: properties - create parser function to get properties.";
-
-            } else if (name == "note") {
-                Note *n = new Note(0, mScene);
-                n->loadNote(&stream, mScene->pagePath());
+            if (name == "note") {
+                Note *n = new Note(&stream, pagePath, 0, mScene);
                 mScene->incrementMaxNoteId();
                 updateSceneRect(n);
                 connect(n, SIGNAL(pageLinkClicked(QString)), SLOT(nextPage(QString)));
@@ -176,11 +168,11 @@ void Page::loadPage()
                             endNote = n;
                     }
                 }
-                Arrow *a = new Arrow(startNote, endNote, 0, mScene);
+                new Arrow(startNote, endNote, 0, mScene);
 
 
             } else if (name == "group") {
-                qDebug() << "TODO: for each child element load each note.";
+                qDebug() << "TODO: Create groups of notes where the edges are ";
             }
         }
     }
@@ -313,10 +305,13 @@ Note *Page::currentNote()
     QGraphicsItem *i = mScene->selectedItems().first();
     if(!i)
         return 0;
+
     if(i->type() == Note::Type)
         return qgraphicsitem_cast<Note*>(i);
     else if(i->type() != Arrow::Type) //FIXME: do a metter job of checking the item type.
         return qgraphicsitem_cast<Note*>(i->parentItem());
+
+    return 0;
 }
 
 void Page::zoomChanged(int value)

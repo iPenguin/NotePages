@@ -12,21 +12,24 @@
 
 #include <QFocusEvent>
 #include <QString>
+#include "note.h"
 
+#include "debug.h"
 #include <QDebug>
 
-NoteText::NoteText(QGraphicsItem *parent, QGraphicsScene *scene) :
-    QGraphicsTextItem(parent, scene),
-    mParent(parent),
-    mSize(QSizeF(100,50))
+NoteText::NoteText(QGraphicsItem *parent, QGraphicsScene *scene)
+    : QGraphicsTextItem(parent, scene), NoteContent(parent, scene),
+      mParent(parent),
+      mSize(QSizeF(100,50))
 {
+
     setFlag(QGraphicsItem::ItemIsSelectable);
-    setTextInteractionFlags(Qt::TextBrowserInteraction); //Qt::TextEditorInteraction);
+    setTextInteractionFlags(Qt::TextBrowserInteraction);
     setCursor(QCursor(Qt::IBeamCursor));
     setOpenExternalLinks(false);
 
-    connect(this, SIGNAL(linkHovered(QString)), SLOT(hoveringOverLink(QString)));
-    //FIXME: emit selection changed information and pass the correct status of text b/i/u left/right/center/justify.
+    //FIXME: connect link signals.
+    //connect(mText, SIGNAL(linkActivated(QString)), SIGNAL(linkActivated(QString)));
 }
 
 QRectF NoteText::boundingRect() const
@@ -39,17 +42,15 @@ QRectF NoteText::boundingRect() const
 
 void NoteText::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    QRectF r = boundingRect();
-    painter->fillRect(r, Qt::white);
     painter->setPen(Qt::gray);
-    painter->drawRect(r);
+    painter->setBrush(QColor(Qt::white));
+    painter->drawRoundedRect(boundingRect(), 5, 5);
 
     QGraphicsTextItem::paint(painter, option, widget);
 }
 
 void NoteText::mousePressEvent(QGraphicsSceneMouseEvent *e)
 {
-
 
     /** Code needed to make Spell Checking work for suggested replacements, when right clicking..
      *QTextCursor c = textCursor();
@@ -82,6 +83,7 @@ void NoteText::focusOutEvent(QFocusEvent *e)
 
 void NoteText::hoveringOverLink(QString link)
 {
+    Q_UNUSED(link);
     setCursor(QCursor(Qt::PointingHandCursor));
 }
 
@@ -90,10 +92,17 @@ void NoteText::setSize(QSizeF size)
     if(size.width() < 5)
         size.setWidth(5);
     setTextWidth(size.width());
+
     if(size.height() < document()->size().height())
         size.setHeight(document()->size().height());
-
+    if(size.width() < document()->size().width())
+        size.setWidth(document()->size().width());
     mSize = size;
+}
+
+void NoteText::setPos(const QPointF &pos)
+{
+    return QGraphicsTextItem::setPos(pos);
 }
 
 void NoteText::mergeFormatOnSelection(QTextCharFormat format)
@@ -103,8 +112,6 @@ void NoteText::mergeFormatOnSelection(QTextCharFormat format)
         textCursor().select(QTextCursor::WordUnderCursor);
 
     textCursor().mergeCharFormat(format);
-    //mergeCurrentCharFormat(format);
-
 }
 
 
@@ -141,8 +148,64 @@ void NoteText::setTextBlockAlignment(Qt::Alignment align)
     textCursor().setBlockFormat(format);
 }
 
+void NoteText::setTextEditMode(bool value)
+{
+    setTextInteractionFlags(value ? Qt::TextEditorInteraction : Qt::TextBrowserInteraction);
+}
+
 void NoteText::addLink(QStringList link)
 {
 
     textCursor().insertHtml("<a href=\""+link.last()+"\">"+link.first()+"</a>");
+}
+
+void NoteText::loadContent(QXmlStreamReader *stream)
+{
+
+    QString fileName = stream->attributes().value("file").toString();
+    QFile f(pageScene()->pagePath() + "/" + fileName);
+
+    if(!f.open(QIODevice::ReadOnly)) {
+        qDebug() << "Error opening note - " << f.fileName();
+        return;
+    }
+
+    QString text = f.readAll();
+    QGraphicsTextItem::setHtml(text);
+}
+
+void NoteText::saveContent(QXmlStreamWriter *stream)
+{
+
+    QString noteFile = "note" + QString::number(note()->id()) + ".html";
+    stream->writeAttribute("file", noteFile);
+
+    if(!toHtml().isEmpty()) {
+        QFile f(pageScene()->pagePath() + "/" + noteFile);
+
+        if(!f.open(QFile::WriteOnly)) {
+            qDebug() << "error opening file for writing: " << f.fileName();
+        }
+
+        QTextStream out(&f);
+        out << toHtml();
+        f.flush();
+        f.close();
+    }
+}
+
+void NoteText::deleteContent()
+{
+    QString noteFile = pageScene()->pagePath() + "/note" + QString::number(note()->id()) + ".html";
+
+    if(QFileInfo(noteFile).exists()) {
+        QDir d(pageScene()->pagePath());
+        d.remove(noteFile);
+    }
+
+}
+
+QString NoteText::toHtml()
+{
+    return document()->toHtml();
 }

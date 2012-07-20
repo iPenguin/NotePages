@@ -13,6 +13,7 @@ set(np_qobject_headers  mainwindow.h
                         notetext.h
                         note.h
                         linkdialog.h
+                        notecontent.h
                         )
 
 set(np_resources

@@ -12,7 +12,6 @@
 #include <QDataStream>
 #include <QMenu>
 #include <QAction>
-#include "noteoptions.h"
 
 #include <QFileInfo>
 #include <QMessageBox>
@@ -50,7 +49,7 @@ void PageScene::deleteNote()
     items.removeFirst();
 }
 
-void PageScene::addAttachment()
+void PageScene::addDocument()
 {
     QAction *a = qobject_cast<QAction*>(sender());
 
@@ -58,25 +57,24 @@ void PageScene::addAttachment()
     QGraphicsItem *i = items.first();
     Note *n = qgraphicsitem_cast<Note*>(i->parentItem());
 
-    if(a->text() == tr("Add Attachment")) {
+    if(a->text() == tr("Add Document")) {
 
         if(n) {
-            //TODO: Add an attachment to the note.
+            //TODO: Add an document to the note.
             //find file with dialog
             QFileDialog* fd = new QFileDialog(0, Qt::Sheet);
             fd->setDirectory(mPagePath);
-            fd->setObjectName("addattachmentdialog");
+            fd->setObjectName("adddocumentdialog");
             fd->setViewMode(QFileDialog::List);
-            //fd->setFileMode( QFileDialog::Directory );
             fd->setAcceptMode(QFileDialog::AcceptOpen);
-            fd->open(this, SLOT(loadAttachment(QString)));
+            fd->open(this, SLOT(loadDocument(QString)));
         }
     } else {
-        n->removeAttachment();
+        n->removeDocument();
     }
 }
 
-void PageScene::loadAttachment(QString fileName)
+void PageScene::loadDocument(QString fileName)
 {
 
     QList<QGraphicsItem*> items = selectedItems();
@@ -97,7 +95,7 @@ void PageScene::loadAttachment(QString fileName)
     }
 
     f.copy(mPagePath + "/" + fInfo.fileName());
-    n->setAttachment(fInfo.fileName());
+    n->setDocument(fInfo.fileName());
 }
 
 void PageScene::addImage()
@@ -107,7 +105,7 @@ void PageScene::addImage()
     QGraphicsItem *i = items.first();
     Note *n = qgraphicsitem_cast<Note*>(i->parentItem());
     if(n) {
-        //FIXME: Add an attachment to the note.
+        //FIXME: Add a document to the note.
         //find file with dialog
         QFileDialog* fd = new QFileDialog(0, Qt::Sheet);
           fd->setDirectory(mPagePath);
@@ -235,7 +233,7 @@ void PageScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
         if(!n)
             return;
 
-        Arrow *a = new Arrow(mLineStart, n, 0, this);
+        new Arrow(mLineStart, n, 0, this);
         delete mTempLine;
         mTempLine = 0;
     } else {
@@ -257,14 +255,17 @@ void PageScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
 
 void PageScene::dragEnterEvent(QGraphicsSceneDragDropEvent *e)
 {
+    Q_UNUSED(e);
 }
 
 void PageScene::dragMoveEvent(QGraphicsSceneDragDropEvent *e)
 {
+    Q_UNUSED(e);
 }
 
 void PageScene::dragLeaveEvent(QGraphicsSceneDragDropEvent *e)
 {
+    Q_UNUSED(e);
 }
 
 void PageScene::dropEvent(QGraphicsSceneDragDropEvent *e)
@@ -283,7 +284,7 @@ void PageScene::dropEvent(QGraphicsSceneDragDropEvent *e)
             n->setPos(e->scenePos());
 
             if(!true) {
-                n->setAttachment(QFileInfo(url).fileName());
+                n->setDocument(QFileInfo(url).fileName());
             } else {
                 n->setImage(QFileInfo(url).fileName(), QSizeF());
             }
@@ -312,7 +313,7 @@ void PageScene::dropEvent(QGraphicsSceneDragDropEvent *e)
 
         qDebug() << "fileName" << mPagePath + "/" + fileName << QFileInfo(mPagePath + "/" + fileName).exists();
         n->setImage(fileName, ireader->size());
-        n->mPixmap.loadFromData(mime->imageData().toByteArray());
+        n->setPixmap(mime->imageData().toByteArray());
         e->setAccepted(true);
     }
 
@@ -328,15 +329,15 @@ void PageScene::showNoteOptions(QPointF screenPos)
             Note *n = qgraphicsitem_cast<Note*>(items.first()->parentItem());
 
             QAction *attach;
-            if(n->hasAttachment()) {
-                attach = new QAction(tr("Remove Attachment"), 0);
+            if(n->hasDocument()) {
+                attach = new QAction(tr("Remove Document"), 0);
             } else {
-                attach = new QAction(tr("Add Attachment"), 0);
+                attach = new QAction(tr("Add Document"), 0);
             }
             QAction *addImg = new QAction(tr("Add Image"), 0);
             QAction *delNote = new QAction(tr("Delete Note"), 0);
 
-            connect(attach, SIGNAL(triggered()), SLOT(addAttachment()));
+            connect(attach, SIGNAL(triggered()), SLOT(addDocument()));
             connect(addImg, SIGNAL(triggered()), SLOT(addImage()));
             connect(delNote, SIGNAL(triggered()), SLOT(deleteNote()));
 
@@ -357,7 +358,7 @@ Note* PageScene::createNewNote(int noteId)
         mCurMaxNoteId = noteId + 1;
 
     int newId;
-    Note *n = new Note();
+    Note *n = new Note(NoteType::Text);
     if (noteId > -1) { //load an existing note.
         newId = noteId;
 

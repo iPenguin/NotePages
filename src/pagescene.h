@@ -26,8 +26,8 @@ signals:
 
 public slots:
     void deleteNote();
-    void addAttachment();
-    void loadAttachment(QString fileName);
+    void addDocument();
+    void loadDocument(QString fileName);
     void addImage();
     void loadImage(QString fileName);
 
