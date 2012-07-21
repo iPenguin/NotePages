@@ -28,8 +28,7 @@ NoteText::NoteText(QGraphicsItem *parent, QGraphicsScene *scene)
     setCursor(QCursor(Qt::IBeamCursor));
     setOpenExternalLinks(false);
 
-    //FIXME: connect link signals.
-    //connect(mText, SIGNAL(linkActivated(QString)), SIGNAL(linkActivated(QString)));
+    connect(this, SIGNAL(linkActivated(QString)), SIGNAL(linkActivated(QString)));
 }
 
 QRectF NoteText::boundingRect() const

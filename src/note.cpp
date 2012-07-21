@@ -146,7 +146,7 @@ void Note::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     Q_UNUSED(option);
     Q_UNUSED(widget);
 
-//    if(mHovering) {
+    if(mContent->contentType() != NoteType::Document) {
         QRectF br = boundingRect();
 
         painter->setPen(Qt::gray);
@@ -159,7 +159,7 @@ void Note::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
         //draw resize handle.
         painter->drawLine(QPointF(br.right(), br.bottom() - 15), QPointF(br.right() - 15, br.bottom()));
         painter->drawLine(QPointF(br.right() -3, br.bottom() - 7), QPointF(br.right() - 7, br.bottom() - 3));
-//    }
+    }
 }
 
 void Note::deleteNote()
@@ -222,15 +222,14 @@ void Note::loadNote(QXmlStreamReader* stream, QString pagePath)
             break;
 
         case NoteType::Document:
-            debug("load document...");
             mContent = new NoteDocument(this, scene());
             break;
 
         case NoteType::Text:
         default:
-            mContent = new NoteText(this, scene());
-            //FIXME: connect link signals.
-            //connect(mContent, SIGNAL(linkActivated(QString)), SLOT(signalSend(QString)));
+            NoteText *nt = new NoteText(this, scene());
+            mContent = nt;
+            connect(nt, SIGNAL(linkActivated(QString)), SLOT(signalSend(QString)));
             break;
     }
 

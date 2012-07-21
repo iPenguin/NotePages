@@ -13,8 +13,9 @@
 NoteDocument::NoteDocument(QGraphicsItem *parent, QGraphicsScene *scene)
     : QGraphicsPixmapItem(parent, scene), NoteContent(parent, scene)
 {
-    mFileName = new QGraphicsTextItem();
-    debug("start...");
+    mFileName = new QGraphicsTextItem(parent, scene);
+    mFileName->setPos(0,125);
+
     setAcceptHoverEvents(true);
     setFlag(QGraphicsItem::ItemIsSelectable);
     setCursor(QCursor(Qt::PointingHandCursor));
@@ -30,10 +31,10 @@ QRectF NoteDocument::boundingRect() const
 
 void NoteDocument::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
+    Q_UNUSED(widget);
+    Q_UNUSED(option);
     //FIXME: draw the icon center text - 1/2 diff width.
     painter->drawPixmap(12,0, mPix);
-
-    mFileName->paint(painter, option, widget);
 }
 
 void NoteDocument::setSize(QSizeF size)

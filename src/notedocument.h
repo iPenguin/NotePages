@@ -15,6 +15,7 @@ public:
     NoteDocument(QGraphicsItem *parent = 0, QGraphicsScene *scene = 0);
 
     int type () const { return NoteType::Document; }
+    virtual int contentType() const { return NoteType::Document; }
 
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
