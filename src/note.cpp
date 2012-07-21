@@ -222,6 +222,7 @@ void Note::loadNote(QXmlStreamReader* stream, QString pagePath)
             break;
 
         case NoteType::Document:
+            debug("load document...");
             mContent = new NoteDocument(this, scene());
             break;
 
@@ -396,14 +397,14 @@ void Note::setSize(QSizeF size)
 
 void Note::setDocument(QString doc)
 {
-    mContent->setDocument(mPath, doc);
+    mContent->setFile(doc);
 
 }
 
 void Note::removeDocument()
 {
     QString file = mContent->file();
-    mContent->setDocument(mPath, "");
+    mContent->setFile("");
 
     if(QFileInfo(mPath + "/" + file).exists()) {
         QDir(mPath).remove(file);

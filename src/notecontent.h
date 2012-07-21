@@ -22,6 +22,7 @@ namespace NoteType
 
 class NoteContent
 {
+    friend class NoteDocument;
 public:
     NoteContent(QGraphicsItem *parent = 0, QGraphicsScene *scene = 0);
 
@@ -41,8 +42,6 @@ public:
     virtual void setImage(QByteArray imageData) { debug("unimplemented"); Q_UNUSED(imageData); }
     virtual QPixmap toPixmap() { debug("unimplemented"); return QPixmap(); }
 
-    virtual void setDocument(QString path, QString doc) { debug("unimplemented"); Q_UNUSED(path); Q_UNUSED(doc); }
-
     virtual void setPos(const QPointF &pos) = 0;
     virtual QSizeF size() = 0;
     virtual void setSize(QSizeF size) = 0;
@@ -54,8 +53,10 @@ public:
     PageScene* pageScene() { return mScene; }
     Note* note() { return mNote; }
 
-private:
+protected:
     QString mFile;
+
+private:
     PageScene *mScene;
     Note *mNote;
 };

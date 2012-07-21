@@ -89,6 +89,7 @@ void NoteImage::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
 
     qreal ratio = qreal(pixmap().size().width()) / qreal(pixmap().size().height());
     newSize.setWidth(ratio * newSize.height());
+    qDebug() << "new size" << newSize;
     setPixmap(pixmap().scaled(newSize.toSize()));
 
     QGraphicsPixmapItem::mouseMoveEvent(e);

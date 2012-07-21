@@ -11,11 +11,10 @@
 #include <QUrl>
 
 NoteDocument::NoteDocument(QGraphicsItem *parent, QGraphicsScene *scene)
-    : NoteContent(parent, scene)
+    : QGraphicsPixmapItem(parent, scene), NoteContent(parent, scene)
 {
-    mIcon = new QGraphicsPixmapItem(parent, scene);
-    mFileName = new QGraphicsTextItem(parent, scene);
-
+    mFileName = new QGraphicsTextItem();
+    debug("start...");
     setAcceptHoverEvents(true);
     setFlag(QGraphicsItem::ItemIsSelectable);
     setCursor(QCursor(Qt::PointingHandCursor));
@@ -23,7 +22,7 @@ NoteDocument::NoteDocument(QGraphicsItem *parent, QGraphicsScene *scene)
 
 QRectF NoteDocument::boundingRect() const
 {
-    QRectF icon = mIcon->boundingRect();
+    QRectF icon = mPix.rect();
     QRectF fName = mFileName->boundingRect();
     QRectF final = icon.unite(fName);
     return final; //.adjusted(0,0,64,64);
@@ -31,15 +30,15 @@ QRectF NoteDocument::boundingRect() const
 
 void NoteDocument::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
+    //FIXME: draw the icon center text - 1/2 diff width.
+    painter->drawPixmap(12,0, mPix);
 
-    mIcon->paint(painter, option, widget);
     mFileName->paint(painter, option, widget);
 }
 
 void NoteDocument::setSize(QSizeF size)
 {
-    //TODO: give the text the bottom 12pxs or 24 and the icon the rest.
-    mIcon->setPixmap(QPixmap(pageScene()->pagePath() + "/" + file()).scaled(size.toSize()));
+    setPixmap(QPixmap(pageScene()->pagePath() + "/" + file()).scaled(size.toSize()));
 }
 
 QSizeF NoteDocument::size()
@@ -49,39 +48,38 @@ QSizeF NoteDocument::size()
 
 void NoteDocument::setPos(const QPointF &pos)
 {
-    return QGraphicsObject::setPos(pos);
+    return QGraphicsPixmapItem::setPos(pos);
 }
 
 void NoteDocument::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
 {
 
-    QDesktopServices::openUrl(QUrl("file://"+mPath +"/" +mFile));
-    QGraphicsObject::mouseReleaseEvent(e);
+    QDesktopServices::openUrl(QUrl("file://" + pageScene()->pagePath() +"/" + mFile));
+    QGraphicsPixmapItem::mouseReleaseEvent(e);
 }
 
-void NoteDocument::setDocument(QString path, QString fileName)
+void NoteDocument::setFile(QString file)
 {
     //FIXME: make this work like the old Attachment line worked.
-    if(!fileName.isEmpty()) {
-        QFileInfo fInfo(mPath + "/" + fileName);
+    if(!file.isEmpty()) {
+        QFileInfo fInfo(pageScene()->pagePath() + "/" + file);
         QFileIconProvider *fip = new QFileIconProvider();
-        mIcon->setPixmap(fip->icon(fInfo).pixmap(128));
+        mPix = fip->icon(fInfo).pixmap(128,128);
+        QGraphicsPixmapItem::setPixmap(mPix);
+
+        mFileName->setHtml("<a href=\"file://" + file +"\">" + file + "</a>");
+    } else {
+        mFileName->setHtml("");
     }
 
-    if(fileName.isEmpty()) {
-        mFileName->setHtml("");
-        mFile = fileName;
-    } else {
-        mFileName->setHtml("<a href=\"file://" + fileName +"\">" + fileName + "</a>");
-        mPath = path;
-        mFile = fileName;
-    }
+    NoteContent::setFile(file);
 }
 
 void NoteDocument::loadContent(QXmlStreamReader *stream)
 {
     //TODO: test unsafe data first.
-    mFile = stream->attributes().value("file").toString();
+    setFile(stream->attributes().value("file").toString());
+
 }
 
 void NoteDocument::saveContent(QXmlStreamWriter *stream)
@@ -92,7 +90,7 @@ void NoteDocument::saveContent(QXmlStreamWriter *stream)
 void NoteDocument::deleteContent()
 {
     if(QFileInfo(file()).exists()) {
-        QDir d(mPath);
+        QDir d(pageScene()->pagePath());
         d.remove(file());
     }
 }
