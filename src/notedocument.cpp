@@ -14,7 +14,7 @@ NoteDocument::NoteDocument(QGraphicsItem *parent, QGraphicsScene *scene)
     : QGraphicsPixmapItem(parent, scene), NoteContent(parent, scene)
 {
     mFileName = new QGraphicsTextItem(parent, scene);
-    mFileName->setPos(0,125);
+    mFileName->setPos(20,125);
 
     setAcceptHoverEvents(true);
     setFlag(QGraphicsItem::ItemIsSelectable);
@@ -26,6 +26,11 @@ QRectF NoteDocument::boundingRect() const
     QRectF icon = mPix.rect();
     QRectF fName = mFileName->boundingRect();
     QRectF final = icon.unite(fName);
+
+    qreal diff = (mFileName->boundingRect().width() +20 ) - mPix.width();
+    qreal start = diff / 2.0;
+    if(start < final.left())
+        final.setLeft(start);
     return final; //.adjusted(0,0,64,64);
 }
 
@@ -34,7 +39,10 @@ void NoteDocument::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
     Q_UNUSED(widget);
     Q_UNUSED(option);
     //FIXME: draw the icon center text - 1/2 diff width.
-    painter->drawPixmap(12,0, mPix);
+    qreal diff = (mFileName->boundingRect().width() +20 ) - mPix.width();
+    qreal start = diff / 2.0;
+    //painter->drawRect(boundingRect());
+    painter->drawPixmap(start,0, mPix);
 }
 
 void NoteDocument::setSize(QSizeF size)

@@ -95,7 +95,12 @@ Note::Note(NoteType::Id contentType, QGraphicsItem *parent, QGraphicsScene *scen
     mAdded = QDateTime::currentDateTime();
 
     mNoteOptions = new NoteOptions(this, scene);
-    mNoteOptions->setPos(0,-24);
+
+    if(contentType == NoteType::Document) {
+        mNoteOptions->setPos(0,130);
+    } else {
+        mNoteOptions->setPos(0,-18);
+    }
 }
 
 Note::Note(QXmlStreamReader *stream, QString pagePath, QGraphicsItem *parent, QGraphicsScene *scene)
@@ -118,7 +123,11 @@ Note::Note(QXmlStreamReader *stream, QString pagePath, QGraphicsItem *parent, QG
     mAdded = QDateTime::currentDateTime();
 
     mNoteOptions = new NoteOptions(this, scene);
-    mNoteOptions->setPos(0,-24);
+    if(mContent->contentType() == NoteType::Document) {
+        mNoteOptions->setPos(0,130);
+    } else {
+        mNoteOptions->setPos(0,-18);
+    }
 
 }
 
@@ -126,7 +135,7 @@ QRectF Note::boundingRect() const
 {
     int topMargin = -3;
     int leftMargin = -3;
-    int bottomMargin = 30;
+    int bottomMargin = 24;
 
     QSizeF size;
 
