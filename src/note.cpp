@@ -193,9 +193,9 @@ QString Note::textSelection()
     Q_ASSERT(mContent);
     if(mContent->contentType() != NoteType::Text)
         return "";
-    //FIXME: get the selected text.
-    //NoteText *nt = qgraphicsitem_cast<NoteText*>(mContent);
-    return ""; //nt->textCursor().selectedText();
+
+    NoteText *nt = static_cast<NoteText*>(mContent);
+    return nt->textCursor().selectedText();
 }
 
 void Note::setPixmap(QByteArray imageData)

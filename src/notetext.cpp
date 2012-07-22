@@ -27,8 +27,6 @@ NoteText::NoteText(QGraphicsItem *parent, QGraphicsScene *scene)
     setTextInteractionFlags(Qt::TextBrowserInteraction);
     setCursor(QCursor(Qt::IBeamCursor));
     setOpenExternalLinks(false);
-
-    connect(this, SIGNAL(linkActivated(QString)), SIGNAL(linkActivated(QString)));
 }
 
 QRectF NoteText::boundingRect() const

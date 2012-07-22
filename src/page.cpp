@@ -285,12 +285,12 @@ void Page::addLinkToNote(QStringList link)
     }
 
     QGraphicsItem *i = mScene->selectedItems().first();
-    if(i->type() != NoteText::Type) {
+    if(i->type() != NoteType::Text) {
         qWarning() << "Not a Note: " << i->type();
         return;
     }
 
-    NoteText *nt = qgraphicsitem_cast<NoteText*>(i);
+    NoteText *nt = static_cast<NoteText*>(i);
     if(!nt) {
         qWarning() << "Couldn't find noteText!";
         return;
@@ -302,6 +302,9 @@ void Page::addLinkToNote(QStringList link)
 
 Note *Page::currentNote()
 {
+    if(mScene->selectedItems().count() <= 0)
+        return 0;
+
     QGraphicsItem *i = mScene->selectedItems().first();
     if(!i)
         return 0;

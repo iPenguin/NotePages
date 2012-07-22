@@ -62,7 +62,7 @@ void NoteDocument::setPos(const QPointF &pos)
 
 void NoteDocument::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
 {
-
+    debug("load url...");
     QDesktopServices::openUrl(QUrl("file://" + pageScene()->pagePath() +"/" + mFile));
     QGraphicsPixmapItem::mouseReleaseEvent(e);
 }
