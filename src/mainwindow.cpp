@@ -249,10 +249,15 @@ void MainWindow::tabChanged(int newTab)
         return;
 
     Page *p = qobject_cast<Page*>(w);
+    if(!p)
+        return;
 
     int zoomLevel = p->currentZoomLevel();
 
     mZoom->setValue(zoomLevel);
+
+    int pageNumber = mPages.key(p);
+    selectPage(pageNumber);
 }
 
 void MainWindow::fileOpen()
