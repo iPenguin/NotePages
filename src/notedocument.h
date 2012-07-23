@@ -9,6 +9,31 @@
 
 #include "notecontent.h"
 
+class NoteDocumentName : public QGraphicsTextItem
+{
+
+public:
+    NoteDocumentName(QGraphicsItem *parent = 0, QGraphicsScene *scene = 0) :
+        QGraphicsTextItem(parent, scene)
+    {
+        mScene = qobject_cast<PageScene*>(scene);
+        setFlag(QGraphicsItem::ItemIsSelectable);
+        setCursor(QCursor(Qt::PointingHandCursor));
+
+    }
+
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
+    {
+
+        QDesktopServices::openUrl(QUrl("file://" + mScene->pagePath() +"/" + toPlainText()));
+    }
+
+private:
+    PageScene *mScene;
+
+};
+
+
 class NoteDocument : public QGraphicsPixmapItem, public NoteContent
 {
 public:
@@ -35,7 +60,7 @@ protected:
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *e);
 
 private:
-    QGraphicsTextItem *mFileName;
+    NoteDocumentName *mFileName;
     QPixmap mPix;
 };
 

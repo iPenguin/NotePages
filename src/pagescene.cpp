@@ -358,7 +358,7 @@ Note* PageScene::createNewNote(int noteId)
         mCurMaxNoteId = noteId + 1;
 
     int newId;
-    Note *n = new Note(NoteType::Text);
+    Note *n = new Note(NoteType::Text, 0, this);
     if (noteId > -1) { //load an existing note.
         newId = noteId;
 

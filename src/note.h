@@ -40,7 +40,7 @@ class Note : public QObject, public QGraphicsItem
 {
     Q_OBJECT
 public:
-    explicit Note(NoteType::Id contentType, QGraphicsItem *parent = 0, QGraphicsScene *scene = 0);
+    explicit Note(NoteType::Id contentType, QGraphicsItem *parent, QGraphicsScene *scene);
     Note(QXmlStreamReader *stream, QString pagePath, QGraphicsItem *parent, QGraphicsScene *scene);
     
     QRectF boundingRect() const;

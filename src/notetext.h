@@ -46,14 +46,10 @@ signals:
     void pageLink(QString link);
     void linkActivated(QString link);
 
-protected slots:
-    void hoveringOverLink(QString link);
-
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *e);
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *e);
 
-    void hoverMoveEvent(QGraphicsSceneHoverEvent *e);
     void focusOutEvent(QFocusEvent *e);
 
     void mergeFormatOnSelection(QTextCharFormat format);

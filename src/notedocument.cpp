@@ -13,7 +13,7 @@
 NoteDocument::NoteDocument(QGraphicsItem *parent, QGraphicsScene *scene)
     : QGraphicsPixmapItem(parent, scene), NoteContent(parent, scene)
 {
-    mFileName = new QGraphicsTextItem(parent, scene);
+    mFileName = new NoteDocumentName(parent, scene);
     mFileName->setPos(20,125);
 
     setAcceptHoverEvents(true);
@@ -62,8 +62,6 @@ void NoteDocument::setPos(const QPointF &pos)
 
 void NoteDocument::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
 {
-    debug("load url...");
-    QDesktopServices::openUrl(QUrl("file://" + pageScene()->pagePath() +"/" + mFile));
     QGraphicsPixmapItem::mouseReleaseEvent(e);
 }
 

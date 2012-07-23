@@ -27,6 +27,7 @@ NoteText::NoteText(QGraphicsItem *parent, QGraphicsScene *scene)
     setTextInteractionFlags(Qt::TextBrowserInteraction);
     setCursor(QCursor(Qt::IBeamCursor));
     setOpenExternalLinks(false);
+
 }
 
 QRectF NoteText::boundingRect() const
@@ -67,21 +68,10 @@ void NoteText::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *e)
     QGraphicsTextItem::mouseDoubleClickEvent(e);
 }
 
-void NoteText::hoverMoveEvent(QGraphicsSceneHoverEvent *e)
-{
-    QGraphicsTextItem::hoverMoveEvent(e);
-}
-
 void NoteText::focusOutEvent(QFocusEvent *e)
 {
     setTextInteractionFlags(Qt::TextBrowserInteraction);
     QGraphicsTextItem::focusOutEvent(e);
-}
-
-void NoteText::hoveringOverLink(QString link)
-{
-    Q_UNUSED(link);
-    setCursor(QCursor(Qt::PointingHandCursor));
 }
 
 void NoteText::setSize(QSizeF size)
@@ -189,6 +179,7 @@ void NoteText::saveContent(QXmlStreamWriter *stream)
         f.flush();
         f.close();
     }
+
 }
 
 void NoteText::deleteContent()
