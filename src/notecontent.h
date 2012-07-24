@@ -12,12 +12,8 @@
 #include "pagescene.h"
 #include "debug.h"
 
+#include "pageglobals.h"
 class Note;
-
-namespace NoteType
-{
-    enum Id { Text = Qt::UserRole + 10, Image, Document, Unknown = Qt::UserRole + 255 };
-}
 
 
 class NoteContent

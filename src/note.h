@@ -13,6 +13,7 @@
 #include "pagescene.h"
 
 #include "arrow.h"
+#include "pageglobals.h"
 
 /*********************************************************
  * class NoteOptions:

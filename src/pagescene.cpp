@@ -351,14 +351,14 @@ void PageScene::showNoteOptions(QPointF screenPos)
     }
 }
 
-Note* PageScene::createNewNote(int noteId)
+Note* PageScene::createNewNote(int noteId, NoteType::Id type)
 {
 
     if(noteId >= mCurMaxNoteId)
         mCurMaxNoteId = noteId + 1;
 
     int newId;
-    Note *n = new Note(NoteType::Text, 0, this);
+    Note *n = new Note(type, 0, this);
     if (noteId > -1) { //load an existing note.
         newId = noteId;
 

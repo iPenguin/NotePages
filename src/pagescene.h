@@ -5,6 +5,7 @@
 #define PAGESCENE_H
 
 #include <QGraphicsScene>
+#include "pageglobals.h"
 
 class Note;
 
@@ -50,7 +51,7 @@ protected:
     void dragLeaveEvent(QGraphicsSceneDragDropEvent *e);
     void dropEvent(QGraphicsSceneDragDropEvent *e);
 
-    Note* createNewNote(int noteId = -1);
+    Note* createNewNote(int noteId = -1, NoteType::Id type = NoteType::Text);
 
 private:
 
