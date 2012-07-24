@@ -7,6 +7,7 @@ NoteImage::NoteImage(QGraphicsItem *parent, QGraphicsScene *scene)
       mOldSize(QSizeF()),
       mDiff(QPointF())
 {
+    setupContextMenu();
 }
 
 QRectF NoteImage::boundingRect() const
@@ -73,6 +74,18 @@ void NoteImage::deleteContent()
         QDir d(pageScene()->pagePath());
         d.remove(image);
     }
+}
+
+void NoteImage::setupContextMenu()
+{
+
+    mContextMenu = new QMenu();
+    QAction *delNote = new QAction(QObject::tr("Delete Note"), 0);
+
+    QObject::connect(delNote, SIGNAL(triggered()), pageScene(), SLOT(deleteNote()));
+
+    mContextMenu->addSeparator();
+    mContextMenu->addAction(delNote);
 }
 
 void NoteImage::mousePressEvent(QGraphicsSceneMouseEvent *e)

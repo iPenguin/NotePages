@@ -15,7 +15,6 @@
 #include "pageglobals.h"
 class Note;
 
-
 class NoteContent
 {
     friend class NoteDocument;
@@ -46,15 +45,20 @@ public:
     virtual void saveContent(QXmlStreamWriter *stream) = 0;
     virtual void deleteContent() = 0;
 
+    QMenu* contextMenu() { return mContextMenu; }
+
     PageScene* pageScene() { return mScene; }
     Note* note() { return mNote; }
 
 protected:
     QString mFile;
+    QMenu* mContextMenu;
 
 private:
     PageScene *mScene;
     Note *mNote;
+
+
 };
 
 //Q_DECLARE_INTERFACE(NoteContent, "com.notebook-pages.npp.NoteContent/1.0")

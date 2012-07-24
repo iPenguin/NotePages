@@ -19,6 +19,8 @@ NoteDocument::NoteDocument(QGraphicsItem *parent, QGraphicsScene *scene)
     setAcceptHoverEvents(true);
     setFlag(QGraphicsItem::ItemIsSelectable);
     setCursor(QCursor(Qt::PointingHandCursor));
+
+    setupContextMenu();
 }
 
 QRectF NoteDocument::boundingRect() const
@@ -100,4 +102,16 @@ void NoteDocument::deleteContent()
         QDir d(pageScene()->pagePath());
         d.remove(file());
     }
+}
+
+void NoteDocument::setupContextMenu()
+{
+
+    mContextMenu = new QMenu();
+    QAction *delNote = new QAction(QObject::tr("Delete Note"), 0);
+
+    QObject::connect(delNote, SIGNAL(triggered()), pageScene(), SLOT(deleteNote()));
+
+    mContextMenu->addSeparator();
+    mContextMenu->addAction(delNote);
 }

@@ -3,7 +3,6 @@
 \********************************************************/
 #include "pagescene.h"
 
-#include "note.h"
 #include <QGraphicsSceneMouseEvent>
 #include <QTextDocument>
 #include <QAbstractTextDocumentLayout>
@@ -22,6 +21,7 @@
 #include <QString>
 
 #include "arrow.h"
+#include "note.h"
 
 #include <QDebug>
 
@@ -325,28 +325,9 @@ void PageScene::showNoteOptions(QPointF screenPos)
 
     if(items.count() == 1) {
         if(items.first()->type() == NoteOptions::Type) {
-            QMenu menu;
+
             Note *n = qgraphicsitem_cast<Note*>(items.first()->parentItem());
-
-            QAction *attach;
-            if(n->hasDocument()) {
-                attach = new QAction(tr("Remove Document"), 0);
-            } else {
-                attach = new QAction(tr("Add Document"), 0);
-            }
-            QAction *addImg = new QAction(tr("Add Image"), 0);
-            QAction *delNote = new QAction(tr("Delete Note"), 0);
-
-            connect(attach, SIGNAL(triggered()), SLOT(addDocument()));
-            connect(addImg, SIGNAL(triggered()), SLOT(addImage()));
-            connect(delNote, SIGNAL(triggered()), SLOT(deleteNote()));
-
-            menu.addAction(attach);
-            menu.addAction(addImg);
-            menu.addSeparator();
-            menu.addAction(delNote);
-
-            menu.exec(screenPos.toPoint());
+            n->contextMenu()->exec(screenPos.toPoint());
         }
     }
 }
@@ -359,6 +340,7 @@ Note* PageScene::createNewNote(int noteId, NoteType::Id type)
 
     int newId;
     Note *n = new Note(type, 0, this);
+
     if (noteId > -1) { //load an existing note.
         newId = noteId;
 

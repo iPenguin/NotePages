@@ -6,9 +6,9 @@
 #include "note.h"
 
 NoteContent::NoteContent(QGraphicsItem *parent, QGraphicsScene *scene)
+    : mContextMenu(0)
 {
     mScene = qobject_cast<PageScene*>(scene);
     mNote = qgraphicsitem_cast<Note*>(parent);
 
 }
-

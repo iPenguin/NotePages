@@ -88,6 +88,8 @@ public:
 
     void setPixmap(QByteArray imageData);
 
+    QMenu* contextMenu() { return mContent->contextMenu(); }
+
 signals:
     void pageLinkClicked(QString link);
 

@@ -56,6 +56,8 @@ public:
     void saveContent(QXmlStreamWriter *stream);
     void deleteContent();
 
+    void setupContextMenu();
+
 protected:
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *e);
 

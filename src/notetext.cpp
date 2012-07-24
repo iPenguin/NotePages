@@ -28,6 +28,7 @@ NoteText::NoteText(QGraphicsItem *parent, QGraphicsScene *scene)
     setCursor(QCursor(Qt::IBeamCursor));
     setOpenExternalLinks(false);
 
+    setupContextMenu();
 }
 
 QRectF NoteText::boundingRect() const
@@ -101,6 +102,17 @@ void NoteText::mergeFormatOnSelection(QTextCharFormat format)
     textCursor().mergeCharFormat(format);
 }
 
+void NoteText::setupContextMenu()
+{
+
+    mContextMenu = new QMenu();
+    QAction *delNote = new QAction(tr("Delete Note"), 0);
+
+    connect(delNote, SIGNAL(triggered()), pageScene(), SLOT(deleteNote()));
+
+    mContextMenu->addSeparator();
+    mContextMenu->addAction(delNote);
+}
 
 void NoteText::setBold(bool state)
 {

@@ -42,6 +42,8 @@ public:
 
     QString toHtml();
 
+    QMenu* contextMenu();
+
 signals:
     void pageLink(QString link);
     void linkActivated(QString link);
@@ -49,10 +51,11 @@ signals:
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *e);
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *e);
-
     void focusOutEvent(QFocusEvent *e);
 
     void mergeFormatOnSelection(QTextCharFormat format);
+
+    void setupContextMenu();
 
 private:
     QGraphicsItem *mParent;
