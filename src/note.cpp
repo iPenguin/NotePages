@@ -80,9 +80,9 @@ Note::Note(NoteType::Id contentType, QGraphicsItem *parent, QGraphicsScene *scen
 
         case NoteType::Text:
         default:
-            mContent = new NoteText(this, scene);
-            //FIXME: activate link.
-            //connect(mContent, SIGNAL(linkActivated(QString)), SLOT(signalSend(QString)));
+            NoteText *nt;
+            mContent = nt = new NoteText(this, scene);
+            QObject::connect(nt, SIGNAL(linkActivated(QString)), SLOT(signalSend(QString)));
             break;
     }
 
