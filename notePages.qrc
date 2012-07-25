@@ -178,5 +178,8 @@
         <file>images/Note Pages.ico</file>
         <file>images/Note Pages.png</file>
         <file>images/Note Pages.svg</file>
+        <file>images/add_text.svgz</file>
+        <file>images/add_image.svgz</file>
+        <file>images/add_document.svgz</file>
     </qresource>
 </RCC>
