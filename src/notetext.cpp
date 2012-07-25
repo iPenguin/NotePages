@@ -209,3 +209,8 @@ QString NoteText::toHtml()
 {
     return document()->toHtml();
 }
+
+void NoteText::setHtml(const QString &html)
+{
+    QGraphicsTextItem::setHtml(html);
+}

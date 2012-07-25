@@ -41,6 +41,7 @@ public:
     void deleteContent();
 
     QString toHtml();
+    void setHtml(const QString &html);
 
     QMenu* contextMenu();
 

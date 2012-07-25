@@ -30,7 +30,7 @@ public:
     virtual void setFile(QString file) { mFile = file; }
 
     virtual QString toHtml() { debug("unimplemented"); return ""; }
-    virtual void setHtml(QString html) { debug("unimplemented"); Q_UNUSED(html); }
+    virtual void setHtml(const QString &html) { debug("unimplemented"); Q_UNUSED(html); }
     virtual void setTextEditMode(bool value) { debug("unimplemented"); Q_UNUSED(value); }
 
     virtual void setImage(QString image, QSizeF size) { debug("unimplemented"); Q_UNUSED(image); Q_UNUSED(size); }

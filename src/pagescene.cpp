@@ -278,7 +278,32 @@ void PageScene::dropEvent(QGraphicsSceneDragDropEvent *e)
 {
     const QMimeData* mime = e->mimeData();
 
-    if (mime->hasUrls()) {
+    if (mime->hasImage()) {
+
+        Note *n = createNewNote(-1, NoteType::Image);
+        QString fileName = QString::number(n->id()) + ".png";
+        QImageReader *ireader = new QImageReader(mPagePath + "/" + fileName);
+
+        n->setPos(e->scenePos());
+        n->setSize(QSizeF(ireader->size()));
+
+        QFile f(mPagePath + "/" + fileName);
+        QDataStream ds(&f);
+        mime->imageData().save(ds);
+        f.close();
+        qDebug() << "ireader size:" << ireader->size();
+        n->setImage(fileName, ireader->size());
+        n->setPixmap(mime->imageData().toByteArray());
+        e->setAccepted(true);
+
+    } else if (mime->hasText()) {
+        QString text = mime->text();
+        Note *n = createNewNote(-1, NoteType::Text);
+        n->setPos(e->scenePos());
+        n->setHtml(text);
+        e->setAccepted(true);
+
+    } else if (mime->hasUrls()) {
         QList<QUrl> urls = mime->urls();
         foreach(QUrl u, urls) {
 
