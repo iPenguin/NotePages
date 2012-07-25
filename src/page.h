@@ -44,6 +44,7 @@ public:
     void setDrawLines(bool state) { Q_ASSERT(mScene); mScene->setDrawLines(state); }
 
     Note* currentNote();
+    void setDefaultNoteType(NoteType::Id type);
 
 signals:
     void zoomLevelChanged(int value);
@@ -63,7 +64,6 @@ private:
     int mId;
 
     QUndoStack *mUndoStack;
-
     bool mDeleted;
 };
 

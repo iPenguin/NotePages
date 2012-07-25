@@ -193,6 +193,43 @@ void MainWindow::setupMenubars()
 
     connect(ui->actionAddLink, SIGNAL(triggered()), SLOT(addLink()));
 
+
+    // make the dropdown toolbutton and the associated menu
+    QToolButton *noteTypeBttn = new QToolButton(this);
+    QMenu *noteTypeMenu = new QMenu( noteTypeBttn );
+    noteTypeBttn->setMenu( noteTypeMenu );
+    noteTypeBttn->setPopupMode( QToolButton::InstantPopup );
+
+    QActionGroup *group = new QActionGroup(this);
+
+    // now make the actions
+    QAction *a = mAddTextNote = new QAction(tr("Add Text Note"), noteTypeBttn);
+    a->setIcon(QIcon(":/images/add_text.svgz"));
+    a->setCheckable(true);
+    a->setChecked(true);
+    group->addAction(a);
+    noteTypeMenu->addAction(a);
+    noteTypeBttn->setDefaultAction(a);
+    connect(a, SIGNAL(triggered()), SLOT(addNoteType()));
+
+    a = mAddImageNote = new QAction(tr("Add Image Note"), noteTypeBttn);
+    a->setIcon(QIcon(":/images/add_image.svgz"));
+    a->setCheckable(true);
+    group->addAction(a);
+    noteTypeMenu->addAction(a);
+    connect(a, SIGNAL(triggered()), SLOT(addNoteType()));
+
+    a = mAddDocumentNote = new QAction(tr("Add Document Note"), noteTypeBttn);
+    a->setIcon(QIcon(":/images/add_document.svgz"));
+    a->setCheckable(true);
+    group->addAction(a);
+    noteTypeMenu->addAction(a);
+    connect(a, SIGNAL(triggered()), SLOT(addNoteType()));
+
+    connect(group, SIGNAL(selected(QAction*)), noteTypeBttn, SLOT(setDefaultAction(QAction*)));
+    ui->mainToolBar->addWidget(noteTypeBttn);
+    noteTypeBttn->setToolButtonStyle(Qt::ToolButtonIconOnly);
+
 //Tools
     connect(ui->actionOptions, SIGNAL(triggered()), SLOT(toolsSettings()));
 
@@ -855,4 +892,24 @@ void MainWindow::addLinkToNote(QStringList link)
         return;
 
     p->addLinkToNote(link);
+}
+
+void MainWindow::addNoteType()
+{
+    QAction *a = qobject_cast<QAction*>(sender());
+
+    NoteType::Id type;
+
+    if(a == mAddTextNote)
+        type = NoteType::Text;
+    else if (a == mAddImageNote)
+        type = NoteType::Image;
+    else if (a == mAddDocumentNote)
+        type = NoteType::Document;
+
+    Page *p = currentPage();
+    if(!p)
+        return;
+
+    p->setDefaultNoteType(type);
 }

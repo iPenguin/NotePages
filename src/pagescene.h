@@ -22,6 +22,8 @@ public:
     void incrementMaxNoteId() { mCurMaxNoteId++; }
     void setDrawLines(bool state) { mDrawLines = state; }
 
+    void setDefaultNoteType(NoteType::Id type);
+
 signals:
     void changePage(QString newPage);
 
@@ -58,8 +60,10 @@ private:
     int mCurMaxNoteId;
     bool mDrawLines;
     Note *mLineStart;
+    NoteType::Id mDefaultNoteType;
 
     QGraphicsLineItem *mTempLine;
+
     //requires a path seperator after it.
     QString mPagePath;
 };

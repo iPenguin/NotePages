@@ -104,6 +104,8 @@ private slots:
     void addLink();
     void addLinkToNote(QStringList link);
 
+    void addNoteType();
+
 private:
     Ui::MainWindow *ui;
     LinkDialog *mLinkDialog;
@@ -135,6 +137,10 @@ private:
                 *mUp,
                 *mDown,
                 *mConfigure;
+
+    QAction *mAddTextNote,
+            *mAddImageNote,
+            *mAddDocumentNote;
 
     QSlider *mZoom;
 

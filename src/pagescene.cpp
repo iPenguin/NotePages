@@ -30,10 +30,16 @@ PageScene::PageScene(QObject *parent) :
     mCurMaxNoteId(1),
     mDrawLines(false),
     mLineStart(0),
+    mDefaultNoteType(NoteType::Text),
     mTempLine(0)
 {
     setSceneRect(0, 0, 1500,1500);
 
+}
+
+void PageScene::setDefaultNoteType(NoteType::Id type)
+{
+    mDefaultNoteType = type;
 }
 
 void PageScene::deleteNote()
@@ -192,7 +198,7 @@ void PageScene::mousePressEvent(QGraphicsSceneMouseEvent *e)
     } else {
 
         if(!i) {
-            Note *n = createNewNote();
+            Note *n = createNewNote(mDefaultNoteType);
             n->setPos(e->scenePos());
             n->setPath(mPagePath);
         }
@@ -280,7 +286,7 @@ void PageScene::dropEvent(QGraphicsSceneDragDropEvent *e)
 
             QFile::copy(QFileInfo(url).path() + "/" + QFileInfo(url).fileName(), mPagePath + "/" + QFileInfo(url).fileName());
 
-            Note *n = createNewNote();
+            Note *n = createNewNote(-1);
             n->setPos(e->scenePos());
 
             if(!true) {
@@ -290,33 +296,7 @@ void PageScene::dropEvent(QGraphicsSceneDragDropEvent *e)
             }
         }
         e->setAccepted(true);
-
-    } else if (mime->hasText()) {
-        QString text = mime->text();
-        Note *n = createNewNote();
-        n->setPos(e->scenePos());
-        n->setHtml(text);
-        e->setAccepted(true);
-
-    } else if (mime->hasImage()) {
-        Note *n = createNewNote();
-        QString fileName = QString::number(n->id()) + ".png";
-        QImageReader *ireader = new QImageReader(fileName);
-
-        n->setPos(e->scenePos());
-        n->setSize(QSizeF(ireader->size()));
-
-        QFile f(mPagePath + "/" + fileName);
-        QDataStream ds(&f);
-        mime->imageData().save(ds);
-        f.close();
-
-        qDebug() << "fileName" << mPagePath + "/" + fileName << QFileInfo(mPagePath + "/" + fileName).exists();
-        n->setImage(fileName, ireader->size());
-        n->setPixmap(mime->imageData().toByteArray());
-        e->setAccepted(true);
     }
-
 }
 
 void PageScene::showNoteOptions(QPointF screenPos)
@@ -347,12 +327,11 @@ Note* PageScene::createNewNote(int noteId, NoteType::Id type)
     } else { //create a new note.
         mCurMaxNoteId++;
         newId = mCurMaxNoteId;
-        n->setTextEditMode(true);
+        n->setTextEditMode( (type == NoteType::Text ? true : false) );
     }
 
     n->setId(newId);
     n->setSize(QSizeF(100,50));
-    addItem(n);
     connect(n, SIGNAL(pageLinkClicked(QString)), SLOT(pageLinkClicked(QString)));
     return n;
 }

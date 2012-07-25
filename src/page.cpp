@@ -268,7 +268,6 @@ void Page::deletePage()
         }
     }
 
-
     QDir d(QFileInfo(mScene->pagePath()).path());
     d.remove(QFileInfo(mScene->pagePath()).fileName() + "/page.xml");
     d.rmdir(QFileInfo(mScene->pagePath()).fileName());
@@ -315,6 +314,11 @@ Note *Page::currentNote()
         return qgraphicsitem_cast<Note*>(i->parentItem());
 
     return 0;
+}
+
+void Page::setDefaultNoteType(NoteType::Id type)
+{
+    mScene->setDefaultNoteType(type);
 }
 
 void Page::zoomChanged(int value)
