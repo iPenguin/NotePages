@@ -303,22 +303,16 @@ void PageScene::dropEvent(QGraphicsSceneDragDropEvent *e)
         n->setHtml(text);
         e->setAccepted(true);
 
-    } else if (mime->hasUrls()) {
+    } else {
         QList<QUrl> urls = mime->urls();
         foreach(QUrl u, urls) {
 
             QString url = u.toString().remove(QRegExp("^[a-zA-Z].*://"));
-
             QFile::copy(QFileInfo(url).path() + "/" + QFileInfo(url).fileName(), mPagePath + "/" + QFileInfo(url).fileName());
 
-            Note *n = createNewNote(-1);
+            Note *n = createNewNote(-1, NoteType::Document);
             n->setPos(e->scenePos());
-
-            if(!true) {
-                n->setDocument(QFileInfo(url).fileName());
-            } else {
-                n->setImage(QFileInfo(url).fileName(), QSizeF());
-            }
+            n->setDocument(QFileInfo(url).fileName());
         }
         e->setAccepted(true);
     }
