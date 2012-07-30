@@ -11,7 +11,9 @@ include(MacroOutOfSourceBuild)
 macro_ensure_out_of_source_build("${NP_PROJECT_NAME} requires an out of source build.")
 
 if(APPLE)
-    set(QT_QMAKE_EXECUTABLE "/Users/brian/QtSDK/Desktop/Qt/4.8.0/gcc/bin/qmake")
+    if(CMAKE_BUILD_TYPE STREQUAL "Release")
+        set(QT_QMAKE_EXECUTABLE "/Users/brian/QtSDK/Desktop/Qt/current/gcc/bin/qmake")
+    endif()
 endif()
 
 set(CMAKE_CONFIGURATION_TYPES Debug Release Profile CACHE TYPE INTERNAL FORCE)
