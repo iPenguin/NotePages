@@ -22,9 +22,15 @@ public:
 
     }
 
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+    {
+        //painter->fillRect(boundingRect(), Qt::green);
+        QGraphicsTextItem::paint(painter, option, widget);
+    }
+
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
     {
-
+        Q_UNUSED(e);
         QDesktopServices::openUrl(QUrl("file://" + mScene->pagePath() +"/" + toPlainText()));
     }
 

@@ -59,10 +59,10 @@ public:
     int id() { return mId; }
     void setId(int id) { mId = id; }
 
-    QString document() { return mContent->file(); }
-    void setDocument(QString doc);
-    bool hasDocument() const { return !mContent->file().isEmpty(); }
-    void removeDocument();
+    QString file() { return mContent->file(); }
+    void setFile(QString file);
+    bool hasFile() const { return !mContent->file().isEmpty(); }
+    void removeFile();
 
     void setSize(QSizeF size);
 
@@ -70,9 +70,6 @@ public:
     QString html() const {  Q_ASSERT(mContent); return mContent->toHtml(); }
 
     QSizeF size() { Q_ASSERT(mContent); return mContent->size(); }
-
-    //if size = (-1,-1) use native image size.
-    void setImage(QString img, QSizeF size);
 
     QString path();
     void setPath(QString p) { mPath = p; }

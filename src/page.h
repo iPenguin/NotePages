@@ -39,6 +39,7 @@ public:
 
     int currentZoomLevel();
 
+    //Add page link to note.
     void addLinkToNote(QStringList link);
 
     void setDrawLines(bool state) { Q_ASSERT(mScene); mScene->setDrawLines(state); }

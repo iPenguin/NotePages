@@ -29,10 +29,8 @@ signals:
 
 public slots:
     void deleteNote();
-    void addDocument();
-    void loadDocument(QString fileName);
-    void addImage();
-    void loadImage(QString fileName);
+    void addFileAsNote();
+    void loadFile(QString fileName);
 
     void pageLinkClicked(QString link);
 
@@ -63,6 +61,8 @@ private:
     NoteType::Id mDefaultNoteType;
 
     QGraphicsLineItem *mTempLine;
+
+    QPointF mMouseReleasePos;
 
     //requires a path seperator after it.
     QString mPagePath;

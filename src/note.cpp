@@ -155,7 +155,7 @@ void Note::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     Q_UNUSED(option);
     Q_UNUSED(widget);
 
-    if(mContent->contentType() != NoteType::Document) {
+    if(mContent->type() != NoteType::Document) {
         QRectF br = boundingRect();
 
         painter->setPen(Qt::gray);
@@ -403,13 +403,15 @@ void Note::setSize(QSizeF size)
     update();
 }
 
-void Note::setDocument(QString doc)
+void Note::setFile(QString file)
 {
-    mContent->setFile(doc);
+    Q_ASSERT(mContent);
 
+    mContent->setFile(file);
+    update();
 }
 
-void Note::removeDocument()
+void Note::removeFile()
 {
     QString file = mContent->file();
     mContent->setFile("");
@@ -417,15 +419,6 @@ void Note::removeDocument()
     if(QFileInfo(mPath + "/" + file).exists()) {
         QDir(mPath).remove(file);
     }
-}
-
-void Note::setImage(QString img, QSizeF size)
-{
-
-    QRectF br = boundingRect();
-
-    mContent->setImage(img, size);
-
 }
 
 void Note::signalSend(QString link)

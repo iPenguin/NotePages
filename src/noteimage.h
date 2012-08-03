@@ -18,7 +18,7 @@ public:
     void setSize(QSizeF size);
     void setPos(const QPointF &pos);
 
-    void setImage(QString image, QSizeF size);
+    void setFile(QString f);
     void setImage(QByteArray imageData);
 
     void loadContent(QXmlStreamReader *stream);

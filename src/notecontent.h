@@ -33,7 +33,6 @@ public:
     virtual void setHtml(const QString &html) { debug("unimplemented"); Q_UNUSED(html); }
     virtual void setTextEditMode(bool value) { debug("unimplemented"); Q_UNUSED(value); }
 
-    virtual void setImage(QString image, QSizeF size) { debug("unimplemented"); Q_UNUSED(image); Q_UNUSED(size); }
     virtual void setImage(QByteArray imageData) { debug("unimplemented"); Q_UNUSED(imageData); }
     virtual QPixmap toPixmap() { debug("unimplemented"); return QPixmap(); }
 

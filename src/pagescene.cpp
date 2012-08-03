@@ -16,7 +16,6 @@
 #include <QMessageBox>
 #include <QFileDialog>
 
-#include <QImageReader>
 #include <QUrl>
 #include <QString>
 
@@ -55,37 +54,30 @@ void PageScene::deleteNote()
     items.removeFirst();
 }
 
-void PageScene::addDocument()
+void PageScene::addFileAsNote()
 {
-    QAction *a = qobject_cast<QAction*>(sender());
 
-    QList<QGraphicsItem*> items = selectedItems();
-    QGraphicsItem *i = items.first();
-    Note *n = qgraphicsitem_cast<Note*>(i->parentItem());
+    QFileDialog* fd = new QFileDialog(qApp->activeWindow(), Qt::Sheet);
+    fd->setDirectory(mPagePath);
+    fd->setObjectName("addfiledialog");
+    fd->setViewMode(QFileDialog::List);
+    fd->setAcceptMode(QFileDialog::AcceptOpen);
+    fd->open(this, SLOT(loadFile(QString)));
 
-    if(a->text() == tr("Add Document")) {
-
-        if(n) {
-            //TODO: Add an document to the note.
-            //find file with dialog
-            QFileDialog* fd = new QFileDialog(0, Qt::Sheet);
-            fd->setDirectory(mPagePath);
-            fd->setObjectName("adddocumentdialog");
-            fd->setViewMode(QFileDialog::List);
-            fd->setAcceptMode(QFileDialog::AcceptOpen);
-            fd->open(this, SLOT(loadDocument(QString)));
-        }
-    } else {
-        n->removeDocument();
-    }
 }
 
-void PageScene::loadDocument(QString fileName)
+void PageScene::loadFile(QString fileName)
 {
+    Note *n = createNewNote(-1, mDefaultNoteType);
+    n->setPos(mMouseReleasePos);
+    n->setPath(mPagePath);
 
-    QList<QGraphicsItem*> items = selectedItems();
-    QGraphicsItem *i = items.first();
-    Note *n = qgraphicsitem_cast<Note*>(i->parentItem());
+    if(fileName.isEmpty()) {
+        n->deleteNote();
+        n->deleteLater();
+        return;
+    }
+
     //copy file into the directory
     QFileInfo fInfo(fileName);
     if(!fInfo.exists())
@@ -101,51 +93,7 @@ void PageScene::loadDocument(QString fileName)
     }
 
     f.copy(mPagePath + "/" + fInfo.fileName());
-    n->setDocument(fInfo.fileName());
-}
-
-void PageScene::addImage()
-{
-
-    QList<QGraphicsItem*> items = selectedItems();
-    QGraphicsItem *i = items.first();
-    Note *n = qgraphicsitem_cast<Note*>(i->parentItem());
-    if(n) {
-        //FIXME: Add a document to the note.
-        //find file with dialog
-        QFileDialog* fd = new QFileDialog(0, Qt::Sheet);
-          fd->setDirectory(mPagePath);
-          fd->setObjectName("addimagedialog");
-          fd->setViewMode(QFileDialog::List);
-          //fd->setFileMode( QFileDialog::Directory );
-          fd->setAcceptMode(QFileDialog::AcceptOpen);
-          fd->open(this, SLOT(loadImage(QString)));
-    }
-}
-
-void PageScene::loadImage(QString fileName)
-{
-
-    QList<QGraphicsItem*> items = selectedItems();
-    QGraphicsItem *i = items.first();
-    Note *n = qgraphicsitem_cast<Note*>(i->parentItem());
-    //copy file into the directory
-    QFileInfo fInfo(fileName);
-    if(!fInfo.exists())
-        return;
-
-    QFile f(fileName);
-
-    //If the destination file exists offer options.
-    if(QFileInfo(mPagePath + fInfo.fileName()).exists()) {
-        QMessageBox::information(0, tr("Destination file exists"), tr("The destination file exists"), 1);
-        //TODO: more information, and figure out user response and react appropriately.
-        return;
-    }
-
-    f.copy(mPagePath + "/" + fInfo.fileName());
-    n->setImage(fInfo.fileName(), QSizeF());
-
+    n->setFile(fInfo.fileName());
 }
 
 void PageScene::pageLinkClicked(QString link)
@@ -196,13 +144,6 @@ void PageScene::mousePressEvent(QGraphicsSceneMouseEvent *e)
         mTempLine = new QGraphicsLineItem(QLineF(e->scenePos(), e->scenePos()), 0, this);
 
     } else {
-
-        if(!i) {
-            Note *n = createNewNote(mDefaultNoteType);
-            n->setPos(e->scenePos());
-            n->setPath(mPagePath);
-        }
-
         QGraphicsScene::mousePressEvent(e);
     }
 }
@@ -226,8 +167,10 @@ void PageScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
 
         if(!i)
             return;
-        if(i == mLineStart)
+        if(i == mLineStart) {
+            qDebug() << "end == start";
             return;
+        }
 
         Note *n = 0;
         if(i->type() == Note::Type)
@@ -252,6 +195,14 @@ void PageScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
 
             if(i->type() == NoteOptions::Type) {
                 showNoteOptions(e->screenPos());
+            }
+        } else {
+            if(mDefaultNoteType != NoteType::Text) {
+                mMouseReleasePos = e->scenePos();
+                addFileAsNote();
+            } else {
+                Note *n = createNewNote(-1, NoteType::Text);
+                n->setPos(e->scenePos());
             }
         }
 
@@ -282,17 +233,15 @@ void PageScene::dropEvent(QGraphicsSceneDragDropEvent *e)
 
         Note *n = createNewNote(-1, NoteType::Image);
         QString fileName = QString::number(n->id()) + ".png";
-        QImageReader *ireader = new QImageReader(mPagePath + "/" + fileName);
 
         n->setPos(e->scenePos());
-        n->setSize(QSizeF(ireader->size()));
 
         QFile f(mPagePath + "/" + fileName);
         QDataStream ds(&f);
         mime->imageData().save(ds);
         f.close();
-        qDebug() << "ireader size:" << ireader->size();
-        n->setImage(fileName, ireader->size());
+
+        n->setFile(fileName);
         n->setPixmap(mime->imageData().toByteArray());
         e->setAccepted(true);
 
@@ -307,12 +256,22 @@ void PageScene::dropEvent(QGraphicsSceneDragDropEvent *e)
         QList<QUrl> urls = mime->urls();
         foreach(QUrl u, urls) {
 
+            Note *n = 0;
+
             QString url = u.toString().remove(QRegExp("^[a-zA-Z].*://"));
             QFile::copy(QFileInfo(url).path() + "/" + QFileInfo(url).fileName(), mPagePath + "/" + QFileInfo(url).fileName());
 
-            Note *n = createNewNote(-1, NoteType::Document);
+            QImageReader *ireader = new QImageReader(mPagePath + "/" + QFileInfo(url).fileName());
+
+            if(ireader->canRead()) {
+                n = createNewNote(-1, NoteType::Image);
+            } else {
+                n = createNewNote(-1, NoteType::Document);
+            }
+
+            n->setFile(QFileInfo(url).fileName());
             n->setPos(e->scenePos());
-            n->setDocument(QFileInfo(url).fileName());
+
         }
         e->setAccepted(true);
     }

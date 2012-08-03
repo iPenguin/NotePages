@@ -1,6 +1,7 @@
 #include "noteimage.h"
 
 #include "pagescene.h"
+#include <QImageReader>
 
 NoteImage::NoteImage(QGraphicsItem *parent, QGraphicsScene *scene)
     : QGraphicsPixmapItem(parent, scene), NoteContent(parent, scene),
@@ -18,8 +19,8 @@ QRectF NoteImage::boundingRect() const
 void NoteImage::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     QGraphicsPixmapItem::paint(painter, option, widget);
-    painter->setPen(Qt::gray);
-    painter->drawRoundedRect(boundingRect(), 5, 5);
+    //painter->setPen(Qt::gray);
+    //painter->drawRoundedRect(boundingRect(), 5, 5);
 }
 
 QSizeF NoteImage::size()
@@ -37,17 +38,11 @@ void NoteImage::setPos(const QPointF &pos)
     return QGraphicsPixmapItem::setPos(pos);
 }
 
-void NoteImage::setImage(QString image, QSizeF size)
+void NoteImage::setFile(QString f)
 {
-    if(file() == image)
-        return;
-
-    setFile(image);
-
-    QPixmap img(size.width(), size.height());
-    img.load(image);
-    setPixmap(img);
-
+    NoteContent::setFile(f);
+    QImageReader *ireader = new QImageReader(pageScene()->pagePath() + "/" + f);
+    setSize(ireader->size());
 }
 
 void NoteImage::setImage(QByteArray imageData)

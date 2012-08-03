@@ -16,6 +16,8 @@ NoteDocument::NoteDocument(QGraphicsItem *parent, QGraphicsScene *scene)
     mFileName = new NoteDocumentName(parent, scene);
     mFileName->setPos(20,125);
 
+    //TODO: set a default icon and name, so you don't get just the arrow when a new file is set.
+
     setAcceptHoverEvents(true);
     setFlag(QGraphicsItem::ItemIsSelectable);
     setCursor(QCursor(Qt::PointingHandCursor));
@@ -44,6 +46,7 @@ void NoteDocument::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
     qreal diff = (mFileName->boundingRect().width() +20 ) - mPix.width();
     qreal start = diff / 2.0;
     //painter->drawRect(boundingRect());
+    //painter->fillRect(boundingRect(), Qt::blue);
     painter->drawPixmap(start,0, mPix);
 }
 
@@ -98,7 +101,7 @@ void NoteDocument::saveContent(QXmlStreamWriter *stream)
 
 void NoteDocument::deleteContent()
 {
-    if(QFileInfo(file()).exists()) {
+    if(QFileInfo(pageScene()->pagePath() + "/" + file()).exists()) {
         QDir d(pageScene()->pagePath());
         d.remove(file());
     }
