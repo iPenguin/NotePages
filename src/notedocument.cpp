@@ -28,14 +28,14 @@ NoteDocument::NoteDocument(QGraphicsItem *parent, QGraphicsScene *scene)
 QRectF NoteDocument::boundingRect() const
 {
     QRectF icon = mPix.rect();
-    QRectF fName = mFileName->boundingRect();
+    QRectF fName = mFileName ? mFileName->boundingRect() : QRectF(10,10,10,10);
     QRectF final = icon.unite(fName);
 
-    qreal diff = (mFileName->boundingRect().width() +20 ) - mPix.width();
+    qreal diff = (fName.width() +20 ) - mPix.width();
     qreal start = diff / 2.0;
     if(start < final.left())
         final.setLeft(start);
-    return final; //.adjusted(0,0,64,64);
+    return final;
 }
 
 void NoteDocument::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
