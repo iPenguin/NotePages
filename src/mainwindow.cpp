@@ -111,7 +111,7 @@ void MainWindow::setupStatusBar()
     mAdd->setIcon(QIcon(":/images/list_add.svgz"));
     mAdd->setStyleSheet( "background-color: rgba( 255, 255, 255, 0% );" );
     ui->statusBar->addWidget(mAdd);
-    connect(mAdd, SIGNAL(clicked()), SLOT(addNewPage()));
+    connect(mAdd, SIGNAL(clicked()), SLOT(addNewPageTreeItem()));
 
     mRemove = new QToolButton(this);
     mRemove->setIcon(QIcon(":/images/list_remove.svgz"));
@@ -364,7 +364,7 @@ void MainWindow::fileSave()
         if(mPath.isEmpty())
             return;
     }
-
+    setWindowFilePath(mPath);
     saveIndex(mPath);
     saveFile(mPath);
 
@@ -445,12 +445,12 @@ void MainWindow::loadFile(QString folder)
 
 void MainWindow::saveFile(QString fileName)
 {
-    Q_UNUSED(fileName);
 
     Page *p = currentPage();
     if(!p)
         return;
-
+    qDebug() << "saveFile" << fileName << p->id();
+    p->setPagePath(fileName);
     p->savePage();
 }
 
@@ -556,7 +556,7 @@ void MainWindow::selectPage(int pageNumber)
     if(!mPages.contains(pageNumber)) {
 
         p = new Page(pagePath);
-
+        p->setId(pageNumber);
         connect(p, SIGNAL(changePage(QString)), SLOT(loadPageFromLink(QString)));
         mPages.insert(pageNumber, p);
 
@@ -587,7 +587,7 @@ void MainWindow::helpAbout()
 
 }
 
-void MainWindow::addNewPage()
+void MainWindow::addNewPageTreeItem()
 {
     QTreeWidgetItem *item = 0;
 

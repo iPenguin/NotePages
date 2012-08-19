@@ -168,6 +168,12 @@ void Note::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
         //draw resize handle.
         painter->drawLine(QPointF(br.right(), br.bottom() - 15), QPointF(br.right() - 15, br.bottom()));
         painter->drawLine(QPointF(br.right() -3, br.bottom() - 7), QPointF(br.right() - 7, br.bottom() - 3));
+    } else {
+        qDebug() << "state:" << option->state << "style" << QStyle::State_Selected;
+        if(option->state & QStyle::State_Selected) {
+            painter->setPen(Qt::DotLine);
+            painter->drawRect(boundingRect());
+        }
     }
 }
 
@@ -247,6 +253,8 @@ void Note::loadNote(QXmlStreamReader* stream, QString pagePath)
     setPos(x, y);
     setSize(QSizeF(width, height));
     setZValue(zValue);
+
+    qDebug() << "id:" << id << mContent->file();
 }
 
 void Note::saveNote(QXmlStreamWriter *stream)

@@ -52,12 +52,11 @@ void Page::savePage()
     QString pagePath = mScene->pagePath();
     QString xmlIndex = pagePath + "/page.xml";
     QString xmlIndexTemp = xmlIndex + ".tmp";
+
     if(!QFileInfo(xmlIndexTemp).exists()) {
         if(!QFileInfo(pagePath).exists()) {
-            QString parentDir = QFileInfo(pagePath).path();
-            QString dir = QFileInfo(pagePath).baseName();
-            QDir d(parentDir);
-            d.mkdir(dir);
+            QDir d("");
+            d.mkpath(pagePath);
         }
     }
 

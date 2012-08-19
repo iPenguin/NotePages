@@ -29,12 +29,15 @@ QRectF NoteDocument::boundingRect() const
 {
     QRectF icon = mPix.rect();
     QRectF fName = mFileName ? mFileName->boundingRect() : QRectF(10,10,10,10);
-    QRectF final = icon.unite(fName);
+    QRectF final = icon.united(fName);
 
     qreal diff = (fName.width() +20 ) - mPix.width();
     qreal start = diff / 2.0;
     if(start < final.left())
         final.setLeft(start);
+
+    // put the dotted line around the entire 'document'
+    final.setWidth( final.width() + 20);
     return final;
 }
 
@@ -45,6 +48,8 @@ void NoteDocument::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
     //FIXME: draw the icon center text - 1/2 diff width.
     qreal diff = (mFileName->boundingRect().width() +20 ) - mPix.width();
     qreal start = diff / 2.0;
+
+    //painter->setPen(Qt::DotLine);
     //painter->drawRect(boundingRect());
     //painter->fillRect(boundingRect(), Qt::blue);
     painter->drawPixmap(start,0, mPix);

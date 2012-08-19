@@ -68,7 +68,7 @@ void Arrow::saveArrow(QXmlStreamWriter *stream)
 {
     if(!mStart || !mEnd)
         return;
-
+    qDebug() << "save Arrow:" << mStart->id() << mStart->file() << mEnd->id() << mEnd->file();
     stream->writeStartElement("arrow");
     stream->writeAttribute("start-id", QString::number(mStart->id()));
     stream->writeAttribute("end-id", QString::number(mEnd->id()));

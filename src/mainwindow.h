@@ -62,7 +62,7 @@ private slots:
 //Help
     void helpAbout();
 
-    void addNewPage();
+    void addNewPageTreeItem();
     void removePages();
 
     void moveItemUp();

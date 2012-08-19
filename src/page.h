@@ -47,6 +47,8 @@ public:
     Note* currentNote();
     void setDefaultNoteType(NoteType::Id type);
 
+    void setPagePath(QString pp) { Q_ASSERT(mScene); mScene->setPagePath(pp + "/pages/" + QString::number(id())); }
+
 signals:
     void zoomLevelChanged(int value);
     void changePage(QString link);
