@@ -33,7 +33,9 @@ public:
     const QString appVersion;
     const QString appVersionShort;
     const QString appBuildInfo;
-    
+
+    void helpAbout();
+    void toolsSettings();    
 private:
     static AppInfo* mInstance;
     SettingsUi *mSettingsUi;

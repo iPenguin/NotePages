@@ -132,6 +132,7 @@ void PageScene::mousePressEvent(QGraphicsSceneMouseEvent *e)
     if(!i) {
         Note *n = createNewNote();
         n->setPos(e->scenePos());
+    }
 
     if(mDrawLines) {
 

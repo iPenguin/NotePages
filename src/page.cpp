@@ -23,9 +23,6 @@ Page::Page(QString pagePath, QWidget *parent) :
     ui->setupUi(this);
 
     mScene = new PageScene(this);
-    mView->setScene(mScene);
-    mView->setOptimizationFlags(QGraphicsView::DontSavePainterState);
-    mView->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
     mScene->setPagePath(pagePath);
 
     connect(mScene, SIGNAL(changePage(QString)), SLOT(nextPage(QString)));
