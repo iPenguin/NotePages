@@ -23,7 +23,8 @@ Page::Page(QString pagePath, QWidget *parent) :
     layout()->setContentsMargins(0,0,0,0);
     mScene = new PageScene(this);
     mView->setScene(mScene);
-
+    mView->setOptimizationFlags(QGraphicsView::DontSavePainterState);
+    mView->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
 
     mUndoStack = new QUndoStack(this);
 

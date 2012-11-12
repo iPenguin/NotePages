@@ -6,8 +6,12 @@
 
 #include "appinfo.h"
 
+//#include "errorhandler.h"
+
 int main(int argc, char *argv[])
 {
+
+    //qInstallMsgHandler(myMessageOutput);
 
     qApp->setApplicationName(AppInfo::inst()->appName);
     qApp->setApplicationVersion(AppInfo::inst()->appVersion);

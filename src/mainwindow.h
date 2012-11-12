@@ -56,6 +56,7 @@ private:
     void openPage(int pageNumber);
 
     void setupMenubars();
+    QString loadNewFolder();
 
     //A mapping of page_id to object.
     QMap <int, Page*> mPages;

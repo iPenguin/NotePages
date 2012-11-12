@@ -11,9 +11,12 @@
 #include <QMessageBox>
 #include "appinfo.h"
 
+#include <QFile>
+
 #include "settings.h"
 
 #include <QDebug>
+//#include "debug.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -107,14 +110,23 @@ void MainWindow::save()
             return;
     }
 
+#ifdef Q_WS_X11
+  
+  QDir d;
+  d.mkpath(mPath);
+  
+#endif //Q_WS_X11
+    
     saveFile(mPath);
 
 }
 
 void MainWindow::loadFile(QString folder)
 {
-    if(folder.isEmpty())
-        return;
+    if(folder.isEmpty()) {
+	save();
+	return;
+    }
 
     mPath = folder;
 
@@ -165,9 +177,19 @@ void MainWindow::loadFile(QString folder)
 
 }
 
+QString MainWindow::loadNewFolder() 
+{
+  QString folder = "";
+
+  folder = QFileDialog::getExistingDirectory(this, tr("Save to folder"));
+  
+  return folder;
+}
+
 void MainWindow::saveFile(QString fileName)
 {
 
+    
     QWidget *w = ui->tabWidget->currentWidget();
 
     if(!w)
@@ -179,7 +201,6 @@ void MainWindow::saveFile(QString fileName)
         return;
 
     p->save();
-
 
 }
 

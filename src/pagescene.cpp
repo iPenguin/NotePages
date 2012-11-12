@@ -20,6 +20,7 @@ PageScene::PageScene(QObject *parent) :
     mCurMaxNoteId(1)
 {
     setSceneRect(-500, -500, 1500,1500);
+    setItemIndexMethod(QGraphicsScene::NoIndex);
 
 }
 
@@ -37,6 +38,7 @@ void PageScene::drawBackground(QPainter *painter, const QRectF &rect)
 void PageScene::mousePressEvent(QGraphicsSceneMouseEvent *e)
 {
     QGraphicsItem *i = itemAt(e->scenePos());
+    //If we didn't click on something create a note.
     if(!i) {
         Note *n = createNewNote();
         n->setPos(e->scenePos());
