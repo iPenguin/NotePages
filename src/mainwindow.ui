@@ -6,42 +6,133 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>625</width>
-    <height>419</height>
+    <width>753</width>
+    <height>444</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Note Pages</string>
   </property>
   <property name="windowIcon">
-   <iconset>
-    <normaloff>../images/icon.svg</normaloff>../images/icon.svg</iconset>
+   <iconset resource="../notePages.qrc">
+    <normaloff>:/images/Note Pages.png</normaloff>:/images/Note Pages.png</iconset>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QHBoxLayout" name="horizontalLayout_2">
+   <layout class="QVBoxLayout" name="verticalLayout">
     <property name="margin">
      <number>0</number>
     </property>
     <item>
-     <widget class="QTabWidget" name="tabWidget">
-      <property name="tabShape">
-       <enum>QTabWidget::Rounded</enum>
+     <widget class="QSplitter" name="splitter_2">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
       </property>
-      <property name="currentIndex">
-       <number>-1</number>
+      <property name="opaqueResize">
+       <bool>false</bool>
       </property>
-      <property name="usesScrollButtons">
-       <bool>true</bool>
+      <property name="handleWidth">
+       <number>1</number>
       </property>
-      <property name="documentMode">
-       <bool>true</bool>
+      <property name="childrenCollapsible">
+       <bool>false</bool>
       </property>
-      <property name="tabsClosable">
-       <bool>true</bool>
-      </property>
-      <property name="movable">
-       <bool>true</bool>
-      </property>
+      <widget class="QSplitter" name="splitter">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="opaqueResize">
+        <bool>false</bool>
+       </property>
+       <property name="handleWidth">
+        <number>1</number>
+       </property>
+       <property name="childrenCollapsible">
+        <bool>false</bool>
+       </property>
+       <widget class="QTreeWidget" name="pageTree">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::NoFrame</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Plain</enum>
+        </property>
+        <property name="lineWidth">
+         <number>1</number>
+        </property>
+        <property name="dragEnabled">
+         <bool>true</bool>
+        </property>
+        <property name="dragDropMode">
+         <enum>QAbstractItemView::DragDrop</enum>
+        </property>
+        <property name="defaultDropAction">
+         <enum>Qt::MoveAction</enum>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>32</width>
+          <height>32</height>
+         </size>
+        </property>
+        <property name="rootIsDecorated">
+         <bool>true</bool>
+        </property>
+        <attribute name="headerVisible">
+         <bool>false</bool>
+        </attribute>
+        <column>
+         <property name="text">
+          <string notr="true">Pages</string>
+         </property>
+        </column>
+       </widget>
+       <widget class="QListWidget" name="iconList">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>24</width>
+          <height>24</height>
+         </size>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QTabWidget" name="tabWidget">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+         <horstretch>10</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="tabShape">
+        <enum>QTabWidget::Rounded</enum>
+       </property>
+       <property name="currentIndex">
+        <number>-1</number>
+       </property>
+       <property name="usesScrollButtons">
+        <bool>true</bool>
+       </property>
+       <property name="documentMode">
+        <bool>true</bool>
+       </property>
+       <property name="tabsClosable">
+        <bool>true</bool>
+       </property>
+       <property name="movable">
+        <bool>true</bool>
+       </property>
+      </widget>
      </widget>
     </item>
    </layout>
@@ -51,7 +142,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>625</width>
+     <width>753</width>
      <height>22</height>
     </rect>
    </property>
@@ -59,6 +150,7 @@
     <property name="title">
      <string>File</string>
     </property>
+    <addaction name="actionNew"/>
     <addaction name="actionOpen"/>
     <addaction name="separator"/>
     <addaction name="actionSave"/>
@@ -80,12 +172,13 @@
     <property name="title">
      <string>View</string>
     </property>
+    <addaction name="actionFullScreen"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
      <string>Help</string>
     </property>
-    <addaction name="actionAbout_DesktopWiki"/>
+    <addaction name="actionAboutNotePages"/>
    </widget>
    <widget class="QMenu" name="menuTools">
     <property name="title">
@@ -106,86 +199,28 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
-   <addaction name="actionOpen"/>
-   <addaction name="actionSave"/>
-   <addaction name="separator"/>
    <addaction name="actionCopy"/>
    <addaction name="actionCut"/>
    <addaction name="actionPaste"/>
+   <addaction name="separator"/>
+   <addaction name="actionBold"/>
+   <addaction name="actionItalic"/>
+   <addaction name="actionUnderline"/>
+   <addaction name="separator"/>
+   <addaction name="actionLeftJustify"/>
+   <addaction name="actionCenterJustify"/>
+   <addaction name="actionRightJustify"/>
+   <addaction name="actionJustify"/>
+   <addaction name="separator"/>
+   <addaction name="actionAddLink"/>
+   <addaction name="actionConnect"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
-  <widget class="QDockWidget" name="dockWidget">
-   <property name="windowTitle">
-    <string>Pages</string>
-   </property>
-   <attribute name="dockWidgetArea">
-    <number>1</number>
-   </attribute>
-   <widget class="QWidget" name="dockWidgetContents">
-    <layout class="QVBoxLayout" name="verticalLayout_2">
-     <property name="margin">
-      <number>3</number>
-     </property>
-     <item>
-      <widget class="QTreeWidget" name="pageTree">
-       <property name="iconSize">
-        <size>
-         <width>32</width>
-         <height>32</height>
-        </size>
-       </property>
-       <property name="rootIsDecorated">
-        <bool>false</bool>
-       </property>
-       <attribute name="headerVisible">
-        <bool>false</bool>
-       </attribute>
-       <column>
-        <property name="text">
-         <string notr="true">1</string>
-        </property>
-       </column>
-      </widget>
-     </item>
-     <item>
-      <layout class="QHBoxLayout" name="horizontalLayout">
-       <property name="topMargin">
-        <number>0</number>
-       </property>
-       <item>
-        <widget class="QToolButton" name="add">
-         <property name="text">
-          <string>+</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QToolButton" name="remove">
-         <property name="text">
-          <string>-</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QToolButton" name="up">
-         <property name="text">
-          <string>^</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QToolButton" name="down">
-         <property name="text">
-          <string>\</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-    </layout>
-   </widget>
-  </widget>
   <action name="actionOpen">
+   <property name="icon">
+    <iconset resource="../notePages.qrc">
+     <normaloff>:/images/fileopen.svgz</normaloff>:/images/fileopen.svgz</iconset>
+   </property>
    <property name="text">
     <string>Open</string>
    </property>
@@ -194,6 +229,10 @@
    </property>
   </action>
   <action name="actionSave">
+   <property name="icon">
+    <iconset resource="../notePages.qrc">
+     <normaloff>:/images/filesave.svgz</normaloff>:/images/filesave.svgz</iconset>
+   </property>
    <property name="text">
     <string>Save</string>
    </property>
@@ -218,11 +257,19 @@
    </property>
   </action>
   <action name="actionExport">
+   <property name="icon">
+    <iconset resource="../notePages.qrc">
+     <normaloff>:/images/document_export.svgz</normaloff>:/images/document_export.svgz</iconset>
+   </property>
    <property name="text">
     <string>Export</string>
    </property>
   </action>
   <action name="actionCopy">
+   <property name="icon">
+    <iconset resource="../notePages.qrc">
+     <normaloff>:/images/edit_copy.svgz</normaloff>:/images/edit_copy.svgz</iconset>
+   </property>
    <property name="text">
     <string>Copy</string>
    </property>
@@ -231,6 +278,10 @@
    </property>
   </action>
   <action name="actionCut">
+   <property name="icon">
+    <iconset resource="../notePages.qrc">
+     <normaloff>:/images/edit_cut.svgz</normaloff>:/images/edit_cut.svgz</iconset>
+   </property>
    <property name="text">
     <string>Cut</string>
    </property>
@@ -239,6 +290,10 @@
    </property>
   </action>
   <action name="actionPaste">
+   <property name="icon">
+    <iconset resource="../notePages.qrc">
+     <normaloff>:/images/edit_paste.svgz</normaloff>:/images/edit_paste.svgz</iconset>
+   </property>
    <property name="text">
     <string>Paste</string>
    </property>
@@ -246,9 +301,9 @@
     <string>Ctrl+V</string>
    </property>
   </action>
-  <action name="actionAbout_DesktopWiki">
+  <action name="actionAboutNotePages">
    <property name="text">
-    <string>About DesktopWiki</string>
+    <string>About Note Pages</string>
    </property>
   </action>
   <action name="actionOptions">
@@ -256,8 +311,159 @@
     <string>Options</string>
    </property>
   </action>
+  <action name="actionBold">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../notePages.qrc">
+     <normaloff>:/images/text_bold.svgz</normaloff>:/images/text_bold.svgz</iconset>
+   </property>
+   <property name="text">
+    <string>Bold</string>
+   </property>
+  </action>
+  <action name="actionItalic">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../notePages.qrc">
+     <normaloff>:/images/text_italic.svgz</normaloff>:/images/text_italic.svgz</iconset>
+   </property>
+   <property name="text">
+    <string>Italic</string>
+   </property>
+  </action>
+  <action name="actionUnderline">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../notePages.qrc">
+     <normaloff>:/images/text_under.svgz</normaloff>:/images/text_under.svgz</iconset>
+   </property>
+   <property name="text">
+    <string>Underline</string>
+   </property>
+  </action>
+  <action name="actionLeftJustify">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../notePages.qrc">
+     <normaloff>:/images/text_left.svgz</normaloff>:/images/text_left.svgz</iconset>
+   </property>
+   <property name="text">
+    <string>Left Justify</string>
+   </property>
+  </action>
+  <action name="actionRightJustify">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../notePages.qrc">
+     <normaloff>:/images/text_right.svgz</normaloff>:/images/text_right.svgz</iconset>
+   </property>
+   <property name="text">
+    <string>Right Justify</string>
+   </property>
+  </action>
+  <action name="actionCenterJustify">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../notePages.qrc">
+     <normaloff>:/images/text_center.svgz</normaloff>:/images/text_center.svgz</iconset>
+   </property>
+   <property name="text">
+    <string>Center</string>
+   </property>
+  </action>
+  <action name="actionJustify">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../notePages.qrc">
+     <normaloff>:/images/text_block.svgz</normaloff>:/images/text_block.svgz</iconset>
+   </property>
+   <property name="text">
+    <string>Justify</string>
+   </property>
+  </action>
+  <action name="actionOrderedList">
+   <property name="text">
+    <string>Ordered List</string>
+   </property>
+  </action>
+  <action name="actionUnorderedList">
+   <property name="text">
+    <string>Unordered List</string>
+   </property>
+  </action>
+  <action name="actionInsertTable">
+   <property name="text">
+    <string>Insert Table</string>
+   </property>
+  </action>
+  <action name="actionNew">
+   <property name="icon">
+    <iconset resource="../notePages.qrc">
+     <normaloff>:/images/filenew.svgz</normaloff>:/images/filenew.svgz</iconset>
+   </property>
+   <property name="text">
+    <string>New...</string>
+   </property>
+   <property name="toolTip">
+    <string>New document</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
+   </property>
+  </action>
+  <action name="actionAddLink">
+   <property name="icon">
+    <iconset resource="../notePages.qrc">
+     <normaloff>:/images/insert_link.svgz</normaloff>:/images/insert_link.svgz</iconset>
+   </property>
+   <property name="text">
+    <string>Add Link</string>
+   </property>
+  </action>
+  <action name="actionConnect">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../notePages.qrc">
+     <normaloff>:/images/connection_line.svgz</normaloff>:/images/connection_line.svgz</iconset>
+   </property>
+   <property name="text">
+    <string>Connect</string>
+   </property>
+   <property name="toolTip">
+    <string>Connect Notes Together</string>
+   </property>
+  </action>
+  <action name="actionFullScreen">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Full Screen</string>
+   </property>
+   <property name="toolTip">
+    <string>Make the application use the full screen</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources/>
+ <resources>
+  <include location="../notePages.qrc"/>
+ </resources>
  <connections/>
 </ui>

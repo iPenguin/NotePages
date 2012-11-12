@@ -11,6 +11,8 @@
 #include <QPainter>
 #include <QColorDialog>
 
+#include <QComboBox>
+
 
 SettingsUi::SettingsUi(QWidget* parent)
     : QDialog(parent), ui(new Ui::SettingsDialog)
@@ -21,20 +23,13 @@ SettingsUi::SettingsUi(QWidget* parent)
     ui->tabWidget->setCurrentIndex(0);
 
 #ifdef Q_WS_MAC
-    this->setWindowTitle(tr("Preferences"));
+    setWindowTitle(tr("Preferences"));
 #else
-    this->setWindowTitle(tr("Options"));
+    setWindowTitle(tr("Options"));
 #endif //Q_WS_MAC
 
     connect(ui->buttonBox, SIGNAL(clicked(QAbstractButton*)), SLOT(buttonClicked(QAbstractButton*)));
-
-
-    //TODO: add later for expanded use of software.
-    ui->showStitchWrongSide->hide();
-    ui->showStitchWrongSideLbl->hide();
-    ui->colorLegendSortBy->hide();
-    ui->colorSortByLbl->hide();
-    
+    connect(ui->buttonBox, SIGNAL(accepted()), SLOT(saveSettings()));
     setupDialogWidgets();
 
     for(int i = 0; i < ui->tabWidget->count(); ++i) {
@@ -43,12 +38,24 @@ SettingsUi::SettingsUi(QWidget* parent)
                 load(obj);
         }
     }
+
 }
 
 SettingsUi::~SettingsUi()
 {
     delete ui;
     ui = 0;
+}
+
+void SettingsUi::saveSettings()
+{
+    for(int i = 0; i < ui->tabWidget->count(); ++i) {
+        foreach(QObject* obj, ui->tabWidget->widget(i)->children()) {
+            if(isSettingsWidget(obj))
+                save(obj);
+        }
+    }
+    saveDialogWidgets();
 }
 
 void SettingsUi::buttonClicked(QAbstractButton* button)
@@ -62,24 +69,6 @@ void SettingsUi::buttonClicked(QAbstractButton* button)
         }
         resetDialogWidgets();
     }
-}
-
-int SettingsUi::exec()
-{
-    int retValue = QDialog::exec();
-    
-    if(retValue != QDialog::Accepted)
-        return retValue;
-
-    for(int i = 0; i < ui->tabWidget->count(); ++i) {
-        foreach(QObject* obj, ui->tabWidget->widget(i)->children()) {
-            if(isSettingsWidget(obj))
-                save(obj);
-        }
-    }
-    saveDialogWidgets();
-    
-    return retValue;
 }
 
 void SettingsUi::load(QObject* w)

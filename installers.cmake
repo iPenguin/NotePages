@@ -4,12 +4,12 @@ include(InstallRequiredSystemLibraries)
 set(PROJECT_DESCRIPTION  "Desktop notes application")
 set(PROJECT_VENDOR       "Brian Milco")
 set(PROJECT_LIFE         "2012")
-set(ORG_BASE_URL         "desktopWiki.org")
+set(ORG_BASE_URL         "notePages.org")
 set(PROJECT_CONTACT      "support@${ORG_BASE_URL}")
 set(ORG_CONTACT          "http://${ORG_BASE_URL}/contact")
 set(ORG_DOWNLOAD         "http://${ORG_BASE_URL}/downloads")
 set(ORG_WEBSITE          "www.${ORG_BASE_URL}")
-set(PROJECT_VERSION      "${DW_VERSION_SHORT}")
+set(PROJECT_VERSION      "${NP_VERSION_SHORT}")
 set(PROJECT_COPYRIGHT    "Copyright (c) ${PROJECT_LIFE} ${PROJECT_VENDOR}")
 set(PROJECT_MACOSX_ICON  "${PROJECT_NAME}.icns")
 
@@ -17,12 +17,12 @@ set(PROJECT_MACOSX_ICON  "${PROJECT_NAME}.icns")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY ${PROJECT_DESCRIPTION})
 set(CPACK_PACKAGE_VENDOR ${PROJECT_VENDOR})
 set(CPACK_PACKAGE_VERSION "${PROJECT_VERSION}")
-set(CPACK_PACKAGE_VERSION_MAJOR ${DW_VERSION_MAJOR})
-set(CPACK_PACKAGE_VERSION_MINOR ${DW_VERSION_MINOR})
-set(CPACK_PACKAGE_VERSION_PATCH ${DW_VERSION_PATCH})
+set(CPACK_PACKAGE_VERSION_MAJOR ${NP_VERSION_MAJOR})
+set(CPACK_PACKAGE_VERSION_MINOR ${NP_VERSION_MINOR})
+set(CPACK_PACKAGE_VERSION_PATCH ${NP_VERSION_PATCH})
 set(CPACK_PACKAGE_CONTACT ${PROJECT_CONTACT})
-set(CPACK_PACKAGE_EXECUTABLES "${PROJECT_NAME};${DW_PROJECT_NAME}")
-set(CPACK_PACKAGE_INSTALL_DIRECTORY "${DW_PROJECT_NAME}")
+set(CPACK_PACKAGE_EXECUTABLES "${PROJECT_NAME};${NP_PROJECT_NAME}")
+set(CPACK_PACKAGE_INSTALL_DIRECTORY "${NP_PROJECT_NAME}")
 
 #FIXME: use the FindDoxygen.cmake module.
 if(DOXYGEN)
@@ -52,20 +52,20 @@ if(WIN32)
 
     set(CPACK_PACKAGE_ICON "installer.bmp")
     set(CPACK_GENERATOR "NSIS")
-    set(CPACK_NSIS_PACKAGE_NAME "${DW_PROJECT_NAME}")
-    set(CPACK_NSIS_DISPLAY_NAME "${DW_PROJECT_NAME}")
+    set(CPACK_NSIS_PACKAGE_NAME "${NP_PROJECT_NAME}")
+    set(CPACK_NSIS_DISPLAY_NAME "${NP_PROJECT_NAME}")
     set(CPACK_NSIS_CONTACT "${CPACK_PACKAGE_CONTACT}")
-    set(CPACK_PACKAGE_INSTALL_REGISTRY_KEY "${PROJECT_NAME}-${DW_VERSION_MAJOR}.${DW_VERSION_MINOR}")
+    set(CPACK_PACKAGE_INSTALL_REGISTRY_KEY "${PROJECT_NAME}-${NP_VERSION_MAJOR}.${NP_VERSION_MINOR}")
 
     set(CPACK_CMAKE_MODULES_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules/")
 
     set(CPACK_NSIS_MENU_LINKS "docs/homepage.html" "Homepage for ${PROJECT_VENDOR}"
-                              "bin/${PROJECT_NAME}_User_Guide_${DW_VERSION_SHORT}.pdf" "${DW_PROJECT_NAME} Help")
+                              "bin/${PROJECT_NAME}_User_Guide_${NP_VERSION_SHORT}.pdf" "${NP_PROJECT_NAME} Help")
     # this doesn't work for the NSIS installer
     set(CPACK_CREATE_DESKTOP_LINKS "${PROJECT_NAME}.exe")
 
-    #set(CPACK_NSIS_CREATE_ICONS_EXTRA "CreateShortCut '\$SMPROGRAMS\\\\$STARTMENU_FOLDER\\\\${DW_PROJECT_NAME}.lnk' '\$INSTDIR\\\\${PROJECT_NAME}.exe'"
-    #                                  "CreateShortCut '\$DESKTOP\\\\${DW_PROJECT_NAME}.lnk' '\$INSTDIR\\\\${PROJECT_NAME}.exe'")
+    #set(CPACK_NSIS_CREATE_ICONS_EXTRA "CreateShortCut '\$SMPROGRAMS\\\\$STARTMENU_FOLDER\\\\${NP_PROJECT_NAME}.lnk' '\$INSTDIR\\\\${PROJECT_NAME}.exe'"
+    #                                  "CreateShortCut '\$DESKTOP\\\\${NP_PROJECT_NAME}.lnk' '\$INSTDIR\\\\${PROJECT_NAME}.exe'")
     # Icon in the add/remove control panel. Must be an .exe file
     set(CPACK_NSIS_INSTALLED_ICON_NAME "${PROJECT_NAME}.exe")
 
@@ -82,13 +82,13 @@ elseif(APPLE)
     set(CPACK_BUNDLE_PLIST "${CMAKE_BINARY_DIR}/Info.plist")
     set(CPACK_BUNDLE_ICON "${CMAKE_SOURCE_DIR}/images/${PROJECT_MACOSX_ICON}")
     
-    set(CPACK_DMG_VOLUME_NAME "${DW_PROJECT_NAME}")
+    set(CPACK_DMG_VOLUME_NAME "${NP_PROJECT_NAME}")
     set(CPACK_DMG_DS_STORE "${CMAKE_SOURCE_DIR}/resources/MacDmgDsStore")
     set(CPACK_DMG_BACKGROUND_IMAGE "${CMAKE_SOURCE_DIR}/images/dmg_background.png")
 
     set(CPACK_OSX_PACKAGE_VERSION "10.6") #min package version
     
-    set(MACOSX_BUNDLE_LONG_VERSION_STRING "${DW_PROJECT_NAME} version ${DW_VERSION}")
+    set(MACOSX_BUNDLE_LONG_VERSION_STRING "${NP_PROJECT_NAME} version ${NP_VERSION}")
     set(MACOSX_BUNDLE_SHORT_VERSION_STRING "${PROJECT_VERSION}")
     set(MACOSX_BUNDLE_COPYRIGHT "${PROJECT_COPYRIGHT}. All rights reserved.")
 
@@ -96,19 +96,19 @@ elseif(APPLE)
 #and see: http://www.cmake.org/Wiki/CMake:Bundles_And_Frameworks
 #plutil command line utility to edit plist files.
 #http://rixstep.com/2/20060901,00.shtml
-    set(MACOSX_BUNDLE_INFO_STRING "${DW_PROJECT_NAME} - version ${PROJECT_VERSION}")
+    set(MACOSX_BUNDLE_INFO_STRING "${NP_PROJECT_NAME} - version ${PROJECT_VERSION}")
     set(MACOSX_BUNDLE_BUNDLE_VERSION "${PROJECT_VERSION}")
     set(MACOSX_BUNDLE_ICON_FILE "${CMAKE_CURRENT_SOURCE_DIR}/images/${PROJECT_MACOSX_ICON}")
     set_source_files_properties("${MACOSX_BUNDLE_ICON_FILE}" PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
 
-    set(MACOSX_BUNDLE_GUI_IDENTIFIER "org.desktopwiki.desktopwiki")
+    set(MACOSX_BUNDLE_GUI_IDENTIFIER "org.notePages.notePages")
     set(MACOSX_BUNDLE_BUNDLE_NAME "${PROJECT_NAME}")
 
     configure_file(${CMAKE_SOURCE_DIR}/cmake/modules/MacOSXBundleInfo.plist.in
                 ${CMAKE_BINARY_DIR}/Info.plist)
 
     install(CODE "
-        set(VERSION_STR \"@DW_VERSION_MAJOR@.@DW_VERSION_MINOR@.@DW_VERSION_PATCH@\")
+        set(VERSION_STR \"@NP_VERSION_MAJOR@.@NP_VERSION_MINOR@.@NP_VERSION_PATCH@\")
         file(COPY \"@CMAKE_BINARY_DIR@/docs/pdf/@PROJECT_NAME@_User_Guide_@VERSION_STR@.pdf\" 
              DESTINATION \"@CMAKE_BINARY_DIR@/_CPack_Packages/Darwin/Bundle/@PROJECT_NAME@-@VERSION_STR@\")
         file(RENAME \"@CMAKE_BINARY_DIR@/_CPack_Packages/Darwin/Bundle/@PROJECT_NAME@-@VERSION_STR@/@PROJECT_NAME@_User_Guide_@VERSION_STR@.pdf\" 
@@ -117,7 +117,7 @@ elseif(APPLE)
 
     set(DIRS ${QT_LIBRARY_DIRS})
 
-    set(dw_mac "${CPACK_BUNDLE_ICON}")
+    set(np_mac "${CPACK_BUNDLE_ICON}")
 
 else()
 

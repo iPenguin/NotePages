@@ -2,39 +2,125 @@
 | Copyright (c) 2012 Brian C. Milco <bcmilco@gmail.com>  |
 \********************************************************/
 #include "page.h"
+#include "ui_page.h"
 
-#include <QLayout>
-
-#include <QFile>
 #include <QFileInfo>
 #include <QDebug>
-
-#include <QtSvg/QGraphicsSvgItem>
+#include <QFile>
+#include <QXmlStreamReader>
+#include <QDir>
+#include "pagescene.h"
+#include <QTextDocument>
 
 #include "note.h"
+#include "notetext.h"
 
 Page::Page(QString pagePath, QWidget *parent) :
-    QWidget(parent)
+    QWidget(parent),
+    ui(new Ui::Page),
+    mDeleted(false)
 {
-    setLayout(new QVBoxLayout);
-    mView = new QGraphicsView(this);
-    layout()->addWidget(mView);
-    layout()->setMargin(0);
-    layout()->setContentsMargins(0,0,0,0);
+    ui->setupUi(this);
+
     mScene = new PageScene(this);
     mView->setScene(mScene);
     mView->setOptimizationFlags(QGraphicsView::DontSavePainterState);
     mView->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
+    mScene->setPagePath(pagePath);
 
+    connect(mScene, SIGNAL(changePage(QString)), SLOT(nextPage(QString)));
+    ui->graphicsView->setScene(mScene);
+
+    //FIXME: move this code into a seperate function.
     mUndoStack = new QUndoStack(this);
 
+    connect(ui->graphicsView, SIGNAL(zoomLevelChanged(int)), SIGNAL(zoomLevelChanged(int)));
 
-    mPagePath = pagePath;
+    loadPage();
+
+    ui->graphicsView->ensureVisible(QRectF(0,0,50,50));
+
+}
+
+Page::~Page()
+{
+    if(!mDeleted)
+        savePage();
+    delete ui;
+}
+
+void Page::savePage()
+{
+    //FIXME: don't hard code paths. Simplify and streamline paths.
+    QString pagePath = mScene->pagePath();
+    QString xmlIndex = pagePath + "/page.xml";
+    QString xmlIndexTemp = xmlIndex + ".tmp";
+
+    if(!QFileInfo(xmlIndexTemp).exists()) {
+        if(!QFileInfo(pagePath).exists()) {
+            QDir d("");
+            d.mkpath(pagePath);
+        }
+    }
+
+    QFile file(xmlIndexTemp);
+
+    if(!file.open(QIODevice::WriteOnly)) {
+        //TODO: some nice dialog to warn the user.
+        qWarning() << "Couldn't open file for reading:" << xmlIndexTemp;
+        return;
+    }
+
+    QXmlStreamWriter stream(&file);
+    stream.setAutoFormatting(true);
+    stream.writeStartDocument();
+
+    stream.writeStartElement("npage_page");
+
+        foreach(QGraphicsItem *i, mScene->items()) {
+            if(i->type() != Note::Type) {
+                continue;
+            }
+
+            Note *n = qgraphicsitem_cast<Note*>(i);
+            n->saveNote(&stream);
+        }
+
+        foreach(QGraphicsItem *i, mScene->items()) {
+            if(i->type() != Arrow::Type) {
+                continue;
+            }
+
+            Arrow *a = qgraphicsitem_cast<Arrow*>(i);
+            a->saveArrow(&stream);
+        }
+    stream.writeEndElement(); //npage_page
+    stream.writeEndDocument();
+    file.close();
+    QDir d(pagePath);
+    d.remove("page.xml");
+    if(file.copy(xmlIndex))
+        file.remove();
+}
+
+bool Page::isSaved()
+{
+    //FIXME: check if the page has been saved.
+    return false;
+}
+
+void Page::loadPage()
+{
+    QString pagePath = mScene->pagePath();
     QString xmlIndex = pagePath + "/page.xml";
 
     if(!QFileInfo(xmlIndex).exists()) {
-        qDebug() << "TODO: Create" << xmlIndex;
-        //TODO: create pagePath and some basic data.
+        if(!QFileInfo(pagePath).exists()) {
+            QString parentDir = QFileInfo(pagePath).path();
+            QString dir = QFileInfo(pagePath).baseName();
+            QDir d(parentDir);
+            d.mkdir(dir);
+        }
     }
 
     QFile file(xmlIndex);
@@ -57,192 +143,192 @@ Page::Page(QString pagePath, QWidget *parent) :
     //      the class can then decide if it needs to open file/load data or just switch to what it currently has loaded.
 
     //TODO: pass loading Page content to the Page class.
-
     while (!stream.atEnd() && !stream.hasError()) {
 
         stream.readNextStartElement();
         if (stream.isStartElement()) {
             QString name = stream.name().toString();
 
-            if (name == "properties") {
-                qDebug() << "TODO: properties - create parser function to get properties.";
+            if (name == "note") {
+                Note *n = new Note(&stream, pagePath, 0, mScene);
+                mScene->incrementMaxNoteId();
+                updateSceneRect(n);
+                connect(n, SIGNAL(pageLinkClicked(QString)), SLOT(nextPage(QString)));
+            } else if (name == "arrow") {
+                int start, end;
+                Note *startNote = 0, *endNote = 0;
+                start = stream.attributes().value("start-id").toString().toInt();
+                end = stream.attributes().value("end-id").toString().toInt();
 
-            } else if (name == "note") {
-                createNote(&stream);
+                foreach(QGraphicsItem *i, mScene->items()) {
+
+                    if(i->type() == Note::Type) {
+                        Note *n = qgraphicsitem_cast<Note*>(i);
+                        if(n->id() == start)
+                            startNote = n;
+                        if(n->id() == end)
+                            endNote = n;
+                    }
+                }
+                new Arrow(startNote, endNote, 0, mScene);
+
 
             } else if (name == "group") {
-                qDebug() << "TODO: for each child element load each note.";
+                qDebug() << "TODO: Create groups of notes where the edges are ";
             }
         }
     }
-
 }
 
-void Page::createNote(QXmlStreamReader* stream)
+void Page::updateSceneRect(Note *n)
 {
-    //set all the note properties.
-    qreal x = stream->attributes().value("x").toString().toFloat();
-    qreal y = stream->attributes().value("y").toString().toFloat();
+    qreal left, right, top, bottom;
 
-    qreal width = stream->attributes().value("width").toString().toFloat();
-    qreal height = stream->attributes().value("height").toString().toFloat();
-    qreal zValue = stream->attributes().value("z").toString().toInt();
+    if(n->pos().x() < mScene->sceneRect().left()) {
+        left = n->pos().x();
+    } else {
+        left = mScene->sceneRect().left();
+    }
 
-    int id = stream->attributes().value("id").toString().toInt();
-    Note *n = mScene->createNewNote(id);
+    if(n->pos().y() < mScene->sceneRect().top()) {
+        top = n->pos().y();
+    } else {
+        top = mScene->sceneRect().top();
+    }
 
-    n->setPath(mPagePath);
-    n->setPos(x, y);
-    n->setSize(QSizeF(width, height));
-    n->setZValue(zValue);
+    if(n->boundingRect().right() > mScene->sceneRect().right()) {
+        right = n->boundingRect().right();
+    } else {
+        right = mScene->sceneRect().right();
+    }
 
-    QDateTime lastMod = QDateTime::fromString(stream->attributes().value("lastModified").toString(), "");
-    QDateTime added = QDateTime::fromString(stream->attributes().value("lastModified").toString(), "");
-    n->setLastModified(lastMod);
-    n->setAddedDate(added);
+    if(n->boundingRect().bottom() > mScene->sceneRect().bottom()) {
+        bottom = n->boundingRect().bottom();
+    } else {
+        bottom = mScene->sceneRect().bottom();
+    }
 
+    //FIXME: don't hardcode a margin for the chrome of the notes.
+    mScene->setSceneRect(left - 10, top - 10, right - left, bottom - top);
+}
 
-    while(!(stream->isEndElement() && stream->name() == "note")) {
+void Page::setTextProperties(Page::TextProperty property, bool state)
+{
+    if(mScene->selectedItems().count() <= 0) {
+        return;
+    }
+    QGraphicsItem *i = mScene->selectedItems().first();
+    if(!i)
+        return;
 
-        stream->readNextStartElement();
-        QString tag = stream->name().toString();
+    if(i->type() != NoteText::Type)
+        return;
 
-        if(tag == "flags") {
-            int flagBinary = stream->attributes().value("value").toString().toInt(0, 2);
-            qDebug() << "TODO: load flags" << flagBinary;
-            stream->skipCurrentElement();
+    NoteText *nt = qgraphicsitem_cast<NoteText*>(i);
+    if(!nt)
+        return;
 
-        } else if (tag == "connect") {
-            int connectedNote = stream->attributes().value("id").toString().toInt();
-            //TODO:  make this a qlist that is used to id connections to draw in the painting routines. ?
-            qDebug() << "TODO: connect this note to note" << connectedNote;
+    switch(property) {
+        case Page::TxtBold:
+            nt->setBold(state);
+            break;
+        case Page::TxtItalic:
+            nt->setItalic(state);
+            break;
+        case Page::TxtUnderline:
+            nt->setUnderline(state);
+            break;
+        case Page::TxtLeftJustify:
+            nt->setTextBlockAlignment(Qt::AlignLeft);
+            break;
+        case Page::TxtCenterJustify:
+            nt->setTextBlockAlignment(Qt::AlignHCenter);
+            break;
+        case Page::TxtRightJustify:
+            nt->setTextBlockAlignment(Qt::AlignRight);
+            break;
+        case Page::TxtJustify:
+            nt->setTextBlockAlignment(Qt::AlignJustify);
+            break;
+        default:
+            qDebug() << "Unknown or Unhandled Text Property" << property;
+    }
+}
 
-            stream->skipCurrentElement();
+int Page::currentZoomLevel()
+{
+    return ui->graphicsView->zoomPercent();
+}
 
-        } else if (tag == "image") {
-            QString imageFile = stream->attributes().value("file").toString();
-            n->setImage(imageFile);
-            stream->skipCurrentElement();
-
-        } else if (tag == "attachment") {
-            QString attachment = stream->attributes().value("file").toString();
-            n->setAttachment(attachment);
-            stream->skipCurrentElement();
-
-        } else if (tag == "text") {
-            QString textFile = stream->attributes().value("file").toString();
-            QFile f(mPagePath + "/" + textFile);
-
-            if(!f.open(QIODevice::ReadOnly)) {
-                qDebug() << "Error opening note - " << mPagePath + "/" + textFile;
-
-            } else {
-                QString text = f.readAll();
-                n->setHtml(text);
-            }
-            stream->skipCurrentElement();
-
-        } else {
-            qDebug() << "Unknown note element, skipping" << stream->name().toString();
+void Page::deletePage()
+{
+    //FIXME: delete files on disk and data.
+    foreach(QGraphicsItem *i, mScene->items()) {
+        if(i->type() == Note::Type) {
+            Note *n = qgraphicsitem_cast<Note*>(i);
+            n->deleteNote();
         }
-
     }
+
+    QDir d(QFileInfo(mScene->pagePath()).path());
+    d.remove(QFileInfo(mScene->pagePath()).fileName() + "/page.xml");
+    d.rmdir(QFileInfo(mScene->pagePath()).fileName());
+
+    deleteLater();
+    mDeleted = true;
 }
 
-void Page::save()
+void Page::addLinkToNote(QStringList link)
 {
-
-    QString xmlIndex = mPagePath + "/page.xml";
-    qDebug() << xmlIndex;
-    if(!QFileInfo(xmlIndex).exists()) {
-        qDebug() << "TODO: Create" << xmlIndex;
-        //TODO: create pagePath and some basic data.
-    }
-
-    QFile file(xmlIndex);
-
-    if(!file.open(QIODevice::WriteOnly)) {
-        //TODO: some nice dialog to warn the user.
-        qWarning() << "Couldn't open file for reading:" << xmlIndex;
+    if(mScene->selectedItems().count() <= 0) {
+        qWarning() << "consider creating a note and adding the link to it";
         return;
     }
 
-    QXmlStreamWriter stream(&file);
-    stream.setAutoFormatting(true);
-    stream.writeStartDocument();
+    QGraphicsItem *i = mScene->selectedItems().first();
+    if(i->type() != NoteType::Text) {
+        qWarning() << "Not a Note: " << i->type();
+        return;
+    }
 
-    stream.writeStartElement("dwiki_page");
+    NoteText *nt = static_cast<NoteText*>(i);
+    if(!nt) {
+        qWarning() << "Couldn't find noteText!";
+        return;
+    }
 
-        stream.writeStartElement("properties");
-        stream.writeAttribute("bgColor", "#ff00ff");
-        stream.writeAttribute("bgImage", "");
-        stream.writeEndElement(); //properties
-
-        foreach(QGraphicsItem *i, mScene->items()) {
-            if(i->type() != Note::Type) {
-                qDebug() << "Unknown QGraphicsItem::Type" << i->type();
-                continue;
-            }
-
-            Note *n = qgraphicsitem_cast<Note*>(i);
-            saveNote(n, &stream);
-
-        }
-
-    stream.writeEndElement(); //dwiki_page
-    stream.writeEndDocument();
-    file.close();
+    nt->addLink(link);
 
 }
 
-void Page::saveNote(Note *n, QXmlStreamWriter *stream)
+Note *Page::currentNote()
 {
+    if(mScene->selectedItems().count() <= 0)
+        return 0;
 
-    stream->writeStartElement("note");
-    stream->writeAttribute("id", QString::number(n->id()));
-    stream->writeAttribute("x", QString::number(n->pos().x()));
-    stream->writeAttribute("y", QString::number(n->pos().y()));
-    stream->writeAttribute("z", QString::number(n->zValue()));
-    stream->writeAttribute("width", QString::number(n->size().width()));
-    stream->writeAttribute("height", QString::number(n->size().height()));
-    stream->writeAttribute("lastModified", n->lastModified().toString("yyyy-MM-dd hh:mm:ss"));
-    stream->writeAttribute("added", n->addedDate().toString("yyyy-MM-dd hh:mm:ss"));
+    QGraphicsItem *i = mScene->selectedItems().first();
+    if(!i)
+        return 0;
 
-    qDebug() << "TODO: fill in flags";
-    stream->writeStartElement("flags");
-    //stream->writeAttribute("value", n->flags());
-    stream->writeEndElement(); //flags
+    if(i->type() == Note::Type)
+        return qgraphicsitem_cast<Note*>(i);
+    else if(i->type() != Arrow::Type) //FIXME: do a metter job of checking the item type.
+        return qgraphicsitem_cast<Note*>(i->parentItem());
 
-    qDebug() << "TODO: connect string for pointers";
-    stream->writeStartElement("connect");
-    stream->writeAttribute("id", "");
-    stream->writeEndElement(); //connect
+    return 0;
+}
 
-    stream->writeStartElement("attachment");
-    stream->writeAttribute("file", n->attachment());
-    stream->writeEndElement(); //attachment
+void Page::setDefaultNoteType(NoteType::Id type)
+{
+    mScene->setDefaultNoteType(type);
+}
 
-    stream->writeStartElement("image");
-    stream->writeAttribute("file", n->image());
-    stream->writeEndElement(); //image
+void Page::zoomChanged(int value)
+{
+    ui->graphicsView->zoomLevel(value);
+}
 
-    QString noteFile = "note" + QString::number(n->id()) + ".html";
-    stream->writeStartElement("text");
-    stream->writeAttribute("file", noteFile);
-    stream->writeEndElement(); //text
-
-    stream->writeEndElement(); //note
-
-    if(!n->html().isEmpty()) {
-        QFile f(mPagePath + "/" + noteFile);
-
-        if(!f.open(QFile::WriteOnly)) {
-            qDebug() << "error opeing file for writing: " << f.fileName();
-        }
-
-        QTextStream out(&f);
-        out << n->html();
-        f.close();
-    }
-
+void Page::nextPage(QString link)
+{
+    emit changePage(link);
 }

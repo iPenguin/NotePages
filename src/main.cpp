@@ -5,11 +5,13 @@
 #include "mainwindow.h"
 
 #include "appinfo.h"
+#include "macmenubar.h"
 
 //#include "errorhandler.h"
 
 int main(int argc, char *argv[])
 {
+    QApplication a(argc, argv);
 
     //qInstallMsgHandler(myMessageOutput);
 
@@ -18,9 +20,16 @@ int main(int argc, char *argv[])
     qApp->setOrganizationName(AppInfo::inst()->appOrg);
     qApp->setOrganizationDomain(AppInfo::inst()->appOrgDomain);
 
-    QApplication a(argc, argv);
-    MainWindow w;
-    w.show();
-    
+#ifdef Q_OS_MAC
+
+    new MacMenuBar();
+
+#endif
+
+    MainWindow *mainWin = new MainWindow;
+    mainWin->show();
+
     return a.exec();
 }
+
+

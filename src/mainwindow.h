@@ -8,43 +8,112 @@
 #include <QDomElement>
 #include <QTreeWidgetItem>
 #include <QMap>
+#include <QToolButton>
+
+class QListWidgetItem;
+class QXmlStreamWriter;
+class LinkDialog;
+class SettingsUi;
 
 #include "page.h"
 
 namespace Ui {
-class MainWindow;
+    class MainWindow;
 }
 
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
-    
+
 public:
-    explicit MainWindow(QWidget *parent = 0);
+    explicit MainWindow(bool autoLoad = true, QWidget *parent = 0);
     ~MainWindow();
-    
-private slots:
-//File
-    void open();
-    void closeFile();
-    void quit();
-    void save();
 
-//Edit
-    void copy();
-    void cut();
-    void paste();
+    //This function should mainly be called from the History class, for undo/redo.
+    void selectPage(int pageNumber);
 
+public slots:
     void loadFile(QString folder);
 
-    void pageSelected(QTreeWidgetItem* page);
+private slots:
+//File
+    void fileOpen();
+    void fileClose();
+    void fileQuit();
+    void fileSave();
+
+    void fileNew();
+
+//Edit
+    void editCopy();
+    void editCut();
+    void editPaste();
+
+    void pageSelected(QTreeWidgetItem *current, QTreeWidgetItem *previous);
+
+    void toolsSettings();
+
+//View
+    void viewFullScreen();
+
+//Tools
+    void toolsConnect();
+
 //Help
-    void about();
+    void helpAbout();
+
+    void addNewPageTreeItem();
+    void removePages();
+
+    void moveItemUp();
+    void moveItemDown();
+
+    void configureItem();
+
+    int currentMaxPageId();
+    void setCurrentMaxPageId(int newId);
+    int useNextPageId() { mCurrentMaxPageId++; return mCurrentMaxPageId; }
+
+    void changeItem(QTreeWidgetItem *item, int column);
+
+    void loadPageFromLink(QString link);
+
+protected slots:
+    void closeTab(int tabNumber);
+
+    //set zoom slider to the specified value.
+    void updateZoomLevel(int percent);
+    void zoomPage(int percent);
+
+    void tabChanged(int newTab);
+
+protected:
+    void saveIndex(QString path);
+    void saveIndexPages(QXmlStreamWriter *stream, QTreeWidgetItem *item);
+
+    void populateIconList();
+
+    //return the current tab as a Page, or 0 if no page.
+    Page* currentPage();
+
+private slots:
+    void setTextProperties();
+
+    void updateItemIcon(QListWidgetItem *newItem, QListWidgetItem *oldItem);
+
+    void addLink();
+    void addLinkToNote(QStringList link);
+
+    void addNoteType();
 
 private:
     Ui::MainWindow *ui;
+    LinkDialog *mLinkDialog;
+    SettingsUi *mSettingsUi;
 
     void load();
+
+    QTreeWidgetItem* findPage(int pageNumber);
 
     //update the titlebar, and other pointers to the current page.
     void setCurrentPage(int pageId);
@@ -55,15 +124,35 @@ private:
 
     void openPage(int pageNumber);
 
+    void setupStatusBar();
     void setupMenubars();
     QString loadNewFolder();
+
+    int mCurrentMaxPageId;
 
     //A mapping of page_id to object.
     QMap <int, Page*> mPages;
 
-    QString m_wikiFile;
-    QString m_name;
+    QToolButton *mAdd,
+                *mRemove,
+                *mUp,
+                *mDown,
+                *mConfigure;
+
+    QAction *mAddTextNote,
+            *mAddImageNote,
+            *mAddDocumentNote;
+
+    QSlider *mZoom;
+
+    QString mPagesFile;
+    QString mName;
     QString mPath;
+
+    QUndoStack *mHistory;
+
+    //This is a temporary holder of information when loading files.
+    QList<QTreeWidgetItem*> mExpandedItems;
 };
 
 #endif // MAINWINDOW_H

@@ -5,50 +5,69 @@
 #define PAGE_H
 
 #include <QWidget>
-#include "pagescene.h"
-#include <QGraphicsView>
-
-#include <QXmlStreamReader>
 #include <QUndoStack>
-#include <QMap>
+#include "pagescene.h"
 
-class Note;
+namespace Ui {
+class Page;
+}
 
 class Page : public QWidget
 {
     Q_OBJECT
+    
 public:
+    enum TextProperty { TxtBold = 1, TxtItalic,
+                        TxtUnderline, TxtLeftJustify, TxtCenterJustify, TxtRightJustify, TxtJustify };
+
     explicit Page(QString pagePath, QWidget *parent = 0);
+    ~Page();
 
     int id() { return mId; }
     void setId(int id) { mId = id; }
 
-    QString pagePath() { return mPagePath; }
-    void setPagePath(QString pagePath) { mPagePath = pagePath; }
-
-    void save();
+    void loadPage();
+    void savePage();
+    bool isSaved();
+    //delete and remove data.
+    void deletePage();
 
     QUndoStack* undoStack() { return mUndoStack; }
 
+    //Set properties on selected text, ie, bold, italics, underline, etc.
+    void setTextProperties(TextProperty property, bool state);
+
+    int currentZoomLevel();
+
+    //Add page link to note.
+    void addLinkToNote(QStringList link);
+
+    void setDrawLines(bool state) { Q_ASSERT(mScene); mScene->setDrawLines(state); }
+
+    Note* currentNote();
+    void setDefaultNoteType(NoteType::Id type);
+
+    void setPagePath(QString pp) { Q_ASSERT(mScene); mScene->setPagePath(pp + "/pages/" + QString::number(id())); }
+
 signals:
-    
+    void zoomLevelChanged(int value);
+    void changePage(QString link);
+
 public slots:
+    void zoomChanged(int value);
+    void nextPage(QString link);
+
+protected:
+    void updateSceneRect(Note *n);
 
 private:
-    QGraphicsView  *mView;
+    Ui::Page *ui;
     PageScene *mScene;
-
-    //requires a path seperator after it.
-    QString mPagePath;
-
-    void createNote(QXmlStreamReader *stream);
-    void saveNote(Note *n, QXmlStreamWriter *stream);
 
     int mId;
 
-    QMap<QString, QMap<int, int> > mLines;
-
     QUndoStack *mUndoStack;
+    bool mDeleted;
 };
 
 #endif // PAGE_H

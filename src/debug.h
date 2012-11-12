@@ -1,27 +1,30 @@
+/********************************************************\
+| Copyright (c) 2012 Brian C. Milco <bcmilco@gmail.com>  |
+\********************************************************/
 #ifndef DEBUG_H
 #define DEBUG_H
 
 #include <QDebug>
 
-#define sws_debug(message) \
+#define debug(message) \
 ( \
     (qDebug() << Q_FUNC_INFO << ":" << message), \
     (void)0 \
 )
 
-#define sws_warn(message) \
+#define warn(message) \
 ( \
     (qWarning() << Q_FUNC_INFO << ":" << message), \
     (void)0 \
 )
 
-#define sws_critical(message) \
+#define critical(message) \
 ( \
     (qCritical() << Q_FUNC_INFO << ":" << message), \
     (void)0 \
 )
 
-#define sws_fatal(message) \
+#define fatal(message) \
 ( \
     (qFatal() << Q_FUNC_INFO << ":" << message), \
     (void)0 \

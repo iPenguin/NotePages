@@ -7,26 +7,56 @@
 #include <QGraphicsTextItem>
 #include <QDateTime>
 
-class NoteText : public QGraphicsTextItem
+#include "notecontent.h"
+
+class QTextCharFormat;
+
+class NoteText : public QGraphicsTextItem, public NoteContent
 {
+    Q_OBJECT
 
 public:
     NoteText(QGraphicsItem *parent = 0, QGraphicsScene *scene = 0);
 
-    enum { Type = UserType + 2 };
-    int type () const { return NoteText::Type; }
+    int type () const { return NoteType::Text; }
 
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
 
     void setSize(QSizeF size);
     QSizeF size() { return mSize; }
+    void setPos(const QPointF &pos);
 
-public slots:
+    void setBold(bool state);
+    void setItalic(bool state);
+    void setUnderline(bool state);
+
+    void setTextBlockAlignment(Qt::Alignment align);
+    void setTextEditMode(bool value);
+
+    void addLink(QStringList link);
+
+    void loadContent(QXmlStreamReader *stream);
+    void saveContent(QXmlStreamWriter *stream);
+    void deleteContent();
+
+    QString toHtml();
+    void setHtml(const QString &html);
+
+    QMenu* contextMenu();
+
+signals:
+    void pageLink(QString link);
+    void linkActivated(QString link);
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *e);
+    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *e);
     void focusOutEvent(QFocusEvent *e);
+
+    void mergeFormatOnSelection(QTextCharFormat format);
+
+    void setupContextMenu();
 
 private:
     QGraphicsItem *mParent;

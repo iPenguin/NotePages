@@ -20,13 +20,13 @@ public:
     SettingsUi(QWidget* parent);
     ~SettingsUi();
 
-    int exec();
 public slots:
     void selectFolder();
 
 private slots:
 
     void buttonClicked(QAbstractButton* button);
+    void saveSettings();
 
 private:
 

@@ -5,6 +5,7 @@
 #define PAGESCENE_H
 
 #include <QGraphicsScene>
+#include "pageglobals.h"
 
 class Note;
 
@@ -15,10 +16,23 @@ class PageScene : public QGraphicsScene
 public:
     explicit PageScene(QObject *parent = 0);
     
+    QString pagePath() { return mPagePath; }
+    void setPagePath(QString pp) { mPagePath = pp; }
+
+    void incrementMaxNoteId() { mCurMaxNoteId++; }
+    void setDrawLines(bool state) { mDrawLines = state; }
+
+    void setDefaultNoteType(NoteType::Id type);
+
 signals:
-    
+    void changePage(QString newPage);
+
 public slots:
     void deleteNote();
+    void addFileAsNote();
+    void loadFile(QString fileName);
+
+    void pageLinkClicked(QString link);
 
 private slots:
     void showNoteOptions(QPointF screenPos);
@@ -26,14 +40,32 @@ private slots:
 protected:
     void drawBackground(QPainter *painter, const QRectF &rect);
 
+    void keyReleaseEvent(QKeyEvent *e);
+
     void mousePressEvent(QGraphicsSceneMouseEvent *e);
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *e);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *e);
 
-    Note* createNewNote(int noteId = -1);
+    void dragEnterEvent(QGraphicsSceneDragDropEvent *e);
+    void dragMoveEvent(QGraphicsSceneDragDropEvent *e);
+    void dragLeaveEvent(QGraphicsSceneDragDropEvent *e);
+    void dropEvent(QGraphicsSceneDragDropEvent *e);
+
+    Note* createNewNote(int noteId = -1, NoteType::Id type = NoteType::Text);
 
 private:
 
     int mCurMaxNoteId;
+    bool mDrawLines;
+    Note *mLineStart;
+    NoteType::Id mDefaultNoteType;
+
+    QGraphicsLineItem *mTempLine;
+
+    QPointF mMouseReleasePos;
+
+    //requires a path seperator after it.
+    QString mPagePath;
 };
 
 #endif // PAGESCENE_H
