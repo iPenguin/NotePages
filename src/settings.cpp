@@ -72,6 +72,8 @@ void Settings::setupValueList()
     mValueList["checkForUpdates"] = QVariant(true);
     mValueList["fileLocation"] = QVariant(userDocs);
     mValueList["maxRecentFiles"] = QVariant(5);
+    
+    mValueList["currentNotePages"] = userDocs + "/My Notes";
 }
 
 void Settings::addRecentFile(QString fileName)
