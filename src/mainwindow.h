@@ -118,6 +118,7 @@ private:
     //update the titlebar, and other pointers to the current page.
     void setCurrentPage(int pageId);
 
+    //save page file.
     void saveFile(QString fileName);
 
     QTreeWidgetItem* loadPage(QDomElement element);

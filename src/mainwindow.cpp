@@ -366,7 +366,6 @@ void MainWindow::fileSave()
         if(mPath.isEmpty())
             return;
     }
-  
     
     setWindowFilePath(mPath);
     saveIndex(mPath);
@@ -748,7 +747,7 @@ void MainWindow::closeTab(int tabNumber)
 
 void MainWindow::saveIndex(QString path)
 {
-
+debug(path);
     if(!QFileInfo(path).exists()) {
         QDir d(path);
         d.mkpath(path);
@@ -771,9 +770,13 @@ void MainWindow::saveIndex(QString path)
     stream.writeStartElement("npage_index");
 
     stream.writeTextElement("name", mName);
-
-    saveIndexPages(&stream, ui->pageTree->topLevelItem(0));
-
+    
+    int count = ui->pageTree->topLevelItemCount();
+    
+    for(int i = 0; i < count; i++) {
+        saveIndexPages(&stream, ui->pageTree->topLevelItem(i));
+    }
+    
     stream.writeEndElement(); //npage_index
     stream.writeEndDocument();
 }
