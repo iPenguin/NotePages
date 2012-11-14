@@ -26,6 +26,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
+    //autoLoad automatically loads the default set of pages.
     explicit MainWindow(bool autoLoad = true, QWidget *parent = 0);
     ~MainWindow();
 
@@ -36,7 +37,7 @@ public slots:
     void loadFile(QString folder);
 
 private slots:
-//File
+//File Menu
     void fileOpen();
     void fileClose();
     void fileQuit();
@@ -44,7 +45,7 @@ private slots:
 
     void fileNew();
 
-//Edit
+//Edit Menu
     void editCopy();
     void editCut();
     void editPaste();
@@ -53,13 +54,13 @@ private slots:
 
     void toolsSettings();
 
-//View
+//View Menu
     void viewFullScreen();
 
-//Tools
+//Tools Menu
     void toolsConnect();
 
-//Help
+//Help Menu
     void helpAbout();
 
     void addNewPageTreeItem();
