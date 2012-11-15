@@ -104,7 +104,7 @@ include("installers.cmake")
 add_subdirectory(src)
 
 if(NP_DOCS)
-	add_subdirectory(docs)
+    add_subdirectory(docs)
 endif()
 
 if(UNIT_TESTING)

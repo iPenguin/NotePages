@@ -42,8 +42,8 @@ function(DOCBOOK_GENERATE format input version)
             set(xslFile "${docbookBasePath}/html/docbook.xsl")
 
             #TODO: include a custom CSS Style sheet:
-            #file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/mystyle.css DESTINATION ${working})
-            #--stringparam html.stylesheet mystyle.css
+            #file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/notePages.css DESTINATION ${working})
+            #--stringparam html.stylesheet notePages.css
 
             execute_process(
                 COMMAND "${xsltproc}" --xinclude -o "${working}/index.html" "${xslFile}" "${input}"
@@ -53,7 +53,7 @@ function(DOCBOOK_GENERATE format input version)
 
             set(outputBaseName "${working}/${PROJECT_NAME}_User_Guide_${version}")
 
-            set(xslFile "${CMAKE_CURRENT_SOURCE_DIR}/mystyle.xsl")
+            set(xslFile "${CMAKE_CURRENT_SOURCE_DIR}/notePages.xsl")
 
             execute_process(
                 COMMAND "${xsltproc}" -o "${outputBaseName}.fo" --stringparam fop1.extensions 1 "${xslFile}" "${input}"

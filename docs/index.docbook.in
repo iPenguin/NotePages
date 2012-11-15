@@ -1,0 +1,156 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE book>
+
+<book xmlns="http://docbook.org/ns/docbook" 
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:xi="http://www.w3.org/2001/XInclude"
+    xmlns:svg="http://www.w3.org/2000/svg" 
+    xmlns:html="http://www.w3.org/1999/xhtml" 
+    xmlns:db="http://docbook.org/ns/docbook" 
+    id="note-pages-user-guide" lang="en" version="5.0">
+
+    <bookinfo>
+        <title>The Official @NP_PROJECT_NAME@ User Guide</title>
+        <subtitle>For Version @PROJECT_VERSION@</subtitle>
+        <productname>@NP_PROJECT_NAME@</productname>
+        <productnumber>@PROJECT_VERSION@</productnumber>
+        <edition>@PROJECT_VERSION@</edition>
+        <copyright>
+            <year>@PROJECT_LIFE@</year>
+            <holder>@PROJECT_VENDOR@</holder>
+        </copyright>
+        <author>
+            <firstname>Brian</firstname><surname>Milco</surname>
+            <affiliation>
+                <jobtitle>Owner</jobtitle>
+                <orgname>@PROJECT_VENDOR@</orgname>
+            </affiliation>
+            <address>
+                <city></city>
+                <street></street>
+                <postcode></postcode>
+                <country>USA</country>
+            </address>
+        </author>
+        <abstract>
+            <para>
+                <application>@NP_PROJECT_NAME@</application> 
+                This document will describe the features and abilities of <application>@NP_PROJECT_NAME@</application>.
+            </para>
+        </abstract>
+
+        <mediaobject>
+            <imageobject>
+                <imagedata fileref="images/cover.png" format="PNG" />
+            </imageobject>
+        </mediaobject>
+    </bookinfo>
+
+
+
+    <preface id="introduction" version="5.0" xmlns="http://docbook.org/ns/docbook">
+        <title>Introduction</title>
+        <para></para>
+
+    </preface>
+
+
+
+    <chapter id="installation">
+        <title>Installation</title>
+        
+    </chapter>
+    
+    <chapter id="quick-guide">
+        <title>Quick Guide to Using @NP_PROJECT_NAME@</title>
+        <para></para>
+    </chapter>
+
+
+    
+    <chapter id="tools">
+        <title>Tools</title>
+            
+    </chapter>
+
+
+
+    <chapter id="options-preferences">
+        <title>Options / Preferences</title>
+        <para>The options have been divided into sections. The first section contains the general application settings.
+        </para>
+        <para>If you change the settings and you are unhappy with them you can always return the application to the default state
+            by clicking the <guibutton>Restore Defaults</guibutton> button.
+        </para>
+        
+    </chapter>
+
+    <chapter>
+        <title>Tools</title>
+        <sect1>
+            <title>Check for Updates</title>
+            <para>By default the software will silently check for updates every time you start the software.
+                If it finds an update you will be prompted to install the new version.
+                If you do not wish the software to check for update on startup you can disable this feature
+                by going to the <link linkend="options-application">Application Options/Preferences</link>
+                and un-check the option for this feature.
+            </para>
+            <screenshot>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata width="250" scalefit="1" fileref="images/tools-updates.png" format="PNG" />
+                    </imageobject>
+                    <caption>The dialog when there are no updates</caption>
+                </mediaobject>
+            </screenshot>
+            <screenshot>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata width="300" scalefit="1" fileref="images/tools-updates-new.png" format="PNG" />
+                    </imageobject>
+                    <caption>The dialog when a new version is available for download</caption>
+                </mediaobject>
+            </screenshot>
+        </sect1>
+        
+        <section id="helpAbout">
+            <title>About @NP_PROJECT_NAME@</title>
+            <screenshot>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata width="300" scalefit="1" fileref="images/help-about.png" format="PNG" />
+                    </imageobject>
+                    <caption>The about this application dialog</caption>
+                </mediaobject>
+            </screenshot>
+            <para>The About dialog can be accessed by going to the <menuchoice><guimenu>Help</guimenu><guimenuitem>About @NP_PROJECT_NAME@</guimenuitem></menuchoice> option,
+            or on the Mac by going to <menuchoice><guimenu>@NP_PROJECT_NAME@</guimenu><guimenuitem>About @NP_PROJECT_NAME@</guimenuitem></menuchoice>.
+            </para>
+            <para>This dialog contains the full version string and build date, copyright notice, description,
+                dedication and license information. The license information is required to use the software.
+                The license information was provided to you when you purchased the software, but is presented here for your convenience.
+            </para>
+        </section>
+    </chapter>
+
+    <chapter id="troubleshooting">
+        <title>Troubleshooting</title>
+        <section>
+            <title>Bugs</title>
+            <para>
+                If you find a defect, or unexpected behavior in this software please <ulink url="@ORG_CONTACT@">contact me</ulink> so I can look into the issue.
+                I take bugs and defects very seriously and the sooner I know about them the sooner I can fix them.
+            </para>
+        </section>
+        <section>
+            <title>Features</title>
+            <para>
+                Is the software missing a feature? Do you have an idea that should be included in the software?
+                You should <ulink url="@ORG_CONTACT@">contact me</ulink> and let me know.
+            </para>
+        </section>
+    </chapter>
+
+
+
+</book>
