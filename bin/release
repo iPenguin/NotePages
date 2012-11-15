@@ -1,0 +1,63 @@
+#!/bin/bash
+#
+# Copyright (c) 2012 Brian C. Milco <bcmilco AT gmail DOT com>
+#
+# This script is a part of the Note Pages project
+#
+#    This program is free software; you can redistribute it and/or
+#    modify it under the terms of the GNU General Public License
+#    as published by the Free Software Foundation; version 2
+#    of the License.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program; if not, write to the Free Software
+#    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+#
+#
+#This script manages all the flags and commands needed to create installers for a new release
+#that will actually work on an end users computer.
+
+FLAGS="-DNP_APP=OFF"
+
+while getopts ":a" opt; do
+  case $opt in
+    a)
+      echo "Apple Mac app store release"
+      FLAGS="-DNP_APP=ON"
+      ;;
+    \?)
+      echo "Invalid option: -$OPTARG" >&2
+      ;;
+  esac
+done
+
+PLATFORM=`uname -a | awk '{ print $1 }'`
+
+if [ $PLATFORM == "Darwin" ]; then
+    export CC=/usr/bin/gcc-4.0
+    export CXX=/usr/bin/g++-4.0
+
+    export SDKROOT=/Developer/SDKs/MacOSX10.5.sdk
+    export MACOSX_DEPLOYMENT_TARGET=10.5
+
+    mkdir -p ~/notePages/build
+    cd ~/notePages/build
+
+    cmake .. -DNP_DOCS=ON -DCMAKE_BUILD_TYPE=Release $FLAGS && make && cpack -G Bundle
+
+elif [ $PLATFORM == "Linux" ]; then
+    
+    mkdir -p ~/notePages/build
+    cd ~/notePages/build
+
+    cmake .. -DNP_DOCS=ON -DCMAKE_BUILD_TYPE=Release $FLAGS && make && cpack
+elif [ $PLATFORM == "Cygwin" ]; then
+    print "TODO: Windows"
+else
+    print "Warning unknown platform"
+fi

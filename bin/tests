@@ -1,0 +1,42 @@
+#!/bin/bash
+#
+# Copyright (c) 2012 Brian C. Milco <bcmilco AT gmail DOT com>
+# This script is a part of the Note Pages project
+#
+#    This program is free software; you can redistribute it and/or
+#    modify it under the terms of the GNU General Public License
+#    as published by the Free Software Foundation; version 2
+#    of the License.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program; if not, write to the Free Software
+#    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+#
+#
+# This script is a wrapper for the awk script.
+# The final output of this script is clean color-ified
+# total lines for all the tests in the test suite.
+#
+PATH="~/notePages/bin:$PATH"
+base_dir="${HOME}/notePages"
+
+cd ${base_dir}/build
+tests/tests > tests.log
+cat tests.log | grep -e Start -e Totals | awk -f ${base_dir}/bin/tests_overview.awk
+
+if [[ "$1" != "-d" && "$1" != "--details" ]]; then
+    echo "Do you want to see the details? (y/N)"
+    read answer
+else
+    answer="y"
+fi
+
+if [ "$answer" == "y" ]; then
+    cat ${base_dir}/build/tests.log | awk -f ${base_dir}/bin/tests_output.awk
+fi
+
