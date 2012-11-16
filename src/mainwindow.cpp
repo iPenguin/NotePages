@@ -49,6 +49,7 @@ MainWindow::MainWindow(bool autoLoad, QWidget *parent) :
     ui(new Ui::MainWindow),
     mLinkDialog(0),
     mSettingsUi(0),
+    mUpdater(0),
     mCurrentMaxPageId(0),
     mHistory(new QUndoStack)
 {
@@ -61,6 +62,12 @@ MainWindow::MainWindow(bool autoLoad, QWidget *parent) :
     setUnifiedTitleAndToolBarOnMac(true);
     setAttribute(Qt::WA_DeleteOnClose);
 
+#ifndef APPLE_APP_STORE
+    bool checkForUpdates = Settings::inst()->value("checkForUpdates").toBool();
+    if(checkForUpdates)
+        checkUpdates();
+#endif
+    
     ui->pageTree->setStyleSheet("QTreeWidget { background: #D6DDE5 }");
     ui->pageTree->setAttribute(Qt::WA_MacShowFocusRect, 0);
     QPalette palette = ui->pageTree->palette();
@@ -190,6 +197,7 @@ void MainWindow::setupMenubars()
 
 //Tools
     connect(ui->actionConnect, SIGNAL(triggered()), SLOT(toolsConnect()));
+    connect(ui->actionCheckForUpdates, SIGNAL(triggered(bool)), SLOT(toolsCheckForUpdates()));
 
 //Toolbar
     QActionGroup *g = new QActionGroup(this);
@@ -540,6 +548,12 @@ void MainWindow::toolsSettings()
 
 }
 
+void MainWindow::toolsCheckForUpdates()
+{
+    bool silent = false;
+    checkUpdates(silent);
+}
+
 void MainWindow::viewFullScreen()
 {
     if(isFullScreen())
@@ -607,6 +621,21 @@ void MainWindow::selectPage(int pageNumber)
         ui->iconList->setCurrentItem(items.first());
         ui->iconList->blockSignals(false);
     }
+}
+
+void MainWindow::checkUpdates(bool silent)
+{
+    if(mUpdater) {
+        delete mUpdater;
+        mUpdater = 0;
+    }
+    
+    //TODO: check for updates in a separate thread.
+    mUpdater = new Updater(this);
+    // append the updater to the centralWidget to keep it out of the way of the menus.
+    ui->centralWidget->layout()->addWidget(mUpdater); 
+    
+    mUpdater->checkForUpdates(silent); //check at startup is always silent.
 }
 
 void MainWindow::helpAbout()

@@ -18,10 +18,8 @@
 \*********************************************************************************************/
 #include "settings.h"
 
-//#include "license.h"
-
 #include <QDebug>
-//#include "appinfo.h"
+#include "appinfo.h"
 #include <QDesktopServices>
 #include <QFileInfo>
 
@@ -77,6 +75,9 @@ QVariant Settings::defaultValue ( const QString& key ) const
 
 void Settings::setupValueList()
 {
+    //look up values for setting server/webpage for license and update testing.
+    mValueList["updatePage"] = QVariant(AppInfo::inst()->liveUpdatePage + AppInfo::inst()->liveUpdatePageVals);
+    
     mValueList["currentNotePages"] = QVariant("");
 
     mValueList["geometry"] = QVariant("");

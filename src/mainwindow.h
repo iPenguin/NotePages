@@ -31,6 +31,7 @@ class LinkDialog;
 class SettingsUi;
 
 #include "page.h"
+#include "updater.h"
 
 namespace Ui {
     class MainWindow;
@@ -74,6 +75,7 @@ private slots:
 
 //Tools Menu
     void toolsConnect();
+    void toolsCheckForUpdates();
 
 //Help Menu
     void helpAbout();
@@ -126,7 +128,10 @@ private:
     Ui::MainWindow *ui;
     LinkDialog *mLinkDialog;
     SettingsUi *mSettingsUi;
-
+    Updater* mUpdater;
+    
+    void checkUpdates(bool silent = true);
+    
     void load();
 
     QTreeWidgetItem* findPage(int pageNumber);

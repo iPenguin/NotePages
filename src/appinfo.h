@@ -49,6 +49,9 @@ public:
     const QString appVersionShort;
     const QString appBuildInfo;
 
+    const QString liveUpdatePage;
+    const QString liveUpdatePageVals;
+    
     void helpAbout();
     void toolsSettings();    
 private:

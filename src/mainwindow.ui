@@ -143,7 +143,7 @@
      <x>0</x>
      <y>0</y>
      <width>753</width>
-     <height>22</height>
+     <height>23</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -185,6 +185,7 @@
      <string>Tools</string>
     </property>
     <addaction name="actionOptions"/>
+    <addaction name="actionCheckForUpdates"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -458,6 +459,11 @@
    </property>
    <property name="toolTip">
     <string>Make the application use the full screen</string>
+   </property>
+  </action>
+  <action name="actionCheckForUpdates">
+   <property name="text">
+    <string>Check for Updates</string>
    </property>
   </action>
  </widget>

@@ -14,6 +14,7 @@ set(np_qobject_headers  mainwindow.h
                         note.h
                         linkdialog.h
                         notecontent.h
+                        updater.h
                         )
 
 set(np_resources

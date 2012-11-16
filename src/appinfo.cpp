@@ -34,7 +34,10 @@ AppInfo::AppInfo() :
 
     appVersion(gGIT_VERSION),
     appVersionShort(gGIT_VERSION_SHORT),
-    appBuildInfo(QString(__DATE__) + " " + QString(__TIME__))
+    appBuildInfo(QString(__DATE__) + " " + QString(__TIME__)),
+    
+    liveUpdatePage("http://notepages.org/update.php"),
+    liveUpdatePageVals("?np_software=%1&np_version=%2&np_os=%3&np_arch=%5")
 {
 }
 
