@@ -6,7 +6,7 @@ Note Pages
 
 Note Pages organizes your notes and pictures for you. It makes it easy for you to keep your files together with your notes, and link between information stored on differnet pages.
 
-This can be especially helpful for writers who have to keep track characters, locations, and objects. Or students who have to keep track of research information for classes or papers.
+This can be especially helpful for writers who have to keep track of characters, locations, and objects. Or students who have to keep track of  information for classes or research projects.
 
 Note Pages is written in C++/Qt and supports the following platforms:
 
@@ -17,10 +17,10 @@ Note Pages is written in C++/Qt and supports the following platforms:
 Use Cases
 ----------
 
-* You're working on a research project, you have taken notes and placed them into text blocks inside Note Pages, you scan in some pictures and text from a book and you drag the files onto the Page with your other notes. Those files are stored with your notes, and can be opened just by clicking on the icons in Note Pages.
+* You're working on a research project, you have taken notes and placed them into blocks inside Note Pages, you scan in some pictures and text from a book and you drag the files onto the Page with your other notes. Those files are copied into the page with your notes, and can be opened just by clicking on the icons in Note Pages.
 
 
-* You're writing a book, so you create a nested set of Pages for the plot, characters, and locations. Inside each section you link between related items, so when you're writing you can just click and navigate back and forth between items to refresh your memory about the connections between items.
+* You're writing a book, so you create a nested set of Pages for the plot, characters, and locations. Inside each section you link between related items, so when you're writing you can just click and navigate back and forth between items to refresh your memory about details and the connections between items.
 
 * And many more!
 
@@ -52,11 +52,13 @@ Use the NP_DOCS flag to turn on/off the document creation process:
 
     $ cmake ../ -DNP_DOCS=ON
 
-To convert the documentation to the final output you will need to install the docbook-xsl-ns (<http://sourceforge.net/projects/docbook/files/docbook-xsl-ns/>) fop (<http://xmlgraphics.apache.org/fop/download.html>)
+To convert the documentation to the final output you will need to install the docbook-xsl-ns (<http://sourceforge.net/projects/docbook/files/docbook-xsl-ns/>), xsltproc, and fop (<http://xmlgraphics.apache.org/fop/download.html>)
 
 On Ubuntu: 
     
     $ sudo apt-get install xsltproc docbook-xsl-ns fop libservlet2.4-java
+
+On Windows you can get xsltproc from a cygwin installation.
 
 Making Installers
 ------------------
