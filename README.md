@@ -1,12 +1,7 @@
 Note Pages
 ===========
 
-#### A notes and cross reference application ####
-
-
-Note Pages organizes your notes and pictures for you. It makes it easy for you to keep your files together with your notes, and link between information stored on differnet pages.
-
-This can be especially helpful for writers who have to keep track of characters, locations, and objects. Or students who have to keep track of  information for classes or research projects.
+Note Pages organizes your notes and images for you. It makes it easy for you to keep your files together with your notes, and link between information stored on different Pages.
 
 Note Pages is written in C++/Qt and supports the following platforms:
 
@@ -24,12 +19,31 @@ Use Cases
 
 * And many more!
 
-Building Note Pages
---------------------
+Building Note Pages from Source
+--------------------------------
 
-To build Note Pages from source:
+### Requirements for Building ###
+To build Note Pages you will need the following software installed on your computer.
 
-clone the repo to a folder called "notePages".
+*   To build the application
+    *    cmake (<http://cmake.org/cmake/resources/software.html>)
+    *    Qt (<http://qt-project.org/downloads>)
+
+*   To generate the documentation
+    *    docbook-xsl-ns (<http://sourceforge.net/projects/docbook/files/docbook-xsl-ns/>)
+    *    xsltproc
+    *    fop (<http://xmlgraphics.apache.org/fop/download.html>)
+
+*   To create an installer for Windows
+    *   NSIS installer (<http://nsis.sourceforge.net/Download>)
+
+On Ubuntu run the following command to make sure you have installed all the programs you will need to build Note Pages and it's documentation:
+
+    $ sudo apt-get install build-essential cmake fop xsltproc docbook-xsl-ns libservlet2.4-java
+
+### Compiling Note Pages ###
+
+Clone the repo to a folder called "notePages".
 
     $ cd notePages
     
@@ -41,10 +55,14 @@ clone the repo to a folder called "notePages".
     
     $ make
     
-    $ ./src/Note\ Pages
+On Linux run ./src/notepages
 
-Documentation
---------------
+On Mac run "Note Pages" under the src/ folder
+
+On Windows run "Note Pages.exe" under the src/ folder
+
+
+### Generating the Documentation ###
 
 You can build the documentation from the docbooks source files into the proper pdf, html files, etc. as needed.
 
@@ -52,27 +70,24 @@ Use the NP_DOCS flag to turn on/off the document creation process:
 
     $ cmake ../ -DNP_DOCS=ON
 
-To convert the documentation to the final output you will need to install the docbook-xsl-ns (<http://sourceforge.net/projects/docbook/files/docbook-xsl-ns/>), xsltproc, and fop (<http://xmlgraphics.apache.org/fop/download.html>)
+### Creating an Installer ###
 
-On Ubuntu: 
-    
-    $ sudo apt-get install xsltproc docbook-xsl-ns fop libservlet2.4-java
+You can build the packages/installers for the platform you're working on by completing the following steps. On Linux this will create a deb file, on Windows an NSIS installer with a wizard, and on Mac a dmg file.
 
-On Windows you can get xsltproc from a cygwin installation.
-
-Making Installers
-------------------
-
-You can build the packages/installers for the platform you're working on.
 First build the software (see Building above) including the Documentation (see Documentation above). Then run the following command from the build directory:
 
-    $ cpack 
+Linux/Mac OS X:
 
-Notes: On Windows you need to install the NSIS installer (<http://nsis.sourceforge.net/Download>) before running the above command.
+    $ bin/release
 
-On Linux the currently supported package formats are: 
+Windows:
 
-* deb
+In a cygwin window run:
 
-On Mac this process will create a dmg package.
+    $ cmake ../ -DCMAKE_BUILD_TYPE=Release -DNP_DOCS=ON
+    $ make
+
+In a cmd shell run:
+
+    $ cpack -G MSYS
 
