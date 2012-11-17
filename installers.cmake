@@ -21,8 +21,8 @@ set(CPACK_PACKAGE_VERSION_MAJOR ${NP_VERSION_MAJOR})
 set(CPACK_PACKAGE_VERSION_MINOR ${NP_VERSION_MINOR})
 set(CPACK_PACKAGE_VERSION_PATCH ${NP_VERSION_PATCH})
 set(CPACK_PACKAGE_CONTACT ${PROJECT_CONTACT})
-set(CPACK_PACKAGE_EXECUTABLES "${PROJECT_NAME};${NP_PROJECT_NAME}")
-set(CPACK_PACKAGE_INSTALL_DIRECTORY "${NP_PROJECT_NAME}")
+set(CPACK_PACKAGE_EXECUTABLES "${PROJECT_NAME}")
+set(CPACK_PACKAGE_INSTALL_DIRECTORY "${PROJECT_NAME}")
 
 #FIXME: use the FindDoxygen.cmake module.
 if(DOXYGEN)
@@ -52,20 +52,20 @@ if(WIN32)
 
     set(CPACK_PACKAGE_ICON "installer.bmp")
     set(CPACK_GENERATOR "NSIS")
-    set(CPACK_NSIS_PACKAGE_NAME "${NP_PROJECT_NAME}")
-    set(CPACK_NSIS_DISPLAY_NAME "${NP_PROJECT_NAME}")
+    set(CPACK_NSIS_PACKAGE_NAME "${PROJECT_NAME}")
+    set(CPACK_NSIS_DISPLAY_NAME "${PROJECT_NAME}")
     set(CPACK_NSIS_CONTACT "${CPACK_PACKAGE_CONTACT}")
     set(CPACK_PACKAGE_INSTALL_REGISTRY_KEY "${PROJECT_NAME}-${NP_VERSION_MAJOR}.${NP_VERSION_MINOR}")
 
     set(CPACK_CMAKE_MODULES_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules/")
 
     set(CPACK_NSIS_MENU_LINKS "docs/homepage.html" "Homepage for ${PROJECT_VENDOR}"
-                              "bin/${PROJECT_NAME}_User_Guide_${NP_VERSION_SHORT}.pdf" "${NP_PROJECT_NAME} Help")
+                              "bin/${PROJECT_NAME}_User_Guide_${NP_VERSION_SHORT}.pdf" "${PROJECT_NAME} Help")
     # this doesn't work for the NSIS installer
     set(CPACK_CREATE_DESKTOP_LINKS "${PROJECT_NAME}.exe")
 
-    #set(CPACK_NSIS_CREATE_ICONS_EXTRA "CreateShortCut '\$SMPROGRAMS\\\\$STARTMENU_FOLDER\\\\${NP_PROJECT_NAME}.lnk' '\$INSTDIR\\\\${PROJECT_NAME}.exe'"
-    #                                  "CreateShortCut '\$DESKTOP\\\\${NP_PROJECT_NAME}.lnk' '\$INSTDIR\\\\${PROJECT_NAME}.exe'")
+    #set(CPACK_NSIS_CREATE_ICONS_EXTRA "CreateShortCut '\$SMPROGRAMS\\\\$STARTMENU_FOLDER\\\\${PROJECT_NAME}.lnk' '\$INSTDIR\\\\${PROJECT_NAME}.exe'"
+    #                                  "CreateShortCut '\$DESKTOP\\\\${PROJECT_NAME}.lnk' '\$INSTDIR\\\\${PROJECT_NAME}.exe'")
     # Icon in the add/remove control panel. Must be an .exe file
     set(CPACK_NSIS_INSTALLED_ICON_NAME "${PROJECT_NAME}.exe")
 
@@ -82,13 +82,13 @@ elseif(APPLE)
     set(CPACK_BUNDLE_PLIST "${CMAKE_BINARY_DIR}/Info.plist")
     set(CPACK_BUNDLE_ICON "${CMAKE_SOURCE_DIR}/images/${PROJECT_MACOSX_ICON}")
     
-    set(CPACK_DMG_VOLUME_NAME "${NP_PROJECT_NAME}")
+    set(CPACK_DMG_VOLUME_NAME "${PROJECT_NAME}")
     set(CPACK_DMG_DS_STORE "${CMAKE_SOURCE_DIR}/resources/MacDmgDsStore")
     set(CPACK_DMG_BACKGROUND_IMAGE "${CMAKE_SOURCE_DIR}/images/dmg_background.png")
 
     set(CPACK_OSX_PACKAGE_VERSION "10.6") #min package version
     
-    set(MACOSX_BUNDLE_LONG_VERSION_STRING "${NP_PROJECT_NAME} version ${NP_VERSION}")
+    set(MACOSX_BUNDLE_LONG_VERSION_STRING "${PROJECT_NAME} version ${NP_VERSION}")
     set(MACOSX_BUNDLE_SHORT_VERSION_STRING "${PROJECT_VERSION}")
     set(MACOSX_BUNDLE_COPYRIGHT "${PROJECT_COPYRIGHT}. All rights reserved.")
 
@@ -96,7 +96,7 @@ elseif(APPLE)
 #and see: http://www.cmake.org/Wiki/CMake:Bundles_And_Frameworks
 #plutil command line utility to edit plist files.
 #http://rixstep.com/2/20060901,00.shtml
-    set(MACOSX_BUNDLE_INFO_STRING "${NP_PROJECT_NAME} - version ${PROJECT_VERSION}")
+    set(MACOSX_BUNDLE_INFO_STRING "${PROJECT_NAME} - version ${PROJECT_VERSION}")
     set(MACOSX_BUNDLE_BUNDLE_VERSION "${PROJECT_VERSION}")
     set(MACOSX_BUNDLE_ICON_FILE "${CMAKE_CURRENT_SOURCE_DIR}/images/${PROJECT_MACOSX_ICON}")
     set_source_files_properties("${MACOSX_BUNDLE_ICON_FILE}" PROPERTIES MACOSX_PACKAGE_LOCATION Resources)

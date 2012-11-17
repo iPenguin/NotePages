@@ -43,17 +43,26 @@ On Ubuntu run the following command to make sure you have installed all the prog
 
 ### Compiling Note Pages ###
 
-Clone the repo to a folder called "notePages".
+Clone the repo to a folder called "notePages". On Windows use a cygwin cmd shell, on Linux and Mac you can use a native shell.
 
     $ cd notePages
     
     $ mkdir build
     
     $ cd build
-    
+
+On Linux and Mac:
+
     $ cmake ../
-    
     $ make
+    
+Make sure the PATH contains the folders containing the exe files for the tools you're going to use.
+Right click on "My Computer" and select Properties. 
+On the "Advanced" Tab click on "Environmental Variables" and edit the PATH system variable to include the appropriate paths.
+On Windows in a native cmd shell:
+
+    $ cmake ../ -G "MinGW Makefiles"
+    $ mingw32-make
     
 On Linux run ./src/notepages
 

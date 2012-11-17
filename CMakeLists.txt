@@ -1,19 +1,23 @@
 cmake_minimum_required(VERSION 2.8)
 
-if(WIN32 OR APPLE)
+if(APPLE OR WIN32)
     project("Note Pages")
 else()
     project("notepages")
 endif()
 
-set(NP_PROJECT_NAME "Note Pages")
+if(WIN32)
+    set(EXE_NAME "Note_Pages")
+else()
+    set(EXE_NAME ${PROJECT_NAME})
+endif()
 
 # Appends the cmake/modules path to MAKE_MODULE_PATH variable...
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules ${CMAKE_MODULE_PATH})
 
 #Forces out of source builds just in case.
 include(MacroOutOfSourceBuild)
-macro_ensure_out_of_source_build("${NP_PROJECT_NAME} requires an out of source build.")
+macro_ensure_out_of_source_build("${PROJECT_NAME} requires an out of source build.")
 
 if(APPLE)
     if(CMAKE_BUILD_TYPE STREQUAL "Release")
@@ -53,7 +57,7 @@ option(NP_APP "Create an apple app store version" OFF)
 set(CMAKE_OSX_ARCHITECTURES "x86_64") #"i386;x86_64")
 
 message("-------------------------------------------------------")
-message(STATUS ${NP_PROJECT_NAME} " Version: " ${NP_VERSION})
+message(STATUS ${PROJECT_NAME} " Version: " ${NP_VERSION})
 message(STATUS "CMake Build Type: " ${CMAKE_BUILD_TYPE})
 message(STATUS "Create Documentation: " ${NP_DOCS})
 message(STATUS "Force 32bit: " ${FORCE_32BIT})

@@ -1,0 +1,12 @@
+[Desktop Entry]
+Name=Note Pages
+Version=0.5.0
+Comment=Notes and cross reference application
+TryExec=notepages
+Exec=notepages %F
+Terminal=false
+Icon=NotePages
+Type=Application
+Categories=;
+MimeType=application/x-notepages-npages;
+

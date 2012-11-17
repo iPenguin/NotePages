@@ -51,7 +51,7 @@ function(DOCBOOK_GENERATE format input version)
         
     elseif(format STREQUAL "pdf")
 
-            set(outputBaseName "${working}/${PROJECT_NAME}_User_Guide_${version}")
+            set(outputBaseName "${working}/${EXE_NAME}_User_Guide_${version}")
 
             set(xslFile "${CMAKE_CURRENT_SOURCE_DIR}/notePages.xsl")
 
@@ -85,7 +85,7 @@ function(DOCBOOK_GENERATE format input version)
                 COMMAND "${hhc}" "${working}\\htmlhelp.hhp"
                 WORKING_DIRECTORY "${working}"
                 OUTPUT_VARIABLE _output)
-            file(RENAME "${working}\\htmlhelp.chm" "${working}\\${PROJECT_NAME}.chm")
+            file(RENAME "${working}\\htmlhelp.chm" "${working}\\${EXE_NAME}.chm")
     else()
         message ( FATAL_ERROR "${format} is not supported by this cmake module. Please choose from html, pdf, pages, or htmlhelp" )
 
