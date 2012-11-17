@@ -66,28 +66,29 @@ On Windows run "Note Pages.exe" under the src/ folder
 
 You can build the documentation from the docbooks source files into the proper pdf, html files, etc. as needed.
 
-Use the NP_DOCS flag to turn on/off the document creation process:
+Use the NP_DOCS flag to turn on/off the documentation creation process:
 
     $ cmake ../ -DNP_DOCS=ON
 
 ### Creating an Installer ###
 
-You can build the packages/installers for the platform you're working on by completing the following steps. On Linux this will create a deb file, on Windows an NSIS installer with a wizard, and on Mac a dmg file.
+You can build the packages/installers for the platform you're working on by completing the following steps. On Linux this will create a deb file, on Windows an NSIS install wizard, and on Mac a dmg file.
 
 First build the software (see Building above) including the Documentation (see Documentation above). Then run the following command from the build directory:
 
 Linux/Mac OS X:
 
-    $ bin/release
+    $ ../bin/release
 
 Windows:
 
-In a cygwin window run:
-
+In a cygwin cmd window run:
+    
+    $ cd notePages/build/
     $ cmake ../ -DCMAKE_BUILD_TYPE=Release -DNP_DOCS=ON
     $ make
 
-In a cmd shell run:
+In a Windows cmd shell run:
 
-    $ cpack -G MSYS
+    $ cpack -G "MinGW Makefiles"
 
