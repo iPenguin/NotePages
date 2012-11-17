@@ -29,7 +29,7 @@
 	<key>CSResourcesFileMapped</key>
 	<true/>
         <key>LSApplicationCategoryType</key>
-        <string>public.app-category.graphics-design</string>
+        <string>public.app-category.productivity</string>
         <key>LSMinimumSystemVersion</key>
         <string>10.5.0</string>
 	<key>NSHumanReadableCopyright</key>
@@ -39,11 +39,10 @@
 		<dict>
 			<key>CFBundleTypeExtensions</key>
 			<array>
-				<string>pattern</string>
-				<string>set</string>
+				<string>npages</string>
 			</array>
 			<key>CFBundleTypeName</key>
-			<string>Pattern file</string>
+			<string>Note Pages file</string>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
 			<key>LSItemContentTypes</key>

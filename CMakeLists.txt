@@ -1,5 +1,10 @@
 cmake_minimum_required(VERSION 2.8)
-project("Note Pages")
+
+if(WIN32 OR APPLE)
+    project("Note Pages")
+else()
+    project("notepages")
+endif()
 
 set(NP_PROJECT_NAME "Note Pages")
 
@@ -52,7 +57,7 @@ message(STATUS ${NP_PROJECT_NAME} " Version: " ${NP_VERSION})
 message(STATUS "CMake Build Type: " ${CMAKE_BUILD_TYPE})
 message(STATUS "Create Documentation: " ${NP_DOCS})
 message(STATUS "Force 32bit: " ${FORCE_32BIT})
-message(STATUS "NP App Store version: " ${NP_APP})
+message(STATUS "App Store version: " ${NP_APP})
 message(STATUS "Unit Testing: " ${UNIT_TESTING})
 message(STATUS "Found Hunspell: " ${HUNSPELL_FOUND})
 message(STATUS "Doxygen Docs: " ${DOXYGEN})

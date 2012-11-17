@@ -1,7 +1,7 @@
 include(InstallRequiredSystemLibraries)
 
 
-set(PROJECT_DESCRIPTION  "Desktop notes application")
+set(PROJECT_DESCRIPTION  "A notes and cross reference application")
 set(PROJECT_VENDOR       "Brian Milco")
 set(PROJECT_LIFE         "2012")
 set(ORG_BASE_URL         "notePages.org")
