@@ -10,23 +10,11 @@ docbook_generate(html "${docbookFile}" "${NP_VERSION_SHORT}")
 message(STATUS "Createing documentation: pdf")
 docbook_generate(pdf "${docbookFile}" "${NP_VERSION_SHORT}")
 
+
 if(APPLE)
-    message(STATUS "Createing documentation: pages")
-    docbook_generate(pages "${docbookFile}" "${NP_VERSION_SHORT}")
+    include("apple.cmake")
 elseif(WIN32)
-    message(STATUS "Createing documentation: htmlhelp")
-    #docbook_generate(htmlhelp "${docbookFile}" "${NP_VERSION_SHORT}")
-endif()
-
-message("-------------------------------------------------------")
-
-if(WIN32)
-    install(FILES "${CMAKE_BINARY_DIR}/docs/pdf/${EXE_NAME}_User_Guide_${NP_VERSION_SHORT}.pdf" DESTINATION bin)
-    #install(FILES "${CMAKE_BINARY_DIR}/docs/htmlhelp/${EXE_NAME}.chm" DESTINATION docs)
-    install(FILES "${CMAKE_SOURCE_DIR}/docs/homepage.html" DESTINATION docs)
-
-elseif(APPLE)
-    install(FILES "${CMAKE_BINARY_DIR}/docs/pdf/${EXE_NAME}_User_Guide_${NP_VERSION_SHORT}.pdf" DESTINATION ../MacOS)
+    include("windows.cmake")
 else()
-    install(FILES "${CMAKE_BINARY_DIR}/docs/pdf/${PROJECT_NAME}_User_Guide_${NP_VERSION_SHORT}.pdf" DESTINATION share/${PROJECT_NAME})
+    include("linux.cmake")
 endif()
