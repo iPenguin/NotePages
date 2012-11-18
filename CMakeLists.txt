@@ -1,15 +1,11 @@
 cmake_minimum_required(VERSION 2.8)
 
-if(APPLE OR WIN32)
-    project("Note Pages")
+if(APPLE)
+    include("apple.cmake")
+elseif(WIN32)
+    include("windows.cmake")
 else()
-    project("notepages")
-endif()
-
-if(WIN32)
-    set(EXE_NAME "Note_Pages")
-else()
-    set(EXE_NAME ${PROJECT_NAME})
+    include("linux.cmake")
 endif()
 
 # Appends the cmake/modules path to MAKE_MODULE_PATH variable...
@@ -51,7 +47,7 @@ option(NP_APP "Create an apple app store version" OFF)
 set(CMAKE_OSX_ARCHITECTURES "x86_64") #"i386;x86_64")
 
 message("-------------------------------------------------------")
-message(STATUS ${PROJECT_NAME} " Version: " ${NP_VERSION})
+message(STATUS ${PROJECT_NAME} " version: " ${NP_VERSION})
 message(STATUS "CMake Build Type: " ${CMAKE_BUILD_TYPE})
 message(STATUS "Create Documentation: " ${NP_DOCS})
 message(STATUS "Force 32bit: " ${FORCE_32BIT})
@@ -66,29 +62,27 @@ if(FORCE_32BIT)
     set(extra_link_flags "-m elf_i386")
 endif()
 
-set(CMAKE_C_FLAGS "${extra_build_flags} -g -gdwarf-2 -W -Wall") #-ansi -pedantic
+set(CMAKE_C_FLAGS "${build_flags} ${extra_build_flags}") #-ansi -pedantic
 set(CMAKE_CXX_FLAGS ${CMAKE_C_FLAGS})
 set(CMAKE_EXE_LINKER_FLAGS " ${CMAKE_EXE_LINKER_FLAGS}")
 
-set(CMAKE_C_FLAGS_DEBUG "${extra_build_flags} -g -gdwarf-2 -W -Wall")
+set(CMAKE_C_FLAGS_DEBUG "${build_flags_debug} ${extra_build_flags}")
 set(CMAKE_CXX_FLAGS_DEBUG ${CMAKE_C_FLAGS_DEBUG})
 set(CMAKE_EXE_LINKER_FLAGS_DEBUG "${extra_link_flags} ${CMAKE_EXE_LINKER_FLAGS}")
 
-set(CMAKE_C_FLAGS_RELEASE "${extra_build_flags} -gdwarf-2 -W -Wall -O2 -s")
+set(CMAKE_C_FLAGS_RELEASE "${build_flags_release} ${extra_build_flags}")
 set(CMAKE_CXX_FLAGS_RELEASE ${CMAKE_C_FLAGS_RELEASE})
 set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${extra_link_flags} ${CMAKE_EXE_LINKER_FLAGS}")
 
-set(CMAKE_C_FLAGS_PROFILE "${extra_build_flags} -g -gdwarf-2 -pg -W -Wall")
+set(CMAKE_C_FLAGS_PROFILE "${build_flags_profile} ${extra_build_flags}")
 set(CMAKE_CXX_FLAGS_PROFILE ${CMAKE_C_FLAGS_PROFILE})
 set(CMAKE_EXE_LINKER_FLAGS_PROFILE "-pg " ${CMAKE_EXE_LINKER_FLAGS})
 
 include_directories(${QT_INCLUDES} ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
 
 #More info see: http://cmake.org/cmake/help/cmake2.6docs.html#module:FindQt4
-if(WIN32)
-    set(QT_USE_QTMAIN true)
-endif()
 
+set(QT_USE_QTMAIN true)
 set(QT_USE_QTSVG true)
 set(QT_USE_QTNETWORK true)
 include(${QT_USE_FILE})
@@ -98,11 +92,57 @@ include(${QT_USE_FILE})
 
 add_definitions(${QT_DEFINITIONS})
 
-set(PRJ_NAME "notePages")
 ###################################################################################
-#CPack includes to create installers
+#CPack configuration
 ###################################################################################
-include("installers.cmake")
+include(InstallRequiredSystemLibraries)
+
+
+set(PROJECT_DESCRIPTION  "A notes and cross reference application")
+set(PROJECT_VENDOR       "Brian Milco")
+set(PROJECT_LIFE         "2012")
+set(ORG_BASE_URL         "notePages.org")
+set(PROJECT_CONTACT      "support@${ORG_BASE_URL}")
+set(ORG_CONTACT          "http://${ORG_BASE_URL}/contact")
+set(ORG_DOWNLOAD         "http://${ORG_BASE_URL}/downloads")
+set(ORG_WEBSITE          "www.${ORG_BASE_URL}")
+set(PROJECT_VERSION      "${NP_VERSION_SHORT}")
+set(PROJECT_COPYRIGHT    "Copyright (c) ${PROJECT_LIFE} ${PROJECT_VENDOR}")
+set(PROJECT_MACOSX_ICON  "${PROJECT_NAME}.icns")
+
+
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY ${PROJECT_DESCRIPTION})
+set(CPACK_PACKAGE_VENDOR ${PROJECT_VENDOR})
+set(CPACK_PACKAGE_VERSION "${PROJECT_VERSION}")
+set(CPACK_PACKAGE_VERSION_MAJOR ${NP_VERSION_MAJOR})
+set(CPACK_PACKAGE_VERSION_MINOR ${NP_VERSION_MINOR})
+set(CPACK_PACKAGE_VERSION_PATCH ${NP_VERSION_PATCH})
+set(CPACK_PACKAGE_CONTACT ${PROJECT_CONTACT})
+set(CPACK_PACKAGE_EXECUTABLES "${PROJECT_NAME}")
+set(CPACK_PACKAGE_INSTALL_DIRECTORY "${PROJECT_NAME}")
+
+#FIXME: use the FindDoxygen.cmake module.
+if(DOXYGEN)
+    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules/Doxyfile.in
+                ${CMAKE_BINARY_DIR}/Doxyfile)
+    execute_process(
+                COMMAND "/usr/bin/doxygen" "${CMAKE_BINARY_DIR}/Doxyfile"
+                WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
+                OUTPUT_VARIABLE _output)
+endif()
+
+
+SET(plugin_dest_dir bin)
+SET(qtconf_dest_dir bin)
+SET(APPS "@CMAKE_INSTALL_PREFIX@/bin/${PROJECT_NAME}")
+
+
+set(CPACK_BINARY_DRAGNDROP ON)
+include(CPack)
+
+###################################################################################
+# end cpack configuration
+###################################################################################
 
 add_subdirectory(src)
 
