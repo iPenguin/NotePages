@@ -1,13 +1,3 @@
-project("notepages")
-
-set(EXE_NAME ${PROJECT_NAME})
-
-set(build_flags "-g -ggdb -W -Wall")
-set(build_flags_debug "-g -ggdb -W -Wall")
-set(build_flags_release "-ggdb -W -Wall -O2 -s")
-set(build_flags_profile "-g -ggdb -pg -W -Wall")
-
-
 ###################################################################################
 # cpack information
 ###################################################################################

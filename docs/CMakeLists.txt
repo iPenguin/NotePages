@@ -6,9 +6,9 @@ configure_file(${CMAKE_SOURCE_DIR}/docs/index.docbook.in
 set(docbookFile "${CMAKE_CURRENT_BINARY_DIR}/index.docbook")
 
 message(STATUS "Createing documentation: html")
-docbook_generate(html "${docbookFile}" "${NP_VERSION_SHORT}")
+docbook_generate(html "${docbookFile}" "${VERSION_SHORT}")
 message(STATUS "Createing documentation: pdf")
-docbook_generate(pdf "${docbookFile}" "${NP_VERSION_SHORT}")
+docbook_generate(pdf "${docbookFile}" "${VERSION_SHORT}")
 
 
 if(APPLE)

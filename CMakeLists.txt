@@ -1,12 +1,34 @@
 cmake_minimum_required(VERSION 2.8)
 
 if(APPLE)
-    include("apple.cmake")
+    project("Note Pages")
+
+    set(EXE_NAME ${PROJECT_NAME})
+
+    set(build_flags "-g -gdwarf-2 -W -Wall")
+    set(build_flags_debug "-g -gdwarf-2 -W -Wall")
+    set(build_flags_release "-gdwarf-2 -W -Wall -O2")
+    set(build_flags_profile "-g -gdwarf-2 -pg -W -Wall")
 elseif(WIN32)
-    include("windows.cmake")
+    project("Note Pages")
+
+    set(EXE_NAME "Note_Pages")
+
+    set(build_flags "-g -ggdb -W -Wall")
+    set(build_flags_debug "-g -ggdb -W -Wall")
+    set(build_flags_release "-ggdb -W -Wall -O2 -s")
+    set(build_flags_profile "-g -ggdb -pg -W -Wall")
 else()
-    include("linux.cmake")
+    project("notepages")
+
+    set(EXE_NAME ${PROJECT_NAME})
+
+    set(build_flags "-g -ggdb -W -Wall")
+    set(build_flags_debug "-g -ggdb -W -Wall")
+    set(build_flags_release "-ggdb -W -Wall -O2 -s")
+    set(build_flags_profile "-g -ggdb -pg -W -Wall")
 endif()
+
 
 # Appends the cmake/modules path to MAKE_MODULE_PATH variable...
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules ${CMAKE_MODULE_PATH})
@@ -27,13 +49,13 @@ include(FindHunSpell)
 # Make a version file containing the current version pulled from git.
 #
 include(GetGitRevisionDescription)
-git_describe(NP_VERSION --tags --dirty=-dirty)
+git_describe(VERSION --tags --dirty=-dirty)
 
-string(REGEX REPLACE "^v([0-9]+)\\..*" "\\1" NP_VERSION_MAJOR "${NP_VERSION}")
-string(REGEX REPLACE "^v[0-9]+\\.([0-9]+).*" "\\1" NP_VERSION_MINOR "${NP_VERSION}")
-string(REGEX REPLACE "^v[0-9]+\\.[0-9]+\\.([0-9]+).*" "\\1" NP_VERSION_PATCH "${NP_VERSION}")
-string(REGEX REPLACE "^v[0-9]+\\.[0-9]+\\.[0-9]+(.*)" "\\1" NP_VERSION_SHA1 "${NP_VERSION}")
-set(NP_VERSION_SHORT "${NP_VERSION_MAJOR}.${NP_VERSION_MINOR}.${NP_VERSION_PATCH}")
+string(REGEX REPLACE "^v([0-9]+)\\..*" "\\1" VERSION_MAJOR "${VERSION}")
+string(REGEX REPLACE "^v[0-9]+\\.([0-9]+).*" "\\1" VERSION_MINOR "${VERSION}")
+string(REGEX REPLACE "^v[0-9]+\\.[0-9]+\\.([0-9]+).*" "\\1" VERSION_PATCH "${VERSION}")
+string(REGEX REPLACE "^v[0-9]+\\.[0-9]+\\.[0-9]+(.*)" "\\1" VERSION_SHA1 "${VERSION}")
+set(VERSION_SHORT "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules/version.cpp.in
                 ${CMAKE_CURRENT_BINARY_DIR}/version.cpp)
@@ -45,15 +67,15 @@ find_package(Qt4 REQUIRED)
 
 option(UNIT_TESTING  "Build the test libraries for this software" OFF)
 option(FORCE_32BIT "Force 32-bit builds when cross compiling with distcc (needed for 64-bit compile nodes)" OFF)
-option(DOCUMENTATION "Create docbook documentation" OFF)
+option(DOCS "Create docbook documentation" OFF)
 option(DOXYGEN "Create Doxygen documentation" OFF)
 option(APP_STORE "Create an Apple App Store version - WIP" OFF)
 set(CMAKE_OSX_ARCHITECTURES "x86_64") #"i386;x86_64")
 
 message("-------------------------------------------------------")
-message(STATUS ${PROJECT_NAME} ": " ${NP_VERSION})
+message(STATUS ${PROJECT_NAME} ": " ${VERSION})
 message(STATUS "CMake Build Type: " ${CMAKE_BUILD_TYPE})
-message(STATUS "Documentation:    " ${DOCUMENTATION})
+message(STATUS "Docs:             " ${DOCS})
 message(STATUS "Force 32bit:      " ${FORCE_32BIT})
 message(STATUS "App Store:        " ${APP_STORE})
 message(STATUS "Unit Testing:     " ${UNIT_TESTING})
@@ -110,7 +132,7 @@ set(PROJECT_CONTACT      "support@${ORG_BASE_URL}")
 set(ORG_CONTACT          "http://${ORG_BASE_URL}/contact")
 set(ORG_DOWNLOAD         "http://${ORG_BASE_URL}/downloads")
 set(ORG_WEBSITE          "www.${ORG_BASE_URL}")
-set(PROJECT_VERSION      "${NP_VERSION_SHORT}")
+set(PROJECT_VERSION      "${VERSION_SHORT}")
 set(PROJECT_COPYRIGHT    "Copyright (c) ${PROJECT_LIFE} ${PROJECT_VENDOR}")
 set(PROJECT_MACOSX_ICON  "${PROJECT_NAME}.icns")
 
@@ -118,12 +140,13 @@ set(PROJECT_MACOSX_ICON  "${PROJECT_NAME}.icns")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY ${PROJECT_DESCRIPTION})
 set(CPACK_PACKAGE_VENDOR ${PROJECT_VENDOR})
 set(CPACK_PACKAGE_VERSION "${PROJECT_VERSION}")
-set(CPACK_PACKAGE_VERSION_MAJOR ${NP_VERSION_MAJOR})
-set(CPACK_PACKAGE_VERSION_MINOR ${NP_VERSION_MINOR})
-set(CPACK_PACKAGE_VERSION_PATCH ${NP_VERSION_PATCH})
+set(CPACK_PACKAGE_VERSION_MAJOR ${VERSION_MAJOR})
+set(CPACK_PACKAGE_VERSION_MINOR ${VERSION_MINOR})
+set(CPACK_PACKAGE_VERSION_PATCH ${VERSION_PATCH})
 set(CPACK_PACKAGE_CONTACT ${PROJECT_CONTACT})
 set(CPACK_PACKAGE_EXECUTABLES "${PROJECT_NAME}")
 set(CPACK_PACKAGE_INSTALL_DIRECTORY "${PROJECT_NAME}")
+#set(CPACK_PACKAGE_ICON "${CMAKE_CURRENT_SOURCE_DIR}/images/")  # for the mounted disk image icon.
 
 #FIXME: use the FindDoxygen.cmake module.
 if(DOXYGEN)
@@ -146,9 +169,18 @@ include(CPack)
 # end cpack configuration
 ###################################################################################
 
+if(APPLE)
+    include("apple.cmake")
+elseif(WIN32)
+    include("windows.cmake")
+else()
+    include("linux.cmake")
+endif()
+
+set(CPACK_BUNDLE_NAME "${PROJECT_NAME}")
 add_subdirectory(src)
 
-if(DOCUMENTATION)
+if(DOCS)
     add_subdirectory(docs)
 endif()
 

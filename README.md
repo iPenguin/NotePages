@@ -6,7 +6,7 @@ Note Pages organizes your notes and images for you. It makes it easy for you to 
 Note Pages is written in C++/Qt and supports the following platforms:
 
 * Windows XP, Vista, 7
-* Mac OS X 10.5 -10.7
+* Mac OS X 10.6+
 * Linux
 
 Use Cases
