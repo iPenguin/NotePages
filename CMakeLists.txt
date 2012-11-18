@@ -23,8 +23,11 @@ endif()
 set (HUNSPELL_FIND_QUIETLY TRUE)
 include(FindHunSpell)
 
+################################################################################################
+# Make a version file containing the current version pulled from git.
+#
 include(GetGitRevisionDescription)
-git_describe(NP_VERSION --tags --dirty=-working)
+git_describe(NP_VERSION --tags --dirty=-dirty)
 
 string(REGEX REPLACE "^v([0-9]+)\\..*" "\\1" NP_VERSION_MAJOR "${NP_VERSION}")
 string(REGEX REPLACE "^v[0-9]+\\.([0-9]+).*" "\\1" NP_VERSION_MINOR "${NP_VERSION}")
@@ -35,26 +38,27 @@ set(NP_VERSION_SHORT "${NP_VERSION_MAJOR}.${NP_VERSION_MINOR}.${NP_VERSION_PATCH
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules/version.cpp.in
                 ${CMAKE_CURRENT_BINARY_DIR}/version.cpp)
 set(np_version "${CMAKE_CURRENT_BINARY_DIR}/version.cpp")
+################################################################################################
 
 find_package(Qt4 REQUIRED)
 #find_package(Qt4 COMPONENTS QTCORE QTGUI)
 
 option(UNIT_TESTING  "Build the test libraries for this software" OFF)
 option(FORCE_32BIT "Force 32-bit builds when cross compiling with distcc (needed for 64-bit compile nodes)" OFF)
-option(NP_DOCS "Create docbook documentation" OFF)
+option(DOCUMENTATION "Create docbook documentation" OFF)
 option(DOXYGEN "Create Doxygen documentation" OFF)
-option(NP_APP "Create an apple app store version" OFF)
+option(APP_STORE "Create an Apple App Store version - WIP" OFF)
 set(CMAKE_OSX_ARCHITECTURES "x86_64") #"i386;x86_64")
 
 message("-------------------------------------------------------")
-message(STATUS ${PROJECT_NAME} " version: " ${NP_VERSION})
+message(STATUS ${PROJECT_NAME} ": " ${NP_VERSION})
 message(STATUS "CMake Build Type: " ${CMAKE_BUILD_TYPE})
-message(STATUS "Create Documentation: " ${NP_DOCS})
-message(STATUS "Force 32bit: " ${FORCE_32BIT})
-message(STATUS "App Store version: " ${NP_APP})
-message(STATUS "Unit Testing: " ${UNIT_TESTING})
-message(STATUS "Found Hunspell: " ${HUNSPELL_FOUND})
-message(STATUS "Doxygen Docs: " ${DOXYGEN})
+message(STATUS "Documentation:    " ${DOCUMENTATION})
+message(STATUS "Force 32bit:      " ${FORCE_32BIT})
+message(STATUS "App Store:        " ${APP_STORE})
+message(STATUS "Unit Testing:     " ${UNIT_TESTING})
+message(STATUS "Hunspell:         " ${HUNSPELL_FOUND})
+message(STATUS "Doxygen:          " ${DOXYGEN})
 message("-------------------------------------------------------")
 
 if(FORCE_32BIT)
@@ -64,7 +68,7 @@ endif()
 
 set(CMAKE_C_FLAGS "${build_flags} ${extra_build_flags}") #-ansi -pedantic
 set(CMAKE_CXX_FLAGS ${CMAKE_C_FLAGS})
-set(CMAKE_EXE_LINKER_FLAGS " ${CMAKE_EXE_LINKER_FLAGS}")
+set(CMAKE_EXE_LINKER_FLAGS "${extra_link_flags} ${CMAKE_EXE_LINKER_FLAGS}")
 
 set(CMAKE_C_FLAGS_DEBUG "${build_flags_debug} ${extra_build_flags}")
 set(CMAKE_CXX_FLAGS_DEBUG ${CMAKE_C_FLAGS_DEBUG})
@@ -76,7 +80,7 @@ set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${extra_link_flags} ${CMAKE_EXE_LINKER_FLAGS
 
 set(CMAKE_C_FLAGS_PROFILE "${build_flags_profile} ${extra_build_flags}")
 set(CMAKE_CXX_FLAGS_PROFILE ${CMAKE_C_FLAGS_PROFILE})
-set(CMAKE_EXE_LINKER_FLAGS_PROFILE "-pg " ${CMAKE_EXE_LINKER_FLAGS})
+set(CMAKE_EXE_LINKER_FLAGS_PROFILE "-pg ${extra_link_flags} ${CMAKE_EXE_LINKER_FLAGS}")
 
 include_directories(${QT_INCLUDES} ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
 
@@ -131,11 +135,9 @@ if(DOXYGEN)
                 OUTPUT_VARIABLE _output)
 endif()
 
-
-SET(plugin_dest_dir bin)
-SET(qtconf_dest_dir bin)
-SET(APPS "@CMAKE_INSTALL_PREFIX@/bin/${PROJECT_NAME}")
-
+set(plugin_dest_dir bin)
+set(qtconf_dest_dir bin)
+set(APPS "@CMAKE_INSTALL_PREFIX@/bin/${PROJECT_NAME}")
 
 set(CPACK_BINARY_DRAGNDROP ON)
 include(CPack)
@@ -146,7 +148,7 @@ include(CPack)
 
 add_subdirectory(src)
 
-if(NP_DOCS)
+if(DOCUMENTATION)
     add_subdirectory(docs)
 endif()
 

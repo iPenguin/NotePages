@@ -22,6 +22,6 @@ install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME} DESTINATION ../MacO
             OUTPUT_VARIABLE _output)
     " COMPONENT Runtime)
 
-    if(NP_APP)
+    if(APP_STORE)
         set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_DEFINITIONS "APPLE_APP_STORE=1")
     endif()

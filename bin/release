@@ -22,13 +22,13 @@
 #This script manages all the flags and commands needed to create installers for a new release
 #that will actually work on an end users computer.
 
-FLAGS="-DNP_APP=OFF"
+FLAGS="-DAPP_STORE=OFF"
 
 while getopts ":a" opt; do
   case $opt in
     a)
       echo "Apple Mac app store release"
-      FLAGS="-DNP_APP=ON"
+      FLAGS="-DAPP_STORE=ON"
       ;;
     \?)
       echo "Invalid option: -$OPTARG" >&2
@@ -48,14 +48,14 @@ if [ $PLATFORM == "Darwin" ]; then
     mkdir -p ~/notePages/build
     cd ~/notePages/build
 
-    cmake .. -DNP_DOCS=ON -DCMAKE_BUILD_TYPE=Release $FLAGS && make && cpack -G Bundle
+    cmake .. -DDOCUMENTATION=ON -DCMAKE_BUILD_TYPE=Release $FLAGS && make && cpack -G Bundle
 
 elif [ $PLATFORM == "Linux" ]; then
     
     mkdir -p ~/notePages/build
     cd ~/notePages/build
 
-    cmake .. -DNP_DOCS=ON -DCMAKE_BUILD_TYPE=Release $FLAGS && make && cpack
+    cmake .. -DDOCUMENTATION=ON -DCMAKE_BUILD_TYPE=Release $FLAGS && make && cpack
 elif [ $PLATFORM == "Cygwin" ]; then
     print "TODO: Windows"
 else

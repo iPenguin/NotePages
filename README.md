@@ -75,9 +75,9 @@ On Windows run "Note Pages.exe" under the src/ folder
 
 You can build the documentation from the docbooks source files into the proper pdf, html files, etc. as needed.
 
-Use the NP_DOCS flag to turn on/off the documentation creation process:
+Use the DOCUMENTATION flag to turn on/off the documentation creation process:
 
-    $ cmake ../ -DNP_DOCS=ON
+    $ cmake ../ -DDOCUMENTATION=ON
 
 ### Creating an Installer ###
 
@@ -94,7 +94,7 @@ Windows:
 In a cygwin cmd window run:
     
     $ cd notePages/build/
-    $ cmake ../ -DCMAKE_BUILD_TYPE=Release -DNP_DOCS=ON
+    $ cmake ../ -DCMAKE_BUILD_TYPE=Release -DDOCUMENTATION=ON
     $ make
 
 In a Windows cmd shell run:
