@@ -47,11 +47,17 @@ function(DOCBOOK_GENERATE format input version)
     elseif(WIN32)
         set(xsltproc "xsltproc")
         set(fop "fop.cmd")
-        set(docbookBasePath "/usr/share/xml/docbook/stylesheet/docbook-xsl-ns")
+        #set(docbookBasePath "/usr/share/xml/docbook/stylesheet/docbook-xsl-ns")
+        set(docbookBasePath "C:/cygwin/usr/share/xml/docbook/stylesheet/docbook-xsl-ns")
         set(hhc "hhc")
     else()
         set(fop "/usr/bin/fop")
     endif()
+
+    set(DOCBOOK_XSL_NS_PATH ${docbookBasePath})
+
+    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/notePages.xsl.in
+                ${CMAKE_CURRENT_BINARY_DIR}/notePages.xsl)
 
     if(format STREQUAL "html")
             set(xslFile "${docbookBasePath}/html/docbook.xsl")
@@ -68,7 +74,7 @@ function(DOCBOOK_GENERATE format input version)
 
             set(outputBaseName "${working}/${EXE_NAME}_User_Guide_${version}")
 
-            set(xslFile "${CMAKE_CURRENT_SOURCE_DIR}/notePages.xsl")
+            set(xslFile "${CMAKE_CURRENT_BINARY_DIR}/notePages.xsl")
 
             execute_process(
                 COMMAND "${xsltproc}" -o "${outputBaseName}.fo" --stringparam fop1.extensions 1 "${xslFile}" "${input}"

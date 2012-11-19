@@ -10,9 +10,9 @@
     id="note-pages-user-guide" lang="en" version="5.0">
 
     <bookinfo>
-        <title>The Official @NP_PROJECT_NAME@ User Guide</title>
+        <title>The Official @PROJECT_NAME@ User Guide</title>
         <subtitle>For Version @PROJECT_VERSION@</subtitle>
-        <productname>@NP_PROJECT_NAME@</productname>
+        <productname>@PROJECT_NAME@</productname>
         <productnumber>@PROJECT_VERSION@</productnumber>
         <edition>@PROJECT_VERSION@</edition>
         <copyright>
@@ -34,8 +34,8 @@
         </author>
         <abstract>
             <para>
-                <application>@NP_PROJECT_NAME@</application> 
-                This document will describe the features and abilities of <application>@NP_PROJECT_NAME@</application>.
+                <application>@PROJECT_NAME@</application>
+                This document will describe the features and abilities of <application>@PROJECT_NAME@</application>.
             </para>
         </abstract>
 
@@ -62,7 +62,7 @@
     </chapter>
     
     <chapter id="quick-guide">
-        <title>Quick Guide to Using @NP_PROJECT_NAME@</title>
+        <title>Quick Guide to Using @PROJECT_NAME@</title>
         <para></para>
     </chapter>
 
@@ -114,7 +114,7 @@
         </sect1>
         
         <section id="helpAbout">
-            <title>About @NP_PROJECT_NAME@</title>
+            <title>About @PROJECT_NAME@</title>
             <screenshot>
                 <mediaobject>
                     <imageobject>
@@ -123,8 +123,8 @@
                     <caption>The about this application dialog</caption>
                 </mediaobject>
             </screenshot>
-            <para>The About dialog can be accessed by going to the <menuchoice><guimenu>Help</guimenu><guimenuitem>About @NP_PROJECT_NAME@</guimenuitem></menuchoice> option,
-            or on the Mac by going to <menuchoice><guimenu>@NP_PROJECT_NAME@</guimenu><guimenuitem>About @NP_PROJECT_NAME@</guimenuitem></menuchoice>.
+            <para>The About dialog can be accessed by going to the <menuchoice><guimenu>Help</guimenu><guimenuitem>About @PROJECT_NAME@</guimenuitem></menuchoice> option,
+            or on the Mac by going to <menuchoice><guimenu>@PROJECT_NAME@</guimenu><guimenuitem>About @PROJECT_NAME@</guimenuitem></menuchoice>.
             </para>
             <para>This dialog contains the full version string and build date, copyright notice, description,
                 dedication and license information. The license information is required to use the software.

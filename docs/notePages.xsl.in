@@ -5,7 +5,7 @@
                               xmlns:fo="http://www.w3.org/1999/XSL/Format"
                               xmlns:d="http://docbook.org/ns/docbook">
 
-    <xsl:import href="/usr/share/xml/docbook/stylesheet/docbook-xsl-ns/fo/docbook.xsl" />
+    <xsl:import href="@DOCBOOK_XSL_NS_PATH@/fo/docbook.xsl" />
 
     <xsl:template name="book.titlepage.recto">
 

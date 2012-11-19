@@ -16,7 +16,7 @@ elseif(WIN32)
 
     set(build_flags "-g -ggdb -W -Wall")
     set(build_flags_debug "-g -ggdb -W -Wall")
-    set(build_flags_release "-ggdb -W -Wall -O2 -s")
+    set(build_flags_release "-W -Wall -O2 -s")
     set(build_flags_profile "-g -ggdb -pg -W -Wall")
 else()
     project("notepages")
@@ -144,9 +144,9 @@ set(CPACK_PACKAGE_VERSION_MAJOR ${VERSION_MAJOR})
 set(CPACK_PACKAGE_VERSION_MINOR ${VERSION_MINOR})
 set(CPACK_PACKAGE_VERSION_PATCH ${VERSION_PATCH})
 set(CPACK_PACKAGE_CONTACT ${PROJECT_CONTACT})
-set(CPACK_PACKAGE_EXECUTABLES "${PROJECT_NAME}")
+set(CPACK_PACKAGE_EXECUTABLES "${PROJECT_NAME};${PROJECT_NAME}")
 set(CPACK_PACKAGE_INSTALL_DIRECTORY "${PROJECT_NAME}")
-#set(CPACK_PACKAGE_ICON "${CMAKE_CURRENT_SOURCE_DIR}/images/")  # for the mounted disk image icon.
+#set(CPACK_PACKAGE_ICON "")  # for the mounted disk image icon.
 
 set(plugin_dest_dir bin)
 set(qtconf_dest_dir bin)
