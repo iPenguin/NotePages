@@ -148,6 +148,25 @@ set(CPACK_PACKAGE_EXECUTABLES "${PROJECT_NAME}")
 set(CPACK_PACKAGE_INSTALL_DIRECTORY "${PROJECT_NAME}")
 #set(CPACK_PACKAGE_ICON "${CMAKE_CURRENT_SOURCE_DIR}/images/")  # for the mounted disk image icon.
 
+set(plugin_dest_dir bin)
+set(qtconf_dest_dir bin)
+set(APPS "@CMAKE_INSTALL_PREFIX@/bin/${PROJECT_NAME}")
+
+if(APPLE)
+    include("apple.cmake")
+elseif(WIN32)
+    include("windows.cmake")
+else()
+    include("linux.cmake")
+endif()
+
+#set(CPACK_BINARY_DRAGNDROP ON)
+include(CPack)
+
+###################################################################################
+# end cpack configuration
+###################################################################################
+
 #FIXME: use the FindDoxygen.cmake module.
 if(DOXYGEN)
     configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules/Doxyfile.in
@@ -158,26 +177,6 @@ if(DOXYGEN)
                 OUTPUT_VARIABLE _output)
 endif()
 
-set(plugin_dest_dir bin)
-set(qtconf_dest_dir bin)
-set(APPS "@CMAKE_INSTALL_PREFIX@/bin/${PROJECT_NAME}")
-
-set(CPACK_BINARY_DRAGNDROP ON)
-include(CPack)
-
-###################################################################################
-# end cpack configuration
-###################################################################################
-
-if(APPLE)
-    include("apple.cmake")
-elseif(WIN32)
-    include("windows.cmake")
-else()
-    include("linux.cmake")
-endif()
-
-set(CPACK_BUNDLE_NAME "${PROJECT_NAME}")
 add_subdirectory(src)
 
 if(DOCS)

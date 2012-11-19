@@ -8,13 +8,6 @@ target_link_libraries(${EXE_NAME} ${QT_LIBRARIES})
 install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME} DESTINATION ../MacOS)
 
 install(CODE "
-    file(COPY \"@CMAKE_BINARY_DIR@/docs/pdf/@PROJECT_NAME@_User_Guide_@VERSION_SHORT@.pdf\"
-            DESTINATION \"@CMAKE_BINARY_DIR@/_CPack_Packages/Darwin/Bundle/@PROJECT_NAME@-@VERSION_SHORT@\")
-    file(RENAME \"@CMAKE_BINARY_DIR@/_CPack_Packages/Darwin/Bundle/@PROJECT_NAME@-@VERSION_SHORT@/@PROJECT_NAME@_User_Guide_@VERSION_SHORT@.pdf\"
-    \"@CMAKE_BINARY_DIR@/_CPack_Packages/Darwin/Bundle/@PROJECT_NAME@-@VERSION_SHORT@/User Guide.pdf\")
-    " COMPONENT Runtime)
-
-install(CODE "
     execute_process(
         COMMAND \"/usr/bin/macdeployqt\"
         \"@CMAKE_BINARY_DIR@/_CPack_Packages/Darwin/Bundle/@PROJECT_NAME@-@VERSION_SHORT@/@PROJECT_NAME@.app/\"

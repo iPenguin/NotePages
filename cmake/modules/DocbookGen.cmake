@@ -1,13 +1,28 @@
 #
+# Copyright (c) 2012 Brian C. Milco <bcmilco AT gmail DOT com>
+#
+#    This program is free software; you can redistribute it and/or
+#    modify it under the terms of the GNU General Public License
+#    as published by the Free Software Foundation; version 2
+#    of the License.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program; if not, write to the Free Software
+#    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+#
 # This file contains functions to generate documentaion from docbook files.
 # TODO: make sure that docbook-xsl-ns package is installed
-# by: Brian C. Milco <bcmilco@gmail.com>
 #
-#FORMATS:
-#html: generic html
-#pdf: a PDF
-#pages: Mac specific html help pages
-#htmlhelp: MS Windows specific html help pages
+# OUTPUT FORMATS:
+# html: generic html with a folder of images.
+# pdf: a PDF
+# pages: Mac specific html help pages
+# htmlhelp: MS Windows specific html help pages
 
 MACRO(MAKE_WINDOWS_PATH pathname)
   # An extra \\ escape is necessary to get a \ through CMake's processing.

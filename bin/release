@@ -44,14 +44,14 @@ if [ $PLATFORM == "Darwin" ]; then
     cd ~/notePages/build
 
     export SDKROOT=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk
-    cmake .. -DDOCUMENTATION=ON -DCMAKE_BUILD_TYPE=Release $FLAGS && make && cpack -G Bundle
+    cmake ../ -DDOCS=ON -DCMAKE_BUILD_TYPE=Release $FLAGS && make && cpack -G Bundle
 
 elif [ $PLATFORM == "Linux" ]; then
     
     mkdir -p ~/notePages/build
     cd ~/notePages/build
 
-    cmake .. -DDOCUMENTATION=ON -DCMAKE_BUILD_TYPE=Release $FLAGS && make && cpack
+    cmake .. -DDOCS=ON -DCMAKE_BUILD_TYPE=Release $FLAGS && make && cpack
 elif [ $PLATFORM == "Cygwin" ]; then
     print "TODO: Windows"
 else
