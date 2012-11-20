@@ -27,23 +27,26 @@ To build Note Pages you will need the following software installed on your compu
 
 *   To build the application
     *    cmake (<http://cmake.org/cmake/resources/software.html>)
-    *    Qt (<http://qt-project.org/downloads>)
+    *    QtSDK (<http://qt-project.org/downloads>)
+    *    Hunspell (<http://hunspell.sourceforge.net/>) - not implemented yet.
 
 *   To generate the documentation
     *    docbook-xsl-ns (<http://sourceforge.net/projects/docbook/files/docbook-xsl-ns/>)
     *    xsltproc
     *    fop (<http://xmlgraphics.apache.org/fop/download.html>)
 
-*   To create an installer for Windows
+*   To create an installer for **Windows**
     *   NSIS installer (<http://nsis.sourceforge.net/Download>)
 
-On Ubuntu run the following command to make sure you have installed all the programs you will need to build Note Pages and it's documentation:
+On Ubuntu run the following command to make sure you have installed all the programs you will need to build Note Pages and the documentation:
 
-    $ sudo apt-get install build-essential cmake fop xsltproc docbook-xsl-ns libservlet2.4-java
+    $ sudo apt-get install build-essential cmake fop xsltproc docbook-xsl-ns libservlet2.4-java libhunspell-dev
+
+I've put together some helpful scripts that can be used in the building process. You can copy the scripts in the bin/ directory into a bin folder in your $PATH (ie. ~/bin) and edit them as appropriate for your environment. Otherwise you can follow the instructions below.
 
 ### Compiling Note Pages ###
 
-Clone the repo to a folder called "notePages". On Windows use a cygwin cmd shell, on Linux and Mac you can use a native shell.
+Clone the repo to a folder called "notePages".
 
     $ cd notePages
     
@@ -51,53 +54,63 @@ Clone the repo to a folder called "notePages". On Windows use a cygwin cmd shell
     
     $ cd build
 
-On Linux and Mac:
+On **Linux** and **Mac**:
 
-    $ cmake ../
+    $ cmake ../ [-DDOCS=ON] [-DAPP_STORE=ON] [-DUNIT_TESTING=ON] [-DDOXYGEN=ON] [-DFORECE_32BIT=ON]
     $ make
+
+On **Windows**:
+     
+    $ cmake ../ -G "MinGW Makefiles"
+    $ mingw32-make    
+
+On **Linux** run ./src/notepages. 
+
+On **Mac** run "Note Pages" under the src/ folder. 
+
+On **Windows** run "Note Pages.exe" under the src/ folder.
+
+
+*    -DDOCS=ON
+ 
+    Generate the documentation from the docbooks source files. Based on the platform you're using different formats will be used.
+
+*    -DAPP_STORE=ON
     
-Make sure the PATH contains the folders containing the exe files for the tools you're going to use.
+    Experimental and incomplete! Compile and generate any changes needed to make the software compatible with the Mac OS X App Store.
+
+*    -DUNIT_TESTING=ON
+
+    Turn on and build the unit tests.
+
+*    -DDOXYGEN=ON
+
+    Turn on and generate the Doxygen files.
+
+*    -DFORECE_32BIT=ON
+
+    Pass the -m32 and related flags when building the software. Useful if you're building a 32bit version with distcc and you have 64bit nodes.
+
+On **Windows** make sure the PATH contains the folders containing the exe files for the tools you're going to use.
 Right click on "My Computer" and select Properties. 
 On the "Advanced" Tab click on "Environmental Variables" and edit the PATH system variable to include the appropriate paths.
-On Windows in a native cmd shell:
 
-    $ cmake ../ -G "MinGW Makefiles"
-    $ mingw32-make
-    
-On Linux run ./src/notepages
-
-On Mac run "Note Pages" under the src/ folder
-
-On Windows run "Note Pages.exe" under the src/ folder
-
-
-### Generating the Documentation ###
-
-You can build the documentation from the docbooks source files into the proper pdf, html files, etc. as needed.
-
-Use the DOCUMENTATION flag to turn on/off the documentation creation process:
-
-    $ cmake ../ -DDOCUMENTATION=ON
 
 ### Creating an Installer ###
 
-You can build the packages/installers for the platform you're working on by completing the following steps. On Linux this will create a deb file, on Windows an NSIS install wizard, and on Mac a dmg file.
+You can build the packages/installers for the platform you're working on by completing the following steps. On **Linux** this will create a deb file, on **Windows** an NSIS install wizard, and on **Mac** a dmg file.
 
-First build the software (see Building above) including the Documentation (see Documentation above). Then run the following command from the build directory:
+First build the software (see Building above) include the Documentation (using the -DDOCS=ON). Then run the following commands from the build directory:
 
-Linux/Mac OS X:
+**Linux**:
 
-    $ ../bin/release
+    $ cpack
 
-Windows:
+**Mac**:
 
-In a cygwin cmd window run:
-    
-    $ cd notePages/build/
-    $ cmake ../ -DCMAKE_BUILD_TYPE=Release -DDOCUMENTATION=ON
-    $ make
+    $ cpack -G Bundle
 
-In a Windows cmd shell run:
+**Windows**:
 
-    $ cpack -G "MinGW Makefiles"
+    $ cpack -G NSIS
 
