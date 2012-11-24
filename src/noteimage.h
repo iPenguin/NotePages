@@ -22,6 +22,9 @@
 #include <QGraphicsPixmapItem>
 #include "notecontent.h"
 
+/*!
+ * Images can be displayed on the Note Pages.
+ */
 class NoteImage : public QGraphicsPixmapItem, public NoteContent
 {
 public:
@@ -37,6 +40,7 @@ public:
     void setPos(const QPointF &pos);
 
     void setFile(QString f);
+    //! Load an image note from image data.
     void setImage(QByteArray imageData);
 
     void loadContent(QXmlStreamReader *stream);

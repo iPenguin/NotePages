@@ -30,11 +30,11 @@
 #include "arrow.h"
 #include "pageglobals.h"
 
-/*********************************************************
- * class NoteOptions:
+/*!
+ * \class NoteOptions
  * Draws the arrow item for editing the note.
  *
- *********************************************************/
+ */
 class NoteOptions : public QGraphicsRectItem
 {
 public:
@@ -47,11 +47,10 @@ public:
 };
 
 
-/*********************************************************
- * class Note:
+/*!
+ * \class Note
  * Draws the outline for the note, and contains the content class.
- *
- *********************************************************/
+ */
 class Note : public QObject, public QGraphicsItem
 {
     Q_OBJECT
@@ -92,7 +91,7 @@ public:
     void loadNote(QXmlStreamReader *stream, QString pagePath);
     void saveNote(QXmlStreamWriter *stream);
 
-    //perminantly delete the contents of the note.
+    //! Permanently delete the contents of the note.
     void deleteNote();
 
     void setTextEditMode(bool value);

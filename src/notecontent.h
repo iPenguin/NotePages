@@ -30,6 +30,10 @@
 #include "pageglobals.h"
 class Note;
 
+/*!
+ * \class NoteContent
+ * This class defines the interface for Content types. 
+ */
 class NoteContent
 {
     friend class NoteDocument;
@@ -40,14 +44,18 @@ public:
 
     virtual int contentType() const { return NoteType::Text; }
 
-    //short file name w/o the path.
+    //! Short file name w/o the path.
     virtual QString file() { return mFile; }
     virtual void setFile(QString file) { mFile = file; }
 
+    //! Output the text as html.
     virtual QString toHtml() { debug("unimplemented"); return ""; }
+    //! Set the text by passing a string of html.
     virtual void setHtml(const QString &html) { debug("unimplemented"); Q_UNUSED(html); }
+    //! Set if the user is in interactive text mode. 
     virtual void setTextEditMode(bool value) { debug("unimplemented"); Q_UNUSED(value); }
 
+    //! Create a file in the pagePath that contains \a imageData, and display it.
     virtual void setImage(QByteArray imageData) { debug("unimplemented"); Q_UNUSED(imageData); }
     virtual QPixmap toPixmap() { debug("unimplemented"); return QPixmap(); }
 
@@ -59,9 +67,12 @@ public:
     virtual void saveContent(QXmlStreamWriter *stream) = 0;
     virtual void deleteContent() = 0;
 
+    //! The context menu for this content type.
     QMenu* contextMenu() { return mContextMenu; }
 
+    //! The parent PageScene.
     PageScene* pageScene() { return mScene; }
+    //! The parent Note.
     Note* note() { return mNote; }
 
 protected:
@@ -71,7 +82,6 @@ protected:
 private:
     PageScene *mScene;
     Note *mNote;
-
 
 };
 

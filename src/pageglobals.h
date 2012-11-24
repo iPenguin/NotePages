@@ -16,9 +16,20 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 \*********************************************************************************************/
+/*!
+ * \file pageglobals.h
+ * Some basic information that is shared by all the content types and the page.
+ */
 #ifndef PAGEGLOBALS_H
 #define PAGEGLOBALS_H
 
+#include <qnamespace.h>
+
+/*!
+ * \namespace NoteType
+ * The NoteType namespace is used to define the types of notes that can exist on a Page,
+ * using the Id.
+ */
 namespace NoteType
 {
     enum Id { Text = Qt::UserRole + 10, Image, Document, Unknown = Qt::UserRole + 255 };

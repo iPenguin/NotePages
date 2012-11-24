@@ -25,10 +25,13 @@
 #include <qobject.h>
 
 class SettingsUi;
-/**
- * singleton class to supply general application-wide info to all classes.
- */
 
+/*!
+ * \class AppInfo
+ * Singleton class to supply general application-wide info to all classes.
+ * This class also contains some common dialogs like "Help" >> "About" because
+ * otherwise they won't be available for the Mac Menu Bar class.
+ */
 class AppInfo
 {
 public:
@@ -49,10 +52,12 @@ public:
     const QString appVersionShort;
     const QString appBuildInfo;
 
-    const QString liveUpdatePage;
-    const QString liveUpdatePageVals;
+    const QString liveUpdatePage; //!< Url to a webpage where you can get current version information.
+    const QString liveUpdatePageVals; //!< A string of the values needed to get the update information.
     
+    //! Globally available "Help" >> "About" dialog.
     void helpAbout();
+    //! Globally available "Tools" >> "Settings" dialog.
     void toolsSettings();    
 private:
     static AppInfo* mInstance;

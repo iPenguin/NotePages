@@ -40,11 +40,9 @@
 #include "noteimage.h"
 #include "notedocument.h"
 
-/*********************************************************
- *
- * functions for NoteOptions class.
- *
- *********************************************************/
+/*
+ * Functions for NoteOptions class.
+ */
 NoteOptions::NoteOptions(QGraphicsItem *parent, QGraphicsScene *scene)
     : QGraphicsRectItem(parent, scene)
 {
@@ -69,11 +67,9 @@ void NoteOptions::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
 
 
 
-/*********************************************************
- *
- * functions for Note class.
- *
- *********************************************************/
+/*
+ * Functions for Note class.
+ */
 Note::Note(NoteType::Id contentType, QGraphicsItem *parent, QGraphicsScene *scene)
     : QGraphicsItem(parent, scene),
       mSizeHandle(false),

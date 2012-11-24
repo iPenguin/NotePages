@@ -24,6 +24,10 @@
 
 #include "notecontent.h"
 
+/*!
+ * \class NoteDocumentName
+ * An interactive document name for NoteDocument.
+ */
 class NoteDocumentName : public QGraphicsTextItem
 {
 
@@ -54,7 +58,11 @@ private:
 
 };
 
-
+/*!
+ * Define a new content type for documents, this consists of an icon,
+ * a document name as defined by a NoteDocumentName, and the NoteOptions
+ * widget.
+ */
 class NoteDocument : public QGraphicsPixmapItem, public NoteContent
 {
 public:

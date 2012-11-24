@@ -35,6 +35,22 @@
 #include <QApplication>
 #include "mainwindow.h"
 
+/*!
+ * \class MacMenuBar
+ * This class contains the code needed to connect a persistent Mac Menu Bar object to the rest of the
+ * application.
+ Usage:
+
+ QApplication a(argc, argv);
+ 
+ new MacMenuBar();
+ 
+ MainWindow *mainWin = new MainWindow;
+ 
+ mainWin->show();
+ 
+ return a.exec();
+ */
 class MacMenuBar : public QObject
 {
     Q_OBJECT

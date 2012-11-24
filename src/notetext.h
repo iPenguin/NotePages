@@ -26,6 +26,11 @@
 
 class QTextCharFormat;
 
+/*!
+ * \class NoteText
+ * A rich text note that can be edited on the Page.
+ * 
+ */
 class NoteText : public QGraphicsTextItem, public NoteContent
 {
     Q_OBJECT

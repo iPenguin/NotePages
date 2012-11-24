@@ -24,7 +24,10 @@
 #include <QPointer>
 
 class Note;
-
+/*!
+ * \class Arrow
+ * This class draws the lines between Notes.
+ */
 class Arrow : public QGraphicsLineItem
 {
 public:

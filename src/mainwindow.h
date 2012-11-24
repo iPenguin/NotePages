@@ -37,16 +37,20 @@ namespace Ui {
     class MainWindow;
 }
 
+/*!
+ * The primary class for the application and the UI 
+ * including menus and tool bars.
+ */
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    //autoLoad automatically loads the default set of pages.
+    //! autoLoad automatically loads the default set of pages as defined in the settings.
     explicit MainWindow(bool autoLoad = true, QWidget *parent = 0);
     ~MainWindow();
 
-    //This function should mainly be called from the History class, for undo/redo.
+    //! This function should mainly be called from the History class, for undo/redo.
     void selectPage(int pageNumber);
 
 public slots:
@@ -66,9 +70,8 @@ private slots:
     void editCut();
     void editPaste();
 
+    //! Change the selected Page, and track them in the History.
     void pageSelected(QTreeWidgetItem *current, QTreeWidgetItem *previous);
-
-    void toolsSettings();
 
 //View Menu
     void viewFullScreen();
@@ -76,16 +79,22 @@ private slots:
 //Tools Menu
     void toolsConnect();
     void toolsCheckForUpdates();
+    void toolsSettings();
 
 //Help Menu
     void helpAbout();
-
+    
+    //! Add a Page to the Tree as the child of the currently selected item.
     void addNewPageTreeItem();
+    //! Remove Page from the tree and close the tab.
     void removePages();
 
+    //! Move a tree item up.
     void moveItemUp();
+    //! Move a tree item down.
     void moveItemDown();
 
+    //! Show the configure options for the tree items. 
     void configureItem();
 
     int currentMaxPageId();
@@ -93,13 +102,13 @@ private slots:
     int useNextPageId() { mCurrentMaxPageId++; return mCurrentMaxPageId; }
 
     void changeItem(QTreeWidgetItem *item, int column);
-
+    //! Load a Page from an npages:// link, and add it to the History.
     void loadPageFromLink(QString link);
 
 protected slots:
     void closeTab(int tabNumber);
 
-    //set zoom slider to the specified value.
+    //! Set zoom slider to the specified value.
     void updateZoomLevel(int percent);
     void zoomPage(int percent);
 
@@ -111,7 +120,7 @@ protected:
 
     void populateIconList();
 
-    //return the current tab as a Page, or 0 if no page.
+    //! Return the current tab as a Page, or 0 if no page.
     Page* currentPage();
 
 private slots:
@@ -136,10 +145,10 @@ private:
 
     QTreeWidgetItem* findPage(int pageNumber);
 
-    //update the titlebar, and other pointers to the current page.
+    //! Update the title bar, and other pointers to the current page.
     void setCurrentPage(int pageId);
 
-    //save page file.
+    //! Save page file.
     void saveFile(QString fileName);
 
     QTreeWidgetItem* loadPage(QDomElement element);
@@ -152,7 +161,7 @@ private:
 
     int mCurrentMaxPageId;
 
-    //A mapping of page_id to object.
+    //! A mapping of Page::id() to object.
     QMap <int, Page*> mPages;
 
     QToolButton *mAdd,
@@ -173,7 +182,7 @@ private:
 
     QUndoStack *mHistory;
 
-    //This is a temporary holder of information when loading files.
+    //! This is a temporary holder of information when loading files.
     QList<QTreeWidgetItem*> mExpandedItems;
 };
 
