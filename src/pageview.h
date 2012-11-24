@@ -21,6 +21,10 @@
 
 #include <QGraphicsView>
 
+/*!
+ * This class is an extension of the QGraphicsView class
+ * and includes some functions for easy scrolling and zooming.
+ */
 class PageView : public QGraphicsView
 {
     Q_OBJECT
@@ -28,13 +32,16 @@ public:
     explicit PageView(QWidget *parent = 0);
     ~PageView();
 
+    //! Zoom in increments of 5.
     void zoomIn();
+    //! Zoom out increments of 5.
     void zoomOut();
 
-    //zoom takes the mouseDelta which is usually in icrements of +/- 120;
+    //! zoom takes the mouseDelta which is usually in increments of +/- 120;
     void zoom(int mouseDelta);
     void zoomLevel(int percent);
 
+    //! Return the current zoom percentage.
     int zoomPercent() { return mZoomPercent; }
 
 signals:

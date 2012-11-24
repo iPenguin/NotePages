@@ -43,8 +43,14 @@ void PageView::mouseMoveEvent(QMouseEvent* event)
     int deltaX = 0;
     int deltaY = 0;
 
+    /*
+     * When the user drags objects on the scene scroll the view. 
+     */
     if(event->buttons() == Qt::LeftButton) {
 
+        /*
+         * Scroll horizontally if needed.
+         */
         if(event->pos().x() < 5) {
             int diff = horizontalScrollBar()->value() - horizontalScrollBar()->minimum();
             if(diff < deltaX)
@@ -62,6 +68,9 @@ void PageView::mouseMoveEvent(QMouseEvent* event)
 
         horizontalScrollBar()->setValue(horizontalScrollBar()->value() + deltaX);
 
+        /*
+         * Scroll vertically if needed.
+         */
         if(event->pos().y() < 5) {
             int diff = verticalScrollBar()->value() - verticalScrollBar()->minimum();
             if(diff < deltaY)
@@ -79,6 +88,9 @@ void PageView::mouseMoveEvent(QMouseEvent* event)
 
         verticalScrollBar()->setValue(verticalScrollBar()->value() + deltaY);
 
+        /*
+         * If we're not at the limits of the scrollbars update them.
+         */
         bool isHorizLimit = false;
         isHorizLimit = (horizontalScrollBar()->value() == horizontalScrollBar()->minimum()) ? true : isHorizLimit;
         isHorizLimit = (horizontalScrollBar()->value() == horizontalScrollBar()->maximum()) ? true : isHorizLimit;

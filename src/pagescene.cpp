@@ -326,6 +326,7 @@ Note* PageScene::createNewNote(int noteId, NoteType::Id type)
     } else { //create a new note.
         mCurMaxNoteId++;
         newId = mCurMaxNoteId;
+        //On text Notes allow the user to start typing automatically.
         n->setTextEditMode( (type == NoteType::Text ? true : false) );
     }
 

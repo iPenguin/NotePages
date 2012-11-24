@@ -407,6 +407,9 @@ void MainWindow::fileNew()
 
 void MainWindow::loadFile(QString folder)
 {
+    /*
+     * Load a new MainWindow if we're already working on a document.
+     */
     if(ui->pageTree->topLevelItemCount() > 0) {
         MainWindow *mw = new MainWindow(false);
         mw->loadFile(folder);

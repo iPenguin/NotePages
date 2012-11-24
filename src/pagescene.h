@@ -24,6 +24,11 @@
 
 class Note;
 
+/*!
+ * \class PageScene
+ * This class extends the QGraphicsScene class and includes code to
+ * handle Notes and Arrows.
+ */
 class PageScene : public QGraphicsScene
 {
     Q_OBJECT
@@ -31,25 +36,35 @@ class PageScene : public QGraphicsScene
 public:
     explicit PageScene(QObject *parent = 0);
     
+    //! Return the path where the files of this page are saved.
     QString pagePath() { return mPagePath; }
+    //! Set the path where the files of this page are saved.
     void setPagePath(QString pp) { mPagePath = pp; }
 
     void incrementMaxNoteId() { mCurMaxNoteId++; }
     void setDrawLines(bool state) { mDrawLines = state; }
 
+    //! Use this NoteType when creating a new Note.
     void setDefaultNoteType(NoteType::Id type);
 
 signals:
+    //! This signal is emitted when an npages:// link is clicked and
+    //! the user wants to change to the \a newPage Page.
     void changePage(QString newPage);
 
 public slots:
+    //! Delete the first selected item that is a Note.
     void deleteNote();
+    
+    //! Select a file to add as a Note.
     void addFileAsNote();
     void loadFile(QString fileName);
 
+    //! Perform any actions needed and then emit the changePage() signal.
     void pageLinkClicked(QString link);
 
-private slots:
+private slots: 
+    //! Display the context menu for the Note at \a screenPos.
     void showNoteOptions(QPointF screenPos);
 
 protected:
@@ -69,17 +84,22 @@ protected:
     Note* createNewNote(int noteId = -1, NoteType::Id type = NoteType::Text);
 
 private:
-
+    //! The last Note Id assigned, the next note id to be assigned should be mCurMaxNoteId + 1.
     int mCurMaxNoteId;
     bool mDrawLines;
+    
+    //! Holds the Note where the creation of an Arrow starts. 0 when not in use.
     Note *mLineStart;
+    
+    //! When creating a new note use this NoteType.
     NoteType::Id mDefaultNoteType;
 
     QGraphicsLineItem *mTempLine;
 
+    //! The position where the user released the mouse button while creating a new Note.
     QPointF mMouseReleasePos;
 
-    //requires a path seperator after it.
+    //! requires a path separator after it.
     QString mPagePath;
 };
 
