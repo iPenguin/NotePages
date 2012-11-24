@@ -121,13 +121,13 @@ void PageView::wheelEvent(QWheelEvent* event)
 
 void PageView::zoomIn()
 {
-    zoomLevel((transform().m11()*100) + 5);
+    setZoomLevel((transform().m11()*100) + 5);
     emit zoomLevelChanged(transform().m11()*100);
 }
 
 void PageView::zoomOut()
 {
-    zoomLevel((transform().m11()*100) - 5);
+    setZoomLevel((transform().m11()*100) - 5);
     emit zoomLevelChanged(transform().m11()*100);
 }
 
@@ -135,11 +135,11 @@ void PageView::zoom(int mouseDelta)
 {
     double scroll = mouseDelta / 120;
     int delta = 5 * scroll;
-    zoomLevel((transform().m11()*100) + delta);
+    setZoomLevel((transform().m11()*100) + delta);
     emit zoomLevelChanged(transform().m11()*100);
 }
 
-void PageView::zoomLevel(int percent)
+void PageView::setZoomLevel(int percent)
 {
     qreal pcent = percent / 100.0;
     if(pcent <= 0)

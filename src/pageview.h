@@ -39,7 +39,8 @@ public:
 
     //! zoom takes the mouseDelta which is usually in increments of +/- 120;
     void zoom(int mouseDelta);
-    void zoomLevel(int percent);
+    //! Set the zoom level as a percentage of the original size.
+    void setZoomLevel(int percent);
 
     //! Return the current zoom percentage.
     int zoomPercent() { return mZoomPercent; }

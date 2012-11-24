@@ -265,9 +265,10 @@ void Page::setTextProperties(Page::TextProperty property, bool state)
         default:
             qDebug() << "Unknown or Unhandled Text Property" << property;
     }
+     debug("missing end");
 }
 
-int Page::currentZoomLevel()
+int Page::zoomLevel()
 {
     return ui->graphicsView->zoomPercent();
 }
@@ -335,9 +336,9 @@ void Page::setDefaultNoteType(NoteType::Id type)
     mScene->setDefaultNoteType(type);
 }
 
-void Page::zoomChanged(int value)
+void Page::changeZoom(int value)
 {
-    ui->graphicsView->zoomLevel(value);
+    ui->graphicsView->setZoomLevel(value);
 }
 
 void Page::nextPage(QString link)

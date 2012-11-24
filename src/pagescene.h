@@ -42,7 +42,9 @@ public:
     void setPagePath(QString pp) { mPagePath = pp; }
 
     void incrementMaxNoteId() { mCurMaxNoteId++; }
-    void setDrawLines(bool state) { mDrawLines = state; }
+    
+    //! Set if we are in Draw Lines Mode.
+    void setDrawLinesMode(bool state) { mDrawLines = state; }
 
     //! Use this NoteType when creating a new Note.
     void setDefaultNoteType(NoteType::Id type);
@@ -58,7 +60,8 @@ public slots:
     
     //! Select a file to add as a Note.
     void addFileAsNote();
-    void loadFile(QString fileName);
+    //! Copy the file \a fileName into the Page and create a note.
+    void addFileToPage(QString fileName);
 
     //! Perform any actions needed and then emit the changePage() signal.
     void pageLinkClicked(QString link);
@@ -81,7 +84,13 @@ protected:
     void dragLeaveEvent(QGraphicsSceneDragDropEvent *e);
     void dropEvent(QGraphicsSceneDragDropEvent *e);
 
-    Note* createNewNote(int noteId = -1, NoteType::Id type = NoteType::Text);
+    /*!
+     * \brief Create a Note add add it to this Page.
+     * 
+     * If \a noteId = -1 then this is a new note, if it's >= 0 then we are loading an existing note.
+     * 
+     */
+    Note* createNote(int noteId = -1, NoteType::Id type = NoteType::Text);
 
 private:
     //! The last Note Id assigned, the next note id to be assigned should be mCurMaxNoteId + 1.

@@ -78,13 +78,13 @@ void PageScene::addFileAsNote()
     fd->setObjectName("addfiledialog");
     fd->setViewMode(QFileDialog::List);
     fd->setAcceptMode(QFileDialog::AcceptOpen);
-    fd->open(this, SLOT(loadFile(QString)));
+    fd->open(this, SLOT(addFileToPage(QString)));
 
 }
 
-void PageScene::loadFile(QString fileName)
+void PageScene::addFileToPage(QString fileName)
 {
-    Note *n = createNewNote(-1, mDefaultNoteType);
+    Note *n = createNote(-1, mDefaultNoteType);
     n->setPos(mMouseReleasePos);
     n->setPath(mPagePath);
 
@@ -145,7 +145,7 @@ void PageScene::mousePressEvent(QGraphicsSceneMouseEvent *e)
     QGraphicsItem *i = itemAt(e->scenePos());
     //If we didn't click on something create a note.
     if(!i) {
-        Note *n = createNewNote();
+        Note *n = createNote();
         n->setPos(e->scenePos());
     }
 
@@ -222,7 +222,7 @@ void PageScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
                 mMouseReleasePos = e->scenePos();
                 addFileAsNote();
             } else {
-                Note *n = createNewNote(-1, NoteType::Text);
+                Note *n = createNote(-1, NoteType::Text);
                 n->setPos(e->scenePos());
             }
         }
@@ -252,7 +252,7 @@ void PageScene::dropEvent(QGraphicsSceneDragDropEvent *e)
 
     if (mime->hasImage()) {
 
-        Note *n = createNewNote(-1, NoteType::Image);
+        Note *n = createNote(-1, NoteType::Image);
         QString fileName = QString::number(n->id()) + ".png";
 
         n->setPos(e->scenePos());
@@ -268,7 +268,7 @@ void PageScene::dropEvent(QGraphicsSceneDragDropEvent *e)
 
     } else if (mime->hasText()) {
         QString text = mime->text();
-        Note *n = createNewNote(-1, NoteType::Text);
+        Note *n = createNote(-1, NoteType::Text);
         n->setPos(e->scenePos());
         n->setHtml(text);
         e->setAccepted(true);
@@ -285,9 +285,9 @@ void PageScene::dropEvent(QGraphicsSceneDragDropEvent *e)
             QImageReader *ireader = new QImageReader(mPagePath + "/" + QFileInfo(url).fileName());
 
             if(ireader->canRead()) {
-                n = createNewNote(-1, NoteType::Image);
+                n = createNote(-1, NoteType::Image);
             } else {
-                n = createNewNote(-1, NoteType::Document);
+                n = createNote(-1, NoteType::Document);
             }
 
             n->setFile(QFileInfo(url).fileName());
@@ -311,7 +311,7 @@ void PageScene::showNoteOptions(QPointF screenPos)
     }
 }
 
-Note* PageScene::createNewNote(int noteId, NoteType::Id type)
+Note* PageScene::createNote(int noteId, NoteType::Id type)
 {
 
     if(noteId >= mCurMaxNoteId)

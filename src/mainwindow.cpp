@@ -301,7 +301,7 @@ void MainWindow::zoomPage(int percent)
     if(!p)
         return;
 
-    p->zoomChanged(percent);
+    p->changeZoom(percent);
 }
 
 void MainWindow::tabChanged(int newTab)
@@ -314,7 +314,7 @@ void MainWindow::tabChanged(int newTab)
     if(!p)
         return;
 
-    int zoomLevel = p->currentZoomLevel();
+    int zoomLevel = p->zoomLevel();
 
     mZoom->setValue(zoomLevel);
 
@@ -576,7 +576,7 @@ void MainWindow::toolsConnect()
     if(!p)
         return;
 
-    p->setDrawLines(state);
+    p->setDrawLinesMode(state);
 }
 
 void MainWindow::selectPage(int pageNumber)
