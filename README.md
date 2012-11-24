@@ -22,6 +22,8 @@ Use Cases
 Building Note Pages from Source
 --------------------------------
 
+I've put together some helpful scripts that can be used in the building process. You can copy the scripts in the bin/ directory into a bin folder in your $PATH (ie. ~/bin) and edit them as appropriate for your environment. Otherwise you can follow the instructions below.
+
 ### Requirements for Building ###
 To build Note Pages you will need the following software installed on your computer.
 
@@ -41,8 +43,6 @@ To build Note Pages you will need the following software installed on your compu
 On Ubuntu run the following command to make sure you have installed all the programs you will need to build Note Pages and the documentation:
 
     $ sudo apt-get install build-essential cmake fop xsltproc docbook-xsl-ns libservlet2.4-java libhunspell-dev
-
-I've put together some helpful scripts that can be used in the building process. You can copy the scripts in the bin/ directory into a bin folder in your $PATH (ie. ~/bin) and edit them as appropriate for your environment. Otherwise you can follow the instructions below.
 
 ### Compiling Note Pages ###
 
