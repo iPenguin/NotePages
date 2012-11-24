@@ -22,13 +22,13 @@
 #include "appinfo.h"
 #include "macmenubar.h"
 
-//#include "errorhandler.h"
+#include "errorhandler.h"
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-    //qInstallMsgHandler(myMessageOutput);
+    qInstallMsgHandler(myMessageOutput);
 
     qApp->setApplicationName(AppInfo::inst()->appName);
     qApp->setApplicationVersion(AppInfo::inst()->appVersion);

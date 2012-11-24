@@ -19,29 +19,48 @@
 #ifndef DEBUG_H
 #define DEBUG_H
 
+#include <QString>
 #include <QDebug>
 
+QString debugFunctionName(QString name);
+
+/*!
+ * \def debug(message)
+ * Outputs a debug message showing the calling function and \a message.
+ */
 #define debug(message) \
 ( \
-    (qDebug() << Q_FUNC_INFO << ":" << message), \
+    (qDebug() << debugFunctionName(Q_FUNC_INFO) << ":" << message), \
     (void)0 \
 )
 
+/*!
+ * \def warn(message)
+ * Outputs a warning message showing the calling function and \a message.
+ */
 #define warn(message) \
 ( \
-    (qWarning() << Q_FUNC_INFO << ":" << message), \
+    (qWarning() << debugFunctionName(Q_FUNC_INFO) << ":" << message), \
     (void)0 \
 )
 
+/*!
+ * \def critical(message)
+ * Outputs a critical message showing the calling function and \a message.
+ */
 #define critical(message) \
 ( \
-    (qCritical() << Q_FUNC_INFO << ":" << message), \
+    (qCritical() << debugFunctionName(Q_FUNC_INFO) << ":" << message), \
     (void)0 \
 )
 
+/*!
+ * \def fatal(message)
+ * Outputs a fatal message showing the calling function and \a message and then core dump.
+ */
 #define fatal(message) \
 ( \
-    (qFatal() << Q_FUNC_INFO << ":" << message), \
+    (qFatal("%s : %s", debugFunctionName(Q_FUNC_INFO).toStdString().c_str(), QString(message).toStdString().c_str())), \
     (void)0 \
 )
 

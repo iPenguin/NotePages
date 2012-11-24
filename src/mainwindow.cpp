@@ -42,7 +42,7 @@
 #include "note.h"
 
 #include <QDebug>
-//#include "debug.h"
+#include "debug.h"
 
 MainWindow::MainWindow(bool autoLoad, QWidget *parent) :
     QMainWindow(parent),
