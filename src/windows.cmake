@@ -17,10 +17,10 @@ set(QT_PLUGINS_WINDOWS "${QT_PLUGINS_DIR}/imageformats" "${QT_PLUGINS_DIR}/acces
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_executable(${EXE_NAME} ${np_srcs} ${np_ui_h} ${np_moc_srcs} ${np_rcc_srcs}
-            ${np_version} ${np_win})
+            ${version_file} ${np_win})
 else()
     add_executable(${EXE_NAME} WIN32 ${np_srcs} ${np_ui_h} ${np_moc_srcs} ${np_rcc_srcs}
-            ${np_version} ${np_win})
+            ${version_file} ${np_win})
 endif()
 
 target_link_libraries(${EXE_NAME} ${QT_LIBRARIES})

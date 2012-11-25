@@ -1,6 +1,6 @@
 
 add_executable(${EXE_NAME} ${np_srcs} ${np_ui_h} ${np_moc_srcs} ${np_rcc_srcs}
-            ${np_version} ${np_mac})
+            ${version_file} ${np_mac})
             
             
 target_link_libraries(${EXE_NAME} ${QT_LIBRARIES})

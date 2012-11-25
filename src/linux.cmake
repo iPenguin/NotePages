@@ -1,7 +1,7 @@
 set(np_nix  )
 
 add_executable(${EXE_NAME} ${np_srcs} ${np_ui_h} ${np_moc_srcs} ${np_rcc_srcs}
-            ${np_version} ${np_nix})
+            ${version_file} ${np_nix})
             
 target_link_libraries(${EXE_NAME} ${QT_LIBRARIES})
 
