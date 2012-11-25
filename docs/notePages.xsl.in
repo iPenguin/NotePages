@@ -5,6 +5,7 @@
                               xmlns:fo="http://www.w3.org/1999/XSL/Format"
                               xmlns:d="http://docbook.org/ns/docbook">
 
+    <!-- docbooks cannot do conditional imports so we're using cmake to conditionally set the path -->
     <xsl:import href="@DOCBOOK_XSL_NS_PATH@/fo/docbook.xsl" />
 
     <xsl:template name="book.titlepage.recto">

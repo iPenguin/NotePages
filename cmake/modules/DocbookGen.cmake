@@ -15,7 +15,7 @@
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
-# This file contains functions to generate documentaion from docbook files.
+# This file contains functions to generate documentation from docbook files.
 # TODO: make sure that docbook-xsl-ns package is installed
 #
 # OUTPUT FORMATS:

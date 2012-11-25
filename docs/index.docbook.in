@@ -95,22 +95,6 @@
                 by going to the <link linkend="options-application">Application Options/Preferences</link>
                 and un-check the option for this feature.
             </para>
-            <screenshot>
-                <mediaobject>
-                    <imageobject>
-                        <imagedata width="250" scalefit="1" fileref="images/tools-updates.png" format="PNG" />
-                    </imageobject>
-                    <caption>The dialog when there are no updates</caption>
-                </mediaobject>
-            </screenshot>
-            <screenshot>
-                <mediaobject>
-                    <imageobject>
-                        <imagedata width="300" scalefit="1" fileref="images/tools-updates-new.png" format="PNG" />
-                    </imageobject>
-                    <caption>The dialog when a new version is available for download</caption>
-                </mediaobject>
-            </screenshot>
         </sect1>
         
         <section id="helpAbout">
