@@ -1,7 +1,7 @@
 ;
 ; CPack install script designed for a nmake build
 ;
-; This CPack script is edited by: Brian C. Milco <brian@StitchWorksSoftware.com>
+; This CPack script is edited by: Brian C. Milco <bcmilco AT gmail DOT com>
 ;
 ;--------------------------------
 ; You must define these values
@@ -44,7 +44,7 @@
 
   ;TargetMinimalOS 5.1 ; Windows XP
 
-  !include "C:\Documents and Settings\Brian Milco\My Documents\crochet.git\cmake\modules\FileAssociation.nsh" ;Allow files to be associated with this application.
+  !include "C:\Documents and Settings\Brian Milco\My Documents\notePages\cmake\modules\FileAssociation.nsh" ;Allow files to be associated with this application.
 
   ;end options added by Brian Milco
 
@@ -657,7 +657,7 @@ Section "-Core installation"
   @CPACK_NSIS_FULL_INSTALL@
 
   ;Added by Brian Milco
-  ${registerExtension} "$PROGRAMFILES\@CPACK_PACKAGE_INSTALL_DIRECTORY@\crochet.exe" ".pattern" "Crochet Pattern File"
+  ${registerExtension} "$PROGRAMFILES\@CPACK_PACKAGE_INSTALL_DIRECTORY@\Note Pages.exe" ".npages" "Note Pages Document"
 
   ;Store installation folder
   WriteRegStr SHCTX "Software\@CPACK_PACKAGE_VENDOR@\@CPACK_PACKAGE_INSTALL_REGISTRY_KEY@" "" $INSTDIR
